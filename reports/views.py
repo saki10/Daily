@@ -21,7 +21,8 @@ from django.views.decorators.http import require_POST
 from django.core.mail import send_mail
 from django.conf import settings
 from .utils import send_teams_webhook, format_for_teams
-
+from django.conf import settings
+from django.core.mail import send_mail
 
 client = OpenAI()  # 環境変数 OPENAI_API_KEY を使用
 
@@ -43,6 +44,19 @@ SLACK_WEBHOOK_RE = re.compile(r"^https://hooks\.slack\.com/services/[\w-]+/[\w-]
 
 
 # =====================================
+# Gmail送信
+# =====================================
+def send_gmail(text, to_email):
+    send_mail(
+        "Daily 日報",
+        text,
+        settings.DEFAULT_FROM_EMAIL,
+        [to_email],
+        fail_silently=False,
+    )
+
+
+# =====================================
 # 画面：日報作成（report_form）
 # =====================================
 @login_required
@@ -52,7 +66,7 @@ def report_create(request):
     """
     日報作成画面
     - GET : 空フォーム表示
-    - POST: 入力を保存 → Slack/Teams通知 → 同じ画面へリダイレクト
+    - POST: 入力を保存 → Slack/Teams/Gmail通知 → 同じ画面へリダイレクト
     """
 
     if request.method == "POST":
@@ -64,6 +78,7 @@ def report_create(request):
 
             # ① 保存（同じ日付なら更新）
             report_date = form.instance.report_date
+
             report, created = DailyReport.objects.get_or_create(
                 user=request.user,
                 report_date=report_date
@@ -80,7 +95,7 @@ def report_create(request):
             integration, _ = UserIntegration.objects.get_or_create(user=request.user)
 
             # =====================
-            # Slack用テキスト（整形なし）
+            # Slack用テキスト
             # =====================
             slack_text = (
                 f"【日報】{report.report_date}\n\n"
@@ -99,20 +114,27 @@ def report_create(request):
             note = format_for_teams(report.note)
 
             teams_text = (
-            f"【日報】{report.report_date}\n\n"
+                f"【日報】{report.report_date}\n\n"
+                "**■ 今日やったこと**\n\n"
+                f"{today_work}\n\n"
+                "**■ 振り返り**\n\n"
+                f"{reflection}\n\n"
+                "**■ 明日の予定**\n\n"
+                f"{tomorrow_plan}\n\n"
+                "**■ 備考**\n\n"
+                f"{note}"
+            )
 
-            "**■ 今日やったこと**\n\n\n"
-            f"{today_work}\n\n"
-
-            "**■ 振り返り**\n\n"
-            f"{reflection}\n\n"
-
-            "**■ 明日の予定**\n\n"
-            f"{tomorrow_plan}\n\n"
-
-            "**■ 備考**\n\n"
-            f"{note}"
-        )
+            # =====================
+            # Gmail用テキスト
+            # =====================
+            gmail_text = (
+                f"【日報】{report.report_date}\n\n"
+                f"■ 今日やったこと\n{report.today_work}\n\n"
+                f"■ 振り返り\n{report.reflection}\n\n"
+                f"■ 明日の予定\n{report.tomorrow_plan}\n\n"
+                f"■ 備考\n{report.note}"
+            )
 
             # =====================
             # Slack送信
@@ -125,6 +147,13 @@ def report_create(request):
             # =====================
             if integration.teams_enabled and integration.teams_webhook_url:
                 send_teams_webhook(integration.teams_webhook_url, teams_text)
+
+            # =====================
+            # Gmail送信
+            # =====================
+            if integration.gmail_enabled and request.user.email:
+                send_gmail(gmail_text, request.user.email)
+                messages.success(request, "Gmailへ送信しました")
 
             return redirect("create")
 
@@ -429,25 +458,6 @@ def slack_post(request):
         return JsonResponse({"ok": True})
 
     return JsonResponse({"ok": False, "error": r.text}, status=400)
-    text = request.POST.get("text", "").strip()
-    if not text:
-        return JsonResponse({"ok": False, "error": "text が空です"}, status=400)
-
-    # 🔽 ここはあなたのSlack設定保存モデルに合わせる
-    setting = IntegrationSetting.objects.get(user=request.user)
-
-    if not setting.slack_enabled:
-        return JsonResponse({"ok": False, "error": "Slack連携がOFFです"}, status=400)
-
-    if not setting.slack_webhook_url:
-        return JsonResponse({"ok": False, "error": "Webhook URLが未設定です"}, status=400)
-
-    r = requests.post(setting.slack_webhook_url, json={"text": text}, timeout=10)
-
-    if r.status_code == 200:
-        return JsonResponse({"ok": True})
-
-    return JsonResponse({"ok": False, "error": r.text}, status=400)
 # =====================================
 # Teams設定
 # =====================================
@@ -597,23 +607,6 @@ def send_teams_webhook(webhook_url: str, text: str) -> tuple[bool, str]:
 
     except Exception as e:
         return False, str(e)
-# =====================================
-# Gmail通知（メール送信）
-# =====================================
-
-def send_gmail(text, to_email):
-
-    send_mail(
-        "Daily 日報",
-        text,
-        settings.DEFAULT_FROM_EMAIL,
-        [to_email],
-        fail_silently=False,
-    )
-    
-# =====================================
-# Teams通知（メール送信）
-# =====================================
 
 
 

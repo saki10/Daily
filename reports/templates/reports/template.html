@@ -1,0 +1,81 @@
+{% extends "reports/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="template-page">
+
+  <h1 class="page-title">テンプレート画面</h1>
+
+  <div class="template-grid">
+
+    <!-- 左：日報プレビュー -->
+    <section class="template-preview">
+
+      <div class="preview-box">
+        <p>2月4日（水）　業務日報</p>
+
+        <p>
+        体調：△ <br>
+        定時時間：8:50〜17:20
+        </p>
+
+        <p>
+        出勤時間：8:50 <br>
+        退勤時間：18:20
+        </p>
+
+        <p>
+        業務内容：
+        </p>
+
+        <p>
+        残業：1.0 <br>
+        帰社：無 <br>
+        伝達事項：
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- 右：テンプレ設定 -->
+    <section class="template-setting">
+
+      <div class="setting-card">
+
+        <h3>テンプレ画面</h3>
+
+        <button class="btn template-btn">テンプレ1</button>
+        <button class="btn template-btn">テンプレ2</button>
+
+        <div class="toggle-row">
+          <span>フォーマル</span>
+
+          <label class="toggle">
+            <input type="checkbox">
+            <span class="toggle-ui"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <span>カジュアル</span>
+
+          <label class="toggle">
+            <input type="checkbox">
+            <span class="toggle-ui"></span>
+          </label>
+        </div>
+
+      </div>
+
+      <button class="btn btn-save">下書き保存</button>
+
+    </section>
+
+  </div>
+
+</div>
+
+{% endblock %}
