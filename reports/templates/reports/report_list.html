@@ -1,0 +1,79 @@
+{% extends "reports/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="list-wrap">
+  <div class="list-head">
+    <div>
+      <h1 class="list-title">日報一覧</h1>
+      <p class="list-sub">キーワードで検索できます（本文の一部一致）</p>
+    </div>
+
+    <div class="list-actions">
+      <a class="btn btn-primary" href="{% url 'create' %}">＋ 新規作成</a>
+    </div>
+  </div>
+
+  <form method="get" class="search-bar">
+    <input
+      type="text"
+      name="q"
+      value="{{ q }}"
+      class="search-input"
+      placeholder="例：会議 / バグ修正 / 顧客対応"
+    />
+    <button type="submit" class="btn btn-primary">検索</button>
+    {% if q %}
+      <a class="btn btn-secondary" href="{% url 'report_list' %}">クリア</a>
+    {% endif %}
+  </form>
+
+  <div class="list-meta">
+    <span>件数：{{ reports|length }}件</span>
+    {% if q %}<span class="badge">検索：{{ q }}</span>{% endif %}
+  </div>
+
+  {% if reports %}
+    <div class="cards">
+      {% for r in reports %}
+        <article class="card">
+          <div class="card-top">
+            <div class="card-title">ID: {{ r.id }}</div>
+            <div class="card-date">
+              {% if r.created_at %}{{ r.created_at|date:"Y/m/d H:i" }}{% endif %}
+            </div>
+          </div>
+
+          <div class="card-section">
+            <div class="card-label">今日やったこと</div>
+            <div class="card-text">{{ r.today_work|default:"" }}</div>
+          </div>
+
+          <div class="card-section">
+            <div class="card-label">振り返り</div>
+            <div class="card-text">{{ r.reflection|default:"" }}</div>
+          </div>
+
+          <div class="card-section">
+            <div class="card-label">明日の予定</div>
+            <div class="card-text">{{ r.tomorrow_plan|default:"" }}</div>
+          </div>
+
+          {% if r.note %}
+          <div class="card-section">
+            <div class="card-label">備考</div>
+            <div class="card-text">{{ r.note }}</div>
+          </div>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty">
+      <div class="empty-title">日報がまだありません</div>
+      <div class="empty-text">「新規作成」から最初の日報を作ってみましょう。</div>
+      <a class="btn btn-primary" href="{% url 'create' %}">＋ 新規作成</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

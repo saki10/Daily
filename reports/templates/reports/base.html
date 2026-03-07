@@ -1,0 +1,85 @@
+{% load static %}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Daily</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  <body>
+    <div class="layout">
+      <!-- サイドバー（既存のものをそのまま） -->
+      <aside class="sidebar">
+          <a class="sidebar-item" href="{% url 'home' %}">ホーム</a>
+          <a class="sidebar-item" href="{% url 'create' %}">AI文章生成機能</a>
+          <a class="sidebar-item" href="{% url 'report_list' %}">日報検索</a>
+          <a class="sidebar-item" href="#">テンプレート</a>
+          <a class="sidebar-item" href="{% url 'integrations' %}">外部連携設定</a>
+          <a class="sidebar-item" href="{% url 'settings' %}">設定</a>
+        </nav>
+      </aside>
+
+      <!-- 右側 -->
+      <div class="main">
+        <!-- ✅ 共通ヘッダー（リアルタイム日時） -->
+        <header class="header">
+          <div class="header-left">
+            <span class="header-title">Daily</span>
+          </div>
+
+          <div class="header-right">
+            <!-- 日時表示 -->
+            <span id="realtime-datetime"></span>
+            <form
+              method="post"
+              action="{% url 'logout' %}"
+              style="display: inline"
+            >
+              {% csrf_token %}
+              <button type="submit" class="logout-btn">ログアウト</button>
+            </form>
+          </div>
+        </header>
+
+        <!-- 各ページ内容 -->
+        <main class="content">{% block content %}{% endblock %}</main>
+      </div>
+    </div>
+
+    <!-- ✅ リアルタイム更新スクリプト（共通） -->
+    <script>
+      (function () {
+        const el = document.getElementById("realtime-datetime");
+
+        function pad2(n) {
+          return String(n).padStart(2, "0");
+        }
+
+        function render() {
+          // PCの時計を使って表示（日本想定：Asia/Tokyo）
+          const now = new Date();
+
+          // 年/月/日/曜日（日本語）
+          const datePart = new Intl.DateTimeFormat("ja-JP", {
+            timeZone: "Asia/Tokyo",
+            year: "numeric",
+            month: "long",
+            day: "2-digit",
+            weekday: "long",
+          }).format(now);
+
+          // 時刻（HH:MM:SS）
+          const h = pad2(now.getHours());
+          const m = pad2(now.getMinutes());
+          const s = pad2(now.getSeconds());
+          const timePart = `${h}:${m}:${s}`;
+
+          el.textContent = `${datePart}  ${timePart}`;
+        }
+
+        render();
+        setInterval(render, 1000);
+      })();
+    </script>
+  </body>
+</html>

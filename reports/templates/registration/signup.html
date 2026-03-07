@@ -1,0 +1,25 @@
+{% extends "reports/base.html" %}
+
+{% block content %}
+
+<h1>新規登録</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label>名前</label><br>
+    {{ form.username }}<br><br>
+
+    <label>Email</label><br>
+    {{ form.email }}<br><br>
+
+    <label>パスワード</label><br>
+    {{ form.password }}<br><br>
+
+    <label>パスワード確認</label><br>
+    {{ form.password_confirm }}<br><br>
+
+    <button type="submit">登録</button>
+</form>
+
+{% endblock %}

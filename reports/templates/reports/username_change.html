@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー名変更</title>
+</head>
+<body>
+
+<h1>ユーザー名変更</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label>新しいユーザー名</label>
+    <input type="text" name="username" required>
+
+    <br><br>
+    <button type="submit">変更する</button>
+</form>
+
+<br>
+<a href="{% url 'settings' %}">戻る</a>
+
+</body>
+</html> 

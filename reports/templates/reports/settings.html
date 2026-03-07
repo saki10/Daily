@@ -1,0 +1,31 @@
+{% extends "reports/base.html" %}
+
+{% block content %}
+
+<h1 class="page-title">設定</h1>
+
+<div class="card">
+    <a class="card-link" href="{% url 'username_change' %}">
+        ユーザー名変更
+    </a>
+</div>
+
+<div class="card">
+    <a class="card-link" href="{% url 'email_change' %}">
+        メールアドレス変更
+    </a>
+</div>
+
+<div class="card">
+    <a class="card-link" href="{% url 'password_change' %}">
+        パスワード変更
+    </a>
+</div>
+
+<div class="card danger">
+    <a class="card-link" href="{% url 'account_delete' %}">
+        アカウント削除
+    </a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "reports/base.html" %}
+{% block content %}
+<h1>Slack設定</h1>
+
+<form method="post">
+  {% csrf_token %}
+  <label>Webhook URL</label><br>
+  <input type="url" name="slack_webhook_url" style="width: 520px;"
+         value="{{ integration.slack_webhook_url }}" placeholder="https://hooks.slack.com/services/..." />
+  <br><br>
+  <button type="submit">保存</button>
+</form>
+
+<p style="margin-top:16px;">
+  Slack App の Incoming Webhooks を有効化して、Webhook URL を発行してください。
+</p>
+{% endblock %}

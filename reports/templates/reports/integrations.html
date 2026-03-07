@@ -1,0 +1,70 @@
+{% extends "reports/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="page integrations-page">
+  <h1 class="page-title">外部連携設定</h1>
+
+  <div class="integrations-wrap">
+    <!-- 左：サービス一覧 -->
+    <section class="card">
+      <div class="card-body">
+
+        <div class="integration-row">
+          <div class="service-name">Slack</div>
+
+          <a class="btn btn-blue" href="{% url 'slack_settings' %}">Slack設定画面へ</a>
+
+          <label class="toggle" title="Slack連携ON/OFF">
+            <input type="checkbox" name="slack" form="integration-form"
+              {% if integration.slack_enabled %}checked{% endif %}>
+            <span class="toggle-ui"></span>
+          </label>
+        </div>
+
+        <div class="integration-row">
+          <div class="service-name">Microsoft Teams</div>
+
+          <a class="btn btn-blue" href="{% url 'teams_settings' %}">Teams設定画面へ</a>
+
+          <label class="toggle" title="Teams連携ON/OFF">
+            <input type="checkbox" name="teams" form="integration-form"
+              {% if integration.teams_enabled %}checked{% endif %}>
+            <span class="toggle-ui"></span>
+          </label>
+        </div>
+
+        <div class="integration-row">
+          <div class="service-name">Gmail</div>
+
+          <a class="btn btn-blue" href="#">Gmail設定画面へ</a>
+
+          <label class="toggle" title="Gmail連携ON/OFF">
+            <input type="checkbox" name="gmail" form="integration-form"
+              {% if integration.gmail_enabled %}checked{% endif %}>
+            <span class="toggle-ui"></span>
+          </label>
+        </div>
+
+        <form method="post" id="integration-form" class="save-area">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary">保存</button>
+        </form>
+
+        <p class="small-note">※ 各サービスの認証画面からログインすることで連携できます。</p>
+      </div>
+    </section>
+
+    <!-- 右：説明ボックス -->
+    <aside class="card info">
+      <div class="card-body">
+        <p>外部サービスとの連携は <b>ON / OFF</b> で切り替えることが可能。</p>
+        <ul>
+          <li>Slack を ON にすると、日報を Slack へ通知。</li>
+          <li>ON になっているサービスにのみ連携されます。</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "reports/base.html" %}
+{% block content %}
+<h1>Microsoft Teams設定</h1>
+
+<form method="post">
+  {% csrf_token %}
+  <label>Webhook URL</label><br>
+
+  <input type="url"
+         name="teams_webhook_url"
+         style="width: 520px;"
+         value="{{ integration.teams_webhook_url }}"
+         placeholder="https://xxxx.webhook.office.com/webhookb2/..." />
+
+  <br><br>
+  <button type="submit">保存</button>
+</form>
+
+<p style="margin-top:16px;">
+  Microsoft Teams の Incoming Webhook を作成し、Webhook URL を入力してください。
+</p>
+
+{% endblock %}
