@@ -2,80 +2,72 @@
 {% load static %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/template.css' %}">
 
-<div class="template-page">
-
+<div class="page template-page">
   <h1 class="page-title">テンプレート画面</h1>
 
-  <div class="template-grid">
+  <form method="post">
+    {% csrf_token %}
 
-    <!-- 左：日報プレビュー -->
-    <section class="template-preview">
+    <div class="template-wrap">
 
-      <div class="preview-box">
-        <p>2月4日（水）　業務日報</p>
+      <section class="template-preview-card">
+        <div class="template-preview-body">
+          <div
+            id="preview-box"
+            class="template-preview-box"
+            data-preview-url="{% url 'template_preview_api' %}"
+            >{{ saved_template1|linebreaks }}
+           </div>
+      </section>
 
-        <p>
-        体調：△ <br>
-        定時時間：8:50〜17:20
-        </p>
+      <div class="template-center">
 
-        <p>
-        出勤時間：8:50 <br>
-        退勤時間：18:20
-        </p>
+        <section class="template-setting-card">
+          <div class="template-setting-body">
 
-        <p>
-        業務内容：
-        </p>
+            <h2 class="template-setting-title">テンプレ設定</h2>
 
-        <p>
-        残業：1.0 <br>
-        帰社：無 <br>
-        伝達事項：
-        </p>
+            <div class="template-edit-group">
+              <label class="template-label" for="template-text">テンプレート</label>
+              <textarea
+                id="template-text"
+                name="template_text"
+                class="template-textarea"
+              >{{ saved_template1 }}</textarea>
+            </div>
 
-      </div>
+            <input type="hidden" id="tone" name="tone" value="{{ saved_tone|default:'formal' }}">
 
-    </section>
+            <div class="template-toggle-row">
+              <span class="template-toggle-label">フォーマル</span>
+              <label class="toggle">
+                <input type="checkbox" id="formal">
+                <span class="toggle-ui"></span>
+              </label>
+            </div>
 
+            <div class="template-toggle-row">
+              <span class="template-toggle-label">カジュアル</span>
+              <label class="toggle">
+                <input type="checkbox" id="casual">
+                <span class="toggle-ui"></span>
+              </label>
+            </div>
 
-    <!-- 右：テンプレ設定 -->
-    <section class="template-setting">
+          </div>
+        </section>
 
-      <div class="setting-card">
-
-        <h3>テンプレ画面</h3>
-
-        <button class="btn template-btn">テンプレ1</button>
-        <button class="btn template-btn">テンプレ2</button>
-
-        <div class="toggle-row">
-          <span>フォーマル</span>
-
-          <label class="toggle">
-            <input type="checkbox">
-            <span class="toggle-ui"></span>
-          </label>
-        </div>
-
-        <div class="toggle-row">
-          <span>カジュアル</span>
-
-          <label class="toggle">
-            <input type="checkbox">
-            <span class="toggle-ui"></span>
-          </label>
+        <div class="template-save-wrap">
+          <button type="submit" class="template-save-btn">下書き保存</button>
         </div>
 
       </div>
 
-      <button class="btn btn-save">下書き保存</button>
-
-    </section>
-
-  </div>
-
+    </div>
+  </form>
 </div>
 
+<script src="{% static 'js/template.js' %}"></script>
 {% endblock %}

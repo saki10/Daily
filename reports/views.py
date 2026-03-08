@@ -3,7 +3,6 @@ import json
 import traceback
 
 import requests
-from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -21,10 +20,9 @@ from django.views.decorators.http import require_POST
 from django.core.mail import send_mail
 from django.conf import settings
 from .utils import send_teams_webhook, format_for_teams
-from django.conf import settings
-from django.core.mail import send_mail
 
-client = OpenAI()  # 環境変数 OPENAI_API_KEY を使用
+
+
 
 SYSTEM_PROMPT = """
 あなたは日本語の「業務日報」を作るアシスタントです。
@@ -608,5 +606,79 @@ def send_teams_webhook(webhook_url: str, text: str) -> tuple[bool, str]:
     except Exception as e:
         return False, str(e)
 
+# =====================================
+# テンプレート画面
+# =====================================
+client = OpenAI(api_key=settings.OPENAI_API_KEY)
+print("OPENAI_API_KEY exists =", bool(settings.OPENAI_API_KEY))
+@login_required
+@require_POST
+@login_required
+@require_POST
+def template_preview_api(request):
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+        text = data.get("text", "").strip()
+        style = data.get("style", "formal")
+
+        if not text:
+            return JsonResponse({"preview_text": ""})
+
+        style_instruction = {
+            "formal": "以下の文章を日本語の自然なビジネス向けの丁寧語に整えてください。意味は変えず、箇条書きや改行は可能な限り維持してください。",
+            "casual": "以下の文章を日本語の自然でややくだけた表現に整えてください。意味は変えず、箇条書きや改行は可能な限り維持してください。",
+        }.get(style, "以下の文章を自然な日本語に整えてください。")
+
+        response = client.responses.create(
+            model="gpt-5.4",
+            input=f"{style_instruction}\n\n{text}"
+        )
+
+        return JsonResponse({"preview_text": response.output_text})
+
+    except Exception as e:
+        msg = str(e)
+
+        # API利用枠不足時は画面確認用にフォールバック
+        if "insufficient_quota" in msg or "Error code: 429" in msg:
+            preview_text = text
+
+            if style == "formal":
+                preview_text = text.replace("やったこと", "実施した内容")
+            elif style == "casual":
+                preview_text = text.replace("今日は", "今日").replace("実施した内容", "やったこと")
+
+            return JsonResponse({
+                "preview_text": preview_text,
+                "warning": "OpenAI APIの利用枠不足のため簡易プレビューを返しています"
+            }, status=200)
+
+        import traceback
+        return JsonResponse({
+            "error": msg,
+            "traceback": traceback.format_exc(),
+        }, status=500)
 
 
+@login_required
+def template_view(request):
+    if request.method == "POST":
+        saved_template1 = request.POST.get("template_text", "")
+        saved_tone = request.POST.get("tone", "formal")
+
+        request.session["saved_template1"] = saved_template1
+        request.session["saved_tone"] = saved_tone
+
+        messages.success(request, "テンプレートを保存しました")
+        return redirect("template")
+
+    saved_template1 = request.session.get(
+        "saved_template1",
+        "今日はやったこと\n・（ダミー）会議資料作成\n・（ダミー）バグ修正\n・（ダミー）顧客対応"
+    )
+    saved_tone = request.session.get("saved_tone", "formal")
+
+    return render(request, "reports/template.html", {
+        "saved_template1": saved_template1,
+        "saved_tone": saved_tone,
+    })

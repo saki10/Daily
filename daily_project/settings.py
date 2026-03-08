@@ -141,3 +141,12 @@ EMAIL_HOST_PASSWORD = "vlbe vpcg inyn klzt"
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / ".env")
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")

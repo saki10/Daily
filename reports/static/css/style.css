@@ -663,60 +663,131 @@ body{
   }
 }
 
-/* テンプレート画面 */
+/* ===== フォントサイズ調整 ===== */
 
-/* 全体 */
-.template-page{
-  padding:30px;
+/* 共通 */
+body {
+  font-size: 16px;
+  line-height: 1.6;
 }
 
-/* グリッド */
-.template-grid{
-  display:grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap:30px;
-  margin-top:20px;
+/* ページタイトル */
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
 }
 
-/* プレビュー */
-.preview-box{
-  border:1px solid #ccc;
-  padding:20px;
-  background:white;
-  min-height:400px;
+/* ヘッダー */
+.header-title,
+.header-datetime {
+  font-size: 16px;
 }
 
-/* 設定カード */
-.setting-card{
-  border:1px solid #ccc;
-  padding:20px;
-  background:white;
+/* サイドバー */
+.sidebar-brand {
+  font-size: 18px;
 }
 
-/* テンプレボタン */
-.template-btn{
-  display:block;
-  width:160px;
-  margin:10px 0;
-  padding:10px;
-  border-radius:20px;
-  border:1px solid #ccc;
-  background:#f5f5f5;
+.sidebar-item,
+.sidebar-link {
+  font-size: 15px;
+  font-weight: 600;
 }
 
-/* トグル */
-.toggle-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:15px;
+/* 設定画面 */
+.settings-container h1 {
+  font-size: 28px;
 }
 
-/* 保存ボタン */
-.btn-save{
-  margin-top:20px;
-  padding:12px 24px;
-  border-radius:30px;
-  border:none;
-  background:#ddd;
+.settings-card a {
+  font-size: 16px;
+}
+
+.back-link a {
+  font-size: 14px;
+}
+
+/* カード共通 */
+.card-link {
+  font-size: 16px;
+}
+
+/* AI文章生成 */
+.panel-title {
+  font-size: 18px;
+}
+
+.panel-help,
+.panel-note,
+.ai-status,
+.ai-note {
+  font-size: 13px;
+}
+
+.ai-memo,
+.ai-block textarea,
+.form-field textarea,
+.form-field input,
+.form-field select {
+  font-size: 15px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ai-block .ai-label,
+.card-label {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* 一覧画面 */
+.list-title {
+  font-size: 24px;
+}
+
+.list-sub,
+.list-meta,
+.card-date,
+.empty-text {
+  font-size: 13px;
+}
+
+.card-title {
+  font-size: 17px;
+}
+
+.card-text {
+  font-size: 15px;
+}
+
+/* 外部連携 */
+.service-name {
+  font-size: 17px;
+}
+
+.small-note,
+.card.info li {
+  font-size: 13px;
+}
+
+/* テンプレート画面で使うなら */
+.template-setting-title {
+  font-size: 22px;
+}
+
+.template-label,
+.template-toggle-label {
+  font-size: 15px;
+}
+
+.template-textarea,
+.template-preview-box {
+  font-size: 16px;
+}
+
+.template-save-btn {
+  font-size: 18px;
 }

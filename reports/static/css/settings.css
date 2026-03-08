@@ -1,0 +1,168 @@
+.settings-page {
+    min-height: calc(100vh - 80px);
+    padding: 48px 24px;
+    background-color: #f4f6f9;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    box-sizing: border-box;
+}
+
+.settings-card {
+    width: 100%;
+    max-width: 560px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    padding: 32px;
+    box-sizing: border-box;
+}
+
+.username-card {
+    margin-top: 20px;
+}
+
+.settings-title {
+    margin: 0 0 10px;
+    font-size: 30px;
+    font-weight: 700;
+    color: #1f2937;
+    line-height: 1.4;
+}
+
+.settings-subtitle {
+    margin: 0 0 28px;
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.7;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-input {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    font-size: 15px;
+    color: #111827;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    box-sizing: border-box;
+    transition: 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.primary-btn {
+    min-width: 140px;
+    height: 44px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.primary-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.back-link {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+    .settings-page {
+        padding: 24px 16px;
+    }
+
+    .settings-card {
+        padding: 24px 20px;
+        border-radius: 14px;
+    }
+
+    .settings-title {
+        font-size: 24px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .primary-btn {
+        width: 100%;
+    }
+
+    .back-link {
+        text-align: center;
+    }
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 8px;
+}
+
+.form-actions .primary-btn {
+    min-width: 190px;
+}
+
+.form-actions a.back-link {
+    display: inline-block !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b !important;
+    text-decoration: none;
+    line-height: 1;
+}
+
+.form-actions a.back-link:hover {
+    text-decoration: underline;
+}

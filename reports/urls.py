@@ -31,5 +31,7 @@ urlpatterns = [
    path("integrations/slack/", views.slack_settings, name="slack_settings"),
    path("integrations/slack/post/", views.slack_post, name="slack_post"),
    path("integrations/teams/", views.teams_settings, name="teams_settings"),
-
+   #テンプレート画面
+   path("template/preview/", views.template_preview_api, name="template_preview_api"),
+   path("template/", views.template_view, name="template"),
 ]

@@ -4,6 +4,8 @@
   <head>
     <meta charset="UTF-8" />
     <title>Daily</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/settings.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   </head>
   <body>
@@ -13,7 +15,7 @@
           <a class="sidebar-item" href="{% url 'home' %}">ホーム</a>
           <a class="sidebar-item" href="{% url 'create' %}">AI文章生成機能</a>
           <a class="sidebar-item" href="{% url 'report_list' %}">日報検索</a>
-          <a class="sidebar-item" href="#">テンプレート</a>
+          <a class="sidebar-item" href="{% url 'template' %}">テンプレート</a>
           <a class="sidebar-item" href="{% url 'integrations' %}">外部連携設定</a>
           <a class="sidebar-item" href="{% url 'settings' %}">設定</a>
         </nav>
