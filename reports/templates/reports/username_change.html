@@ -2,35 +2,48 @@
 {% load static %}
 
 {% block content %}
-<div class="settings-layout">
-  <div class="settings-page">
-    <div class="settings-card username-card">
-      <h1 class="settings-title">ユーザー名変更</h1>
-      <p class="settings-subtitle">
-        新しいユーザー名を入力してください。
-      </p>
+<div class="settings-page">
+  <div class="settings-card username-card">
+    <h1 class="settings-title">ユーザー名変更</h1>
+    <p class="settings-subtitle">
+      新しいユーザー名を入力してください。
+    </p>
 
-      <form method="post" class="settings-form">
-        {% csrf_token %}
+    <form method="post" class="settings-form">
+      {% csrf_token %}
 
-        <div class="form-group">
-          <label for="id_username" class="form-label">新しいユーザー名</label>
-          <input
-            type="text"
-            name="username"
-            id="id_username"
-            class="form-input"
-            value="{{ request.user.username }}"
-            placeholder="新しいユーザー名を入力"
-          />
+      {% if form.non_field_errors %}
+        <div class="form-error-box">
+          {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
         </div>
+      {% endif %}
 
-        <div class="form-actions">
-          <button type="submit" class="primary-btn">変更する</button>
-          <a href="{% url 'settings' %}" class="back-link">戻る</a>
-        </div>
-      </form>
-    </div>
+      <div class="form-group">
+        <label for="id_username" class="form-label">新しいユーザー名</label>
+        <input
+          type="text"
+          name="username"
+          id="id_username"
+          class="form-input"
+          value="{{ request.user.username }}"
+          placeholder="新しいユーザー名を入力"
+        >
+        {% if form.username.errors %}
+          <div class="field-error">
+            {% for error in form.username.errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="primary-btn">更新する</button>
+        <a href="{% url 'settings' %}" class="secondary-btn">設定に戻る</a>
+      </div>
+    </form>
   </div>
 </div>
 {% endblock %}

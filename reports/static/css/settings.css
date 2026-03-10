@@ -1,391 +1,254 @@
+/* =========================
+   設定画面 共通レイアウト
+========================= */
 .settings-page {
-    min-height: calc(100vh - 80px);
-    padding: 48px 24px;
-    background-color: #f4f6f9;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    box-sizing: border-box;
+  min-height: calc(100vh - 80px);
+  padding: 60px 20px;
+  background-color: #f4f6f9;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
 }
 
 .settings-card {
-    width: 100%;
-    max-width: 560px;
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-    padding: 32px;
-    box-sizing: border-box;
+  width: 100%;
+  max-width: 900px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 44px 48px 40px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
 }
 
-.username-card {
-    margin-top: 20px;
+/* 個別画面用 */
+.username-card,
+.email-card,
+.password-card {
+  margin-top: 0;
 }
 
+/* =========================
+   タイトル・説明文
+========================= */
 .settings-title {
-    margin: 0 0 10px;
-    font-size: 30px;
-    font-weight: 700;
-    color: #1f2937;
-    line-height: 1.4;
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  color: #222;
 }
 
 .settings-subtitle {
-    margin: 0 0 28px;
-    font-size: 14px;
-    color: #6b7280;
-    line-height: 1.7;
+  margin: 18px 0 40px;
+  font-size: 16px;
+  line-height: 1.7;
+  text-align: center;
+  color: #666;
 }
 
+/* =========================
+   フォーム全体
+========================= */
 .settings-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  width: 100%;
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  margin-bottom: 28px;
 }
 
 .form-label {
-    font-size: 14px;
-    font-weight: 600;
-    color: #374151;
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #222;
 }
 
-.form-input {
-    width: 100%;
-    height: 46px;
-    padding: 0 14px;
-    font-size: 15px;
-    color: #111827;
-    background: #ffffff;
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-    box-sizing: border-box;
-    transition: 0.2s ease;
-}
-
-.form-input:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-}
-
-.form-actions {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-top: 8px;
-}
-
-.primary-btn {
-    min-width: 140px;
-    height: 44px;
-    padding: 0 20px;
-    border: none;
-    border-radius: 10px;
-    background: #2563eb;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.primary-btn:hover {
-    background: #1d4ed8;
-    transform: translateY(-1px);
-}
-
-.back-link {
-    display: inline-block;
-    font-size: 14px;
-    font-weight: 500;
-    color: #2563eb;
-    text-decoration: none;
-}
-
-.back-link:hover {
-    text-decoration: underline;
-}
-
-@media (max-width: 640px) {
-    .settings-page {
-        padding: 24px 16px;
-    }
-
-    .settings-card {
-        padding: 24px 20px;
-        border-radius: 14px;
-    }
-
-    .settings-title {
-        font-size: 24px;
-    }
-
-    .form-actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .primary-btn {
-        width: 100%;
-    }
-
-    .back-link {
-        text-align: center;
-    }
-}
-
-.form-actions {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin-top: 8px;
-}
-
-.form-actions .primary-btn {
-    min-width: 190px;
-}
-
-.form-actions a.back-link {
-    display: inline-block !important;
-    width: auto !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    font-size: 16px;
-    font-weight: 600;
-    color: #1e293b !important;
-    text-decoration: none;
-    line-height: 1;
-}
-
-.form-actions a.back-link:hover {
-    text-decoration: underline;
-}
-
-/* PW変更画面 */
-
-.settings-page {
-    min-height: calc(100vh - 80px);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 48px 20px;
-    background: #f4f6f9;
-}
-
-.settings-card {
-    width: 100%;
-    max-width: 720px;
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-    padding: 40px 36px;
-}
-
-.settings-title {
-    margin: 0 0 10px;
-    font-size: 32px;
-    font-weight: 700;
-    color: #222;
-    text-align: center;
-}
-
-.settings-subtitle {
-    margin: 0 0 32px;
-    font-size: 15px;
-    color: #666;
-    text-align: center;
-    line-height: 1.6;
-}
-
-.settings-form {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.form-label {
-    font-size: 15px;
-    font-weight: 600;
-    color: #333;
-}
-
-.settings-form input[type="password"],
+/* =========================
+   入力欄
+========================= */
+.form-input,
 .settings-form input[type="text"],
-.settings-form input[type="email"] {
-    width: 100%;
-    height: 48px;
-    padding: 0 14px;
-    font-size: 15px;
-    border: 1px solid #d7dce3;
-    border-radius: 10px;
-    outline: none;
-    box-sizing: border-box;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    background: #fff;
+.settings-form input[type="email"],
+.settings-form input[type="password"] {
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+  font-size: 16px;
+  color: #222;
+  background: #fff;
+  border: 1px solid #d5dbe5;
+  border-radius: 12px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.settings-form input:focus {
-    border-color: #4a90e2;
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+.form-input:focus,
+.settings-form input[type="text"]:focus,
+.settings-form input[type="email"]:focus,
+.settings-form input[type="password"]:focus {
+  border-color: #2f64e1;
+  box-shadow: 0 0 0 3px rgba(47, 100, 225, 0.12);
 }
 
+/* =========================
+   補足説明（パスワード条件など）
+========================= */
 .form-help {
-    margin-top: 2px;
-    padding: 14px 16px;
-    background: #f8fafc;
-    border: 1px solid #e5eaf0;
-    border-radius: 10px;
-    font-size: 14px;
-    color: #555;
-    line-height: 1.7;
-}
-
-.form-help ul {
-    margin: 0;
-    padding-left: 20px;
-}
-
-.form-help li {
-    margin-bottom: 6px;
-}
-
-.field-error {
-    margin-top: 4px;
-    font-size: 13px;
-    color: #d93025;
-}
-
-.field-error p {
-    margin: 0;
-}
-
-.form-error-box {
-    padding: 14px 16px;
-    background: #fff4f4;
-    border: 1px solid #f3c2c2;
-    border-radius: 10px;
-    color: #c62828;
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-.form-error-box p {
-    margin: 0;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.form-label {
-    font-size: 15px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 4px;
-}
-
-.settings-form input[type="password"],
-.settings-form input[type="text"],
-.settings-form input[type="email"] {
-    width: 100%;
-    height: 48px;
-    padding: 0 14px;
-    font-size: 15px;
-    border: 1px solid #d7dce3;
-    border-radius: 10px;
-    outline: none;
-    box-sizing: border-box;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    background: #fff;
-    display: block;
-}
-
-.settings-form input:focus {
-    border-color: #4a90e2;
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
-}
-
-.form-help {
-    margin-top: 6px;
-    padding: 14px 18px;
-    background: #f8fafc;
-    border: 1px solid #e5eaf0;
-    border-radius: 10px;
-    font-size: 14px;
-    color: #555;
-    line-height: 1.7;
+  margin-top: 8px;
+  padding: 14px 18px;
+  background: #f8fafc;
+  border: 1px solid #e5eaf0;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #555;
 }
 
 .form-help ul,
 .settings-form ul {
-    margin: 0;
-    padding-left: 20px;
+  margin: 0;
+  padding-left: 20px;
 }
 
 .form-help li,
 .settings-form li {
-    margin: 0 0 8px 0;
-    padding: 0;
-    line-height: 1.7;
+  margin-bottom: 8px;
+  line-height: 1.7;
 }
 
 .form-help li:last-child,
 .settings-form li:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
+/* =========================
+   エラーメッセージ
+========================= */
+.form-error-box {
+  margin-bottom: 20px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fff1f1;
+  border: 1px solid #f0b4b4;
+  color: #c62828;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.field-error {
+  margin-top: 8px;
+  color: #c62828;
+  font-size: 14px;
+}
+
+.field-error p,
+.form-error-box p {
+  margin: 4px 0;
+}
+
+/* =========================
+   ボタンエリア
+   更新：青
+   戻る：白
+========================= */
 .form-actions {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 20px;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-top: 32px;
+  flex-wrap: wrap;
 }
 
-.form-input {
-    width: 100%;
-    height: 48px;
-    padding: 0 14px;
+.primary-btn,
+.secondary-btn {
+  min-width: 170px;
+  height: 50px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  line-height: 1;
+  vertical-align: middle;
+  text-align: center;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* 更新ボタン */
+.primary-btn {
+  border: none;
+  background: #3b82f6;
+  color: #fff;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: #2563eb;
+}
+
+/* 戻るボタン */
+.secondary-btn {
+  border: 1px solid #999;
+  background: #fff;
+  color: #222;
+  cursor: pointer;
+}
+
+.secondary-btn:hover {
+  background: #f7f7f7;
+}
+
+/* =========================
+   スマホ対応
+========================= */
+@media (max-width: 640px) {
+  .settings-page {
+    padding: 24px 16px;
+  }
+
+  .settings-card {
+    padding: 28px 20px;
+    border-radius: 14px;
+  }
+
+  .settings-title {
+    font-size: 26px;
+  }
+
+  .settings-subtitle {
+    margin: 14px 0 28px;
+    font-size: 14px;
+  }
+
+  .form-label {
     font-size: 15px;
-    border: 1px solid #d7dce3;
-    border-radius: 10px;
-    outline: none;
-    box-sizing: border-box;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    background: #fff;
-    display: block;
-}
+  }
 
-.form-input:focus {
-    border-color: #4a90e2;
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
-}
+  .form-input,
+  .settings-form input[type="text"],
+  .settings-form input[type="email"],
+  .settings-form input[type="password"] {
+    height: 48px;
+    font-size: 15px;
+  }
 
-.form-help ul {
-    margin: 8px 0 0 0;
-    padding-left: 20px;
-}
-
-.form-help li {
-    margin-bottom: 6px;
-}
-
-.form-actions .secondary-btn,
-.form-actions .primary-btn {
-    min-width: 160px;
-    text-align: center;
+  .primary-btn,
+  .secondary-btn {
+    width: 100%;
+    min-width: auto;
+  }
 }
