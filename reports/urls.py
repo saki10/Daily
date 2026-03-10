@@ -2,7 +2,7 @@ from django.urls import path
 # URLとビューをつなぐための機能を読み込む
 from . import views
 # 同じアプリの views.py を読み込む
-
+from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
@@ -19,7 +19,21 @@ urlpatterns = [
    # Email設定一覧画面
    path('settings/email/', views.email_change, name='email_change'),
    # PW設定一覧画面
-   path('settings/password/', views.password_change, name='password_change'),
+  path(
+      "settings/password/",
+      auth_views.PasswordChangeView.as_view(
+          template_name="reports/password_change_form.html",
+          success_url="/settings/password/done/"
+      ),
+      name="password_change",
+      ),
+    path(
+        "settings/password/done/",
+        auth_views.PasswordChangeDoneView.as_view(
+            template_name="reports/password_change_done.html"
+        ),
+        name="password_change_done",
+    ),
    #username変更画面
    path('settings/username/', views.username_change, name='username_change'),
    #アカウント削除機能

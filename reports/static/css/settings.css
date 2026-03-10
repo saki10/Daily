@@ -166,3 +166,226 @@
 .form-actions a.back-link:hover {
     text-decoration: underline;
 }
+
+/* PW変更画面 */
+
+.settings-page {
+    min-height: calc(100vh - 80px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 48px 20px;
+    background: #f4f6f9;
+}
+
+.settings-card {
+    width: 100%;
+    max-width: 720px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    padding: 40px 36px;
+}
+
+.settings-title {
+    margin: 0 0 10px;
+    font-size: 32px;
+    font-weight: 700;
+    color: #222;
+    text-align: center;
+}
+
+.settings-subtitle {
+    margin: 0 0 32px;
+    font-size: 15px;
+    color: #666;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.settings-form input[type="password"],
+.settings-form input[type="text"],
+.settings-form input[type="email"] {
+    width: 100%;
+    height: 48px;
+    padding: 0 14px;
+    font-size: 15px;
+    border: 1px solid #d7dce3;
+    border-radius: 10px;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #fff;
+}
+
+.settings-form input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+
+.form-help {
+    margin-top: 2px;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border: 1px solid #e5eaf0;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.7;
+}
+
+.form-help ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.form-help li {
+    margin-bottom: 6px;
+}
+
+.field-error {
+    margin-top: 4px;
+    font-size: 13px;
+    color: #d93025;
+}
+
+.field-error p {
+    margin: 0;
+}
+
+.form-error-box {
+    padding: 14px 16px;
+    background: #fff4f4;
+    border: 1px solid #f3c2c2;
+    border-radius: 10px;
+    color: #c62828;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.form-error-box p {
+    margin: 0;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.settings-form input[type="password"],
+.settings-form input[type="text"],
+.settings-form input[type="email"] {
+    width: 100%;
+    height: 48px;
+    padding: 0 14px;
+    font-size: 15px;
+    border: 1px solid #d7dce3;
+    border-radius: 10px;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #fff;
+    display: block;
+}
+
+.settings-form input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+
+.form-help {
+    margin-top: 6px;
+    padding: 14px 18px;
+    background: #f8fafc;
+    border: 1px solid #e5eaf0;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.7;
+}
+
+.form-help ul,
+.settings-form ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.form-help li,
+.settings-form li {
+    margin: 0 0 8px 0;
+    padding: 0;
+    line-height: 1.7;
+}
+
+.form-help li:last-child,
+.settings-form li:last-child {
+    margin-bottom: 0;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.form-input {
+    width: 100%;
+    height: 48px;
+    padding: 0 14px;
+    font-size: 15px;
+    border: 1px solid #d7dce3;
+    border-radius: 10px;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #fff;
+    display: block;
+}
+
+.form-input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
+}
+
+.form-help ul {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+}
+
+.form-help li {
+    margin-bottom: 6px;
+}
+
+.form-actions .secondary-btn,
+.form-actions .primary-btn {
+    min-width: 160px;
+    text-align: center;
+}
