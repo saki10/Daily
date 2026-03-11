@@ -1,0 +1,47 @@
+{% extends "reports/base.html" %} {% load static %} {% block content %}
+<div class="login-page">
+  <div class="login-card">
+    <h1 class="login-title">ログイン</h1>
+
+    <form method="post" class="login-form">
+      {% csrf_token %} {% if form.non_field_errors %}
+      <div class="login-error">
+        {% for error in form.non_field_errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="login-form-group">
+        <label for="{{ form.username.id_for_label }}" class="login-label">
+          ユーザー名
+        </label>
+        {{ form.username }}
+      </div>
+
+      <div class="login-form-group">
+        <label for="{{ form.password.id_for_label }}" class="login-label">
+          パスワード
+        </label>
+        {{ form.password }}
+      </div>
+
+      <div class="login-actions">
+        <button type="submit" class="login-btn">ログイン</button>
+      </div>
+
+      <div class="login-links">
+        <p class="register-link">
+          新規登録は<a href="{% url 'signup' %}">こちら</a>から
+        </p>
+
+        <p class="forgot-link">
+          <a href="{% url 'password_reset' %}">
+            パスワードを忘れてしまった場合はこちら
+          </a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

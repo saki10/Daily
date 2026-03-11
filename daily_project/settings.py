@@ -137,7 +137,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = "rsp10111011@gmail.com"
-EMAIL_HOST_PASSWORD = "vlbe vpcg inyn klzt"
+EMAIL_HOST_PASSWORD = "vlbevpcginynklzt"
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
@@ -148,5 +148,7 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / ".env")
-
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+
+DEFAULT_FROM_EMAIL = "noreply@example.com"

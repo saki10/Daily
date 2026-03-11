@@ -20,7 +20,7 @@ from django.views.decorators.http import require_POST
 from django.core.mail import send_mail
 from django.conf import settings
 from .utils import send_teams_webhook, format_for_teams
-
+from django.http import HttpResponse
 
 
 
@@ -682,3 +682,16 @@ def template_view(request):
         "saved_template1": saved_template1,
         "saved_tone": saved_tone,
     })
+
+def mail_test(request):
+    try:
+        result = send_mail(
+            subject="テストメール",
+            message="Django からの送信テストです。",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=["rsp10111011@gmail.com  "],
+            fail_silently=False,
+        )
+        return HttpResponse(f"送信成功 result={result}")
+    except Exception as e:
+        return HttpResponse(f"送信失敗: {str(e)}")

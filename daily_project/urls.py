@@ -23,4 +23,6 @@ urlpatterns = [
     path('', include('reports.urls')),
     # reports アプリのURL設定を読み込む
     path('accounts/', include('django.contrib.auth.urls')), 
+
+    
 ]
