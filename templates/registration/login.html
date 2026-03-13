@@ -1,47 +1,48 @@
-{% extends "reports/base.html" %} {% load static %} {% block content %}
+{% extends "reports/base.html" %}
+{% load static %}
+
+{% block content %}
 <div class="login-page">
   <div class="login-card">
     <h1 class="login-title">ログイン</h1>
 
     <form method="post" class="login-form">
-      {% csrf_token %} {% if form.non_field_errors %}
-      <div class="login-error">
-        {% for error in form.non_field_errors %}
-        <p>{{ error }}</p>
-        {% endfor %}
-      </div>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="form-error-box">
+          {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
       {% endif %}
 
-      <div class="login-form-group">
-        <label for="{{ form.username.id_for_label }}" class="login-label">
-          ユーザー名
-        </label>
-        {{ form.username }}
-      </div>
+      {% for field in form %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}" class="form-label">
+            {{ field.label }}
+          </label>
+          {{ field }}
 
-      <div class="login-form-group">
-        <label for="{{ form.password.id_for_label }}" class="login-label">
-          パスワード
-        </label>
-        {{ form.password }}
-      </div>
+          {% if field.errors %}
+            <div class="field-error">
+              {% for error in field.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
 
       <div class="login-actions">
-        <button type="submit" class="login-btn">ログイン</button>
-      </div>
-
-      <div class="login-links">
-        <p class="register-link">
-          新規登録は<a href="{% url 'signup' %}">こちら</a>から
-        </p>
-
-        <p class="forgot-link">
-          <a href="{% url 'password_reset' %}">
-            パスワードを忘れてしまった場合はこちら
-          </a>
-        </p>
+        <button type="submit" class="primary-btn">ログイン</button>
       </div>
     </form>
+
+    <div class="login-links">
+      <p><a href="{% url 'signup' %}">新規登録はこちらから</a></p>
+      <p><a href="{% url 'password_reset' %}">パスワードを忘れてしまった場合はこちら</a></p>
+    </div>
   </div>
 </div>
 {% endblock %}

@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth import logout, login, update_session_auth_hash
+from django.contrib.auth import logout, login
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db.models import Q
 from openai import OpenAI
@@ -21,6 +21,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .utils import send_teams_webhook, format_for_teams
 from django.http import HttpResponse
+from .forms import SignupForm
 
 
 
@@ -245,25 +246,20 @@ def username_change(request):
 # =====================================
 # 設定：パスワード変更
 # =====================================
-@login_required
-def password_change(request):
+def signup(request):
     """
-    パスワード変更
-    - PasswordChangeForm を使用
-    - update_session_auth_hash でログイン維持
+    新規登録
     """
     if request.method == "POST":
-        form = PasswordChangeForm(request.user, request.POST)
+        form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save()
-            update_session_auth_hash(request, user)
-            messages.success(request, "パスワードを変更しました")
-            return redirect("settings")
+            login(request, user)
+            return redirect("report_list")
     else:
-        form = PasswordChangeForm(request.user)
+        form = SignupForm()
 
-    return render(request, "reports/password_change.html", {"form": form})
-
+    return render(request, "registration/signup.html", {"form": form})
 
 # =====================================
 # アカウント：新規登録

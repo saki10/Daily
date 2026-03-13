@@ -9,15 +9,17 @@
   </head>
   <body>
     <div class="layout">
-      <!-- サイドバー -->
-      <aside class="sidebar">
-        <a class="sidebar-item" href="{% url 'home' %}">ホーム</a>
-        <a class="sidebar-item" href="{% url 'create' %}">AI文章生成機能</a>
-        <a class="sidebar-item" href="{% url 'report_list' %}">日報検索</a>
-        <a class="sidebar-item" href="{% url 'template' %}">テンプレート</a>
-        <a class="sidebar-item" href="{% url 'integrations' %}">外部連携設定</a>
-        <a class="sidebar-item" href="{% url 'settings' %}">設定</a>
-      </aside>
+      {% if request.resolver_match.url_name != 'signup' %}
+        <!-- サイドバー -->
+        <aside class="sidebar">
+          <a class="sidebar-item" href="{% url 'home' %}">ホーム</a>
+          <a class="sidebar-item" href="{% url 'create' %}">AI文章生成機能</a>
+          <a class="sidebar-item" href="{% url 'report_list' %}">日報検索</a>
+          <a class="sidebar-item" href="{% url 'template' %}">テンプレート</a>
+          <a class="sidebar-item" href="{% url 'integrations' %}">外部連携設定</a>
+          <a class="sidebar-item" href="{% url 'settings' %}">設定</a>
+        </aside>
+      {% endif %}
 
       <!-- 右側 -->
       <div class="main">
@@ -29,54 +31,22 @@
           <div class="header-right">
             <span id="realtime-datetime"></span>
 
-            {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'password_reset' and request.resolver_match.url_name != 'password_reset_done' and request.resolver_match.url_name != 'password_reset_confirm' and request.resolver_match.url_name != 'password_reset_complete' %}
-              <form
-                method="post"
-                action="{% url 'logout' %}"
-                style="display: inline"
-              >
-                {% csrf_token %}
-                <button type="submit" class="logout-btn">ログアウト</button>
-              </form>
+            {% if request.user.is_authenticated %}
+              {% if request.resolver_match.url_name != 'signup' %}
+                <form method="post" action="{% url 'logout' %}" style="display: inline">
+                  {% csrf_token %}
+                  <button type="submit" class="logout-btn">ログアウト</button>
+                </form>
+              {% endif %}
             {% endif %}
           </div>
         </header>
-
-        <main class="content">{% block content %}{% endblock %}</main>
+        <main class="content {% if request.resolver_match.url_name == 'signup' or request.resolver_match.url_name == 'login' %}content-auth{% endif %}">
+          {% block content %}{% endblock %}
+        </main>
       </div>
     </div>
 
-    <script>
-      (function () {
-        const el = document.getElementById("realtime-datetime");
-        if (!el) return;
-
-        function pad2(n) {
-          return String(n).padStart(2, "0");
-        }
-
-        function render() {
-          const now = new Date();
-
-          const datePart = new Intl.DateTimeFormat("ja-JP", {
-            timeZone: "Asia/Tokyo",
-            year: "numeric",
-            month: "long",
-            day: "2-digit",
-            weekday: "long",
-          }).format(now);
-
-          const h = pad2(now.getHours());
-          const m = pad2(now.getMinutes());
-          const s = pad2(now.getSeconds());
-          const timePart = `${h}:${m}:${s}`;
-
-          el.textContent = `${datePart}  ${timePart}`;
-        }
-
-        render();
-        setInterval(render, 1000);
-      })();
-    </script>
+    <script src="{% static 'js/base.js' %}"></script>
   </body>
 </html>
