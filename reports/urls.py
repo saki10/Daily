@@ -1,6 +1,5 @@
 from django.urls import path
 from . import views
-from .views import mail_test
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -67,7 +66,7 @@ urlpatterns = [
     path("integrations/slack/", views.slack_settings, name="slack_settings"),
     path("integrations/slack/post/", views.slack_post, name="slack_post"),
     path("integrations/teams/", views.teams_settings, name="teams_settings"),
-    path("template/preview/", views.template_preview_api, name="template_preview_api"),
-    path("template/", views.template_view, name="template"),
-    path("mail-test/", mail_test, name="mail_test"),
+    # path("template/preview/", views.template_preview_api, name="template_preview_api"),
+    # path("template/", views.template_view, name="template"),
+
 ]

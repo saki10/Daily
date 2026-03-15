@@ -1080,256 +1080,107 @@ body {
   }
 }
 
-/* =========================
-   新規登録画面
-========================= */
-.content.content-auth {
-  padding: 56px 24px;
-  box-sizing: border-box;
+.tone-panel {
+  margin-top: 20px;
 }
 
-.signup-page {
-  width: 100%;
-  max-width: 640px;
-  margin: 0 auto;
-}
-
-.signup-card {
-  width: 100%;
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 40px 40px 36px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  box-sizing: border-box;
-}
-
-.signup-title {
-  margin: 0 0 12px;
-  font-size: 40px;
-  font-weight: 700;
-  color: #111827;
-  text-align: center;   /* ← 中央揃え */
-}
-
-.signup-subtitle {
-  margin: 0 0 32px;
-  font-size: 16px;
-  line-height: 1.7;
-  color: #6b7280;
-  text-align: center;   /* ← 中央揃え */
-}
-
-.signup-form .form-group {
-  margin-bottom: 24px;
-}
-
-.signup-form .form-label {
-  display: block;
+.tone-head {
   margin-bottom: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #111827;
 }
 
-.signup-form input[type="text"],
-.signup-form input[type="email"],
-.signup-form input[type="password"] {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  height: 48px;
-  padding: 0 14px;
-  border: 1px solid #d1d5db;
+.tone-switch {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.tone-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid #d9dee8;
   border-radius: 10px;
   background: #fff;
-  font-size: 15px;
-  box-sizing: border-box;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  font-size: 14px;
 }
 
-.signup-form input[type="text"]:focus,
-.signup-form input[type="email"]:focus,
-.signup-form input[type="password"]:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+.tone-option:hover {
+  background: #f7f9fc;
 }
 
-.form-help-text {
-  margin-top: 10px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  font-size: 13px;
-  line-height: 1.7;
-  color: #4b5563;
+.tone-option input[type="radio"] {
+  margin: 0;
 }
 
-.form-help-text ul {
-  margin: 8px 0 0 18px;
-  padding: 0;
+.tone-panel {
+  margin-top: 20px;
 }
 
-.form-help-text li {
-  margin-bottom: 4px;
+.tone-head {
+  margin-bottom: 10px;
 }
 
-.field-error {
+.tone-toggle-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin-top: 8px;
 }
 
-.field-error p,
-.form-error-box p {
-  margin: 4px 0 0;
+.tone-text {
   font-size: 14px;
-  color: #dc2626;
+  font-weight: 500;
+  color: #333;
 }
 
-.form-error-box {
-  margin-bottom: 20px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+.tone-toggle {
+  position: relative;
+  width: 56px;
+  height: 30px;
+  display: inline-block;
 }
 
-.signup-actions {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;   /* ← ボタン中央揃え */
+.tone-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
-.signup-actions .primary-btn {
-  min-width: 180px;
-  height: 50px;
-  padding: 0 24px;
-  border: none;
+.tone-slider {
+  position: absolute;
+  inset: 0;
+  background-color: #d9dee8;
   border-radius: 999px;
-  background: #3b82f6;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 700;
   cursor: pointer;
+  transition: 0.3s ease;
 }
 
-.signup-actions .primary-btn:hover {
-  opacity: 0.92;
+.tone-slider::before {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  left: 3px;
+  top: 3px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-@media (max-width: 768px) {
-  .content.content-auth {
-    padding: 24px 16px;
-  }
-
-  .signup-card {
-    padding: 28px 20px 24px;
-    border-radius: 16px;
-  }
-
-  .signup-title {
-    font-size: 32px;
-  }
+.tone-toggle input:checked + .tone-slider {
+  background-color: #4f7cff;
 }
 
-/* =========================
-   ログイン画面
-========================= */
-.login-page {
-  width: 100%;
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 56px 24px;
-  box-sizing: border-box;
+.tone-toggle input:checked + .tone-slider::before {
+  transform: translateX(26px);
 }
 
-.login-card {
-  width: 100%;
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 40px 40px 36px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  box-sizing: border-box;
-}
-
-.login-title {
-  margin: 0 0 32px;
-  font-size: 40px;
-  font-weight: 700;
-  color: #111827;
-  text-align: center;
-}
-
-.login-form .form-group {
-  margin-bottom: 24px;
-}
-
-.login-form .form-label {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #111827;
-}
-
-.login-form input[type="text"],
-.login-form input[type="password"],
-.login-form input[type="email"] {
-  display: block;
-  width: 100%;
-  height: 48px;
-  padding: 0 14px;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  background: #fff;
-  font-size: 15px;
-  box-sizing: border-box;
-}
-
-.login-form input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
-}
-
-.login-actions {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-}
-
-.login-actions .primary-btn {
-  min-width: 180px;
-  height: 50px;
-  padding: 0 24px;
-  border: none;
-  border-radius: 999px;
-  background: #3b82f6;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.login-links {
-  margin-top: 24px;
-  text-align: center;
-}
-
-.login-links p {
-  margin: 10px 0 0;
-}
-
-@media (max-width: 768px) {
-  .login-page {
-    padding: 24px 16px;
-  }
-
-  .login-card {
-    padding: 28px 20px 24px;
-    border-radius: 16px;
-  }
-
-  .login-title {
-    font-size: 32px;
-  }
+.tone-current {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
 }

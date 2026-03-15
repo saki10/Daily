@@ -19,7 +19,7 @@ function bindGenerateButton() {
   console.log("✅ bound click handler");
 }
 
-// DOMContentLoadedを待つ版 + 念のため即時実行もする（どちらでも拾える）
+// DOMContentLoadedを待つ版 + 念のため即時実行もする
 document.addEventListener("DOMContentLoaded", bindGenerateButton);
 bindGenerateButton();
 
@@ -27,12 +27,15 @@ async function onGenerateClick() {
   console.log("✅ onGenerateClick start");
 
   const btn = document.getElementById("ai-generate-btn");
-  const generateUrl = btn?.dataset?.generateUrl || "/ai/generate/";
   const memoEl = document.getElementById("ai-memo");
-  const userPrompt = memoEl?.value?.trim() || "";
+  const generateUrl = btn?.dataset?.generateUrl || "/ai/generate/";
+  const toneToggle = document.getElementById("tone-toggle");
+const tone = toneToggle?.checked ? "casual" : "formal";
+  const userPrompt = memoEl?.value.trim() || "";
 
   console.log("🔎 generateUrl:", generateUrl);
   console.log("🔎 prompt:", userPrompt);
+  console.log("🔎 tone:", tone);
 
   if (!userPrompt) {
     alert("素材入力を入力してください");
@@ -46,7 +49,10 @@ async function onGenerateClick() {
         "Content-Type": "application/json",
         "X-CSRFToken": getCookie("csrftoken"),
       },
-      body: JSON.stringify({ prompt: userPrompt }),
+      body: JSON.stringify({
+        prompt: userPrompt,
+        tone: tone,
+      }),
     });
 
     console.log("✅ fetch done:", res.status);

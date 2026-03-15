@@ -1,4 +1,7 @@
-{% extends "reports/base.html" %} {% load static %} {% block content %}
+{% extends "reports/base.html" %}
+{% load static %}
+
+{% block content %}
 <div class="ai-page">
   <h1 class="page-title">AI 文章生成</h1>
 
@@ -20,6 +23,30 @@
 ・顧客対応
 ・明日はテスト予定"
       ></textarea>
+
+      <!-- 文体設定 -->
+      <div class="tone-panel">
+        <div class="panel-head tone-head">
+          <h2 class="panel-title">文体設定</h2>
+          <p class="panel-help">スイッチで文体を切り替えます</p>
+        </div>
+
+        <div class="tone-toggle-box">
+          <span class="tone-text">フォーマル</span>
+
+          <label class="tone-toggle">
+            <input type="checkbox" id="tone-toggle">
+            <span class="tone-slider"></span>
+          </label>
+
+          <span class="tone-text">カジュアル</span>
+        </div>
+
+        <p class="tone-current">
+          現在の文体：
+          <strong id="tone-current-label">フォーマル</strong>
+        </p>
+      </div>
 
       <div class="panel-actions">
         <button
@@ -45,56 +72,70 @@
       <p class="panel-note">※ 素材をもとにAIが一気に文章を書き上げます。</p>
     </section>
 
-<!-- 右：生成結果 -->
-<section class="panel">
-  <div class="panel-head">
-    <h2 class="panel-title">生成結果（日報）</h2>
-    <p class="panel-help">文字を入力すると数秒で日報が作成されます</p>
-  </div>
+    <!-- 右：生成結果 -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2 class="panel-title">生成結果（日報）</h2>
+        <p class="panel-help">文字を入力すると数秒で日報が作成されます</p>
+      </div>
 
-  <!-- ✅ 右パネル全体を form で包む -->
-  <form method="post" id="report-form" class="form">
-    {% csrf_token %}
+      <form method="post" id="report-form" class="form">
+        {% csrf_token %}
 
-    {% if form.non_field_errors %}
-      <div class="form-errors">{{ form.non_field_errors }}</div>
-    {% endif %}
+        {% if form.non_field_errors %}
+          <div class="form-errors">{{ form.non_field_errors }}</div>
+        {% endif %}
 
-    <div class="form-row">
-      <label class="form-label" for="{{ form.today_work.id_for_label }}">本日の業務</label>
-      <div class="form-field">{{ form.today_work }}</div>
-      {{ form.today_work.errors }}
-    </div>
+        <div class="form-row">
+          <label class="form-label" for="{{ form.today_work.id_for_label }}">本日の業務</label>
+          <div class="form-field">{{ form.today_work }}</div>
+          {{ form.today_work.errors }}
+        </div>
 
-    <div class="form-row">
-      <label class="form-label" for="{{ form.reflection.id_for_label }}">振り返り</label>
-      <div class="form-field">{{ form.reflection }}</div>
-      {{ form.reflection.errors }}
-    </div>
+        <div class="form-row">
+          <label class="form-label" for="{{ form.reflection.id_for_label }}">振り返り</label>
+          <div class="form-field">{{ form.reflection }}</div>
+          {{ form.reflection.errors }}
+        </div>
 
-    <div class="form-row">
-      <label class="form-label" for="{{ form.tomorrow_plan.id_for_label }}">明日の予定</label>
-      <div class="form-field">{{ form.tomorrow_plan }}</div>
-      {{ form.tomorrow_plan.errors }}
-    </div>
+        <div class="form-row">
+          <label class="form-label" for="{{ form.tomorrow_plan.id_for_label }}">明日の予定</label>
+          <div class="form-field">{{ form.tomorrow_plan }}</div>
+          {{ form.tomorrow_plan.errors }}
+        </div>
 
-    <div class="form-row">
-      <label class="form-label" for="{{ form.note.id_for_label }}">備考</label>
-      <div class="form-field">{{ form.note }}</div>
-      {{ form.note.errors }}
-    </div>
+        <div class="form-row">
+          <label class="form-label" for="{{ form.note.id_for_label }}">備考</label>
+          <div class="form-field">{{ form.note }}</div>
+          {{ form.note.errors }}
+        </div>
 
-    <!-- ✅ 保存ボタンは form の内側に置く -->
-    <div class="panel-actions right">
-      <button type="submit" form="report-form" class="btn btn-primary">
-  確定（保存）
-</button>
-    </div>
-  </form>
-</section>
+        <div class="panel-actions right">
+          <button type="submit" form="report-form" class="btn btn-primary">
+            確定（保存）
+          </button>
+        </div>
+      </form>
+    </section>
   </div>
 </div>
 
-<!-- ✅ このページだけでJSを読む（1回だけ） -->
 <script src="{% static 'js/ai_generate.js' %}"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById("tone-toggle");
+    const currentLabel = document.getElementById("tone-current-label");
+
+    function updateToneLabel() {
+      if (!toggle || !currentLabel) return;
+      currentLabel.textContent = toggle.checked ? "カジュアル" : "フォーマル";
+    }
+
+    if (toggle) {
+      toggle.addEventListener("change", updateToneLabel);
+      updateToneLabel();
+    }
+  });
+</script>
 {% endblock %}

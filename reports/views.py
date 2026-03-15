@@ -1,13 +1,11 @@
 import re
 import json
-import traceback
-
 import requests
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth import logout, login
+from django.contrib.auth import logout, login, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db.models import Q
 from openai import OpenAI
@@ -20,10 +18,9 @@ from django.views.decorators.http import require_POST
 from django.core.mail import send_mail
 from django.conf import settings
 from .utils import send_teams_webhook, format_for_teams
-from django.http import HttpResponse
-from .forms import SignupForm
 
 
+client = OpenAI()  # 環境変数 OPENAI_API_KEY を使用
 
 SYSTEM_PROMPT = """
 あなたは日本語の「業務日報」を作るアシスタントです。
@@ -34,25 +31,12 @@ SYSTEM_PROMPT = """
 - JSONキーは必ず次の4つ：today_work, reflection, tomorrow_plan, note
 - 各値は文字列
 - today_work / reflection / tomorrow_plan は箇条書き中心、具体的に
-- 文体は丁寧語（です/ます）で統一
+- 文体は、ユーザーが指定したトーン指示に従うこと
 - 不明点は推測しすぎず「（要確認）」で補う
 """.strip()
 
 SLACK_WEBHOOK_RE = re.compile(r"^https://hooks\.slack\.com/services/[\w-]+/[\w-]+/[\w-]+$")
 
-
-
-# =====================================
-# Gmail送信
-# =====================================
-def send_gmail(text, to_email):
-    send_mail(
-        "Daily 日報",
-        text,
-        settings.DEFAULT_FROM_EMAIL,
-        [to_email],
-        fail_silently=False,
-    )
 
 
 # =====================================
@@ -65,7 +49,7 @@ def report_create(request):
     """
     日報作成画面
     - GET : 空フォーム表示
-    - POST: 入力を保存 → Slack/Teams/Gmail通知 → 同じ画面へリダイレクト
+    - POST: 入力を保存 → Slack/Teams通知 → 同じ画面へリダイレクト
     """
 
     if request.method == "POST":
@@ -77,7 +61,6 @@ def report_create(request):
 
             # ① 保存（同じ日付なら更新）
             report_date = form.instance.report_date
-
             report, created = DailyReport.objects.get_or_create(
                 user=request.user,
                 report_date=report_date
@@ -94,7 +77,7 @@ def report_create(request):
             integration, _ = UserIntegration.objects.get_or_create(user=request.user)
 
             # =====================
-            # Slack用テキスト
+            # Slack用テキスト（整形なし）
             # =====================
             slack_text = (
                 f"【日報】{report.report_date}\n\n"
@@ -113,27 +96,20 @@ def report_create(request):
             note = format_for_teams(report.note)
 
             teams_text = (
-                f"【日報】{report.report_date}\n\n"
-                "**■ 今日やったこと**\n\n"
-                f"{today_work}\n\n"
-                "**■ 振り返り**\n\n"
-                f"{reflection}\n\n"
-                "**■ 明日の予定**\n\n"
-                f"{tomorrow_plan}\n\n"
-                "**■ 備考**\n\n"
-                f"{note}"
-            )
+            f"【日報】{report.report_date}\n\n"
 
-            # =====================
-            # Gmail用テキスト
-            # =====================
-            gmail_text = (
-                f"【日報】{report.report_date}\n\n"
-                f"■ 今日やったこと\n{report.today_work}\n\n"
-                f"■ 振り返り\n{report.reflection}\n\n"
-                f"■ 明日の予定\n{report.tomorrow_plan}\n\n"
-                f"■ 備考\n{report.note}"
-            )
+            "**■ 今日やったこと**\n\n\n"
+            f"{today_work}\n\n"
+
+            "**■ 振り返り**\n\n"
+            f"{reflection}\n\n"
+
+            "**■ 明日の予定**\n\n"
+            f"{tomorrow_plan}\n\n"
+
+            "**■ 備考**\n\n"
+            f"{note}"
+        )
 
             # =====================
             # Slack送信
@@ -146,13 +122,6 @@ def report_create(request):
             # =====================
             if integration.teams_enabled and integration.teams_webhook_url:
                 send_teams_webhook(integration.teams_webhook_url, teams_text)
-
-            # =====================
-            # Gmail送信
-            # =====================
-            if integration.gmail_enabled and request.user.email:
-                send_gmail(gmail_text, request.user.email)
-                messages.success(request, "Gmailへ送信しました")
 
             return redirect("create")
 
@@ -246,20 +215,25 @@ def username_change(request):
 # =====================================
 # 設定：パスワード変更
 # =====================================
-def signup(request):
+@login_required
+def password_change(request):
     """
-    新規登録
+    パスワード変更
+    - PasswordChangeForm を使用
+    - update_session_auth_hash でログイン維持
     """
     if request.method == "POST":
-        form = SignupForm(request.POST)
+        form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            return redirect("report_list")
+            update_session_auth_hash(request, user)
+            messages.success(request, "パスワードを変更しました")
+            return redirect("settings")
     else:
-        form = SignupForm()
+        form = PasswordChangeForm(request.user)
 
-    return render(request, "registration/signup.html", {"form": form})
+    return render(request, "reports/password_change.html", {"form": form})
+
 
 # =====================================
 # アカウント：新規登録
@@ -319,106 +293,81 @@ SYSTEM_PROMPT = """
 # Slack Incoming Webhook URLの簡易バリデーション
 SLACK_WEBHOOK_RE = re.compile(r"^https://hooks\.slack\.com/services/[\w-]+/[\w-]+/[\w-]+$")
 
-client = OpenAI()  # 環境変数 OPENAI_API_KEY を使用
-@csrf_exempt
+@require_POST
 def ai_generate_report(request):
-    """
-    AI日報生成（フロントから JSON を受け取り、JSONで返す）
-
-    受け取り:
-      { "prompt": "..."} または { "user_prompt": "..."} または { "memo": "..." }
-
-    返却（成功時）:
-      {
-        "today_work": "...",
-        "reflection": "...",
-        "tomorrow_plan": "...",
-        "note": "..."
-      }
-    """
-    if request.method != "POST":
-        return JsonResponse({"error": "POST only"}, status=405)
-
-    # --- リクエストJSONの取得 ---
     try:
-        payload = json.loads(request.body.decode("utf-8") or "{}")
-    except json.JSONDecodeError:
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
+        body = json.loads(request.body.decode("utf-8"))
+        user_prompt = (body.get("prompt") or "").strip()
+        tone = (body.get("tone") or "formal").strip().lower()
 
-    # フロント側のキー揺れ対策（prompt / user_prompt / memo のどれでも受ける）
-    memo = (payload.get("prompt") or payload.get("user_prompt") or payload.get("memo") or "").strip()
-    if not memo:
-        return JsonResponse({"error": "prompt is empty"}, status=400)
+        if not user_prompt:
+            return JsonResponse({"error": "素材入力を入力してください"}, status=400)
 
-    # --- OpenAI呼び出し ---
-    try:
-        user_prompt = f"""
-次のメモをもとに日報を作成してください。
+        if tone == "casual":
+            tone_instruction = (
+                "やや親しみやすい自然な文体で書いてください。"
+                "ただし、業務日報として読めるように砕けすぎない表現にしてください。"
+            )
+        else:
+            tone_instruction = (
+                "丁寧でかしこまったフォーマルな文体（です・ます調）で書いてください。"
+            )
 
-【メモ】
-{memo}
+        prompt = f"""
+以下の素材をもとに、日本語の業務日報を作成してください。
 
-【出力形式】（この形式で、JSONのみ出力）
-{{
-  "today_work": "・〜\\n・〜",
-  "reflection": "・〜\\n・〜",
-  "tomorrow_plan": "・〜\\n・〜",
-  "note": "・〜"
-}}
-"""
+【文体】
+{tone_instruction}
 
-        resp = client.chat.completions.create(
+【素材】
+{user_prompt}
+""".strip()
+
+        response = client.responses.create(
             model="gpt-4.1-mini",
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT.strip()},
-                {"role": "user", "content": user_prompt.strip()},
-            ],
-            temperature=0.6,
+            instructions=SYSTEM_PROMPT,
+            input=prompt,
+            text={
+                "format": {
+                    "type": "json_schema",
+                    "name": "daily_report",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "today_work": {"type": "string"},
+                            "reflection": {"type": "string"},
+                            "tomorrow_plan": {"type": "string"},
+                            "note": {"type": "string"},
+                            "warning": {"type": "string"}
+                        },
+                        "required": [
+                            "today_work",
+                            "reflection",
+                            "tomorrow_plan",
+                            "note"
+                        ],
+                        "additionalProperties": False
+                    }
+                }
+            }
         )
 
-        content = resp.choices[0].message.content.strip()
-
-        # AIの返答がJSONである前提でパース
-        data = json.loads(content)
-
-        result = {
-            "today_work": str(data.get("today_work", "")).strip(),
-            "reflection": str(data.get("reflection", "")).strip(),
-            "tomorrow_plan": str(data.get("tomorrow_plan", "")).strip(),
-            "note": str(data.get("note", "")).strip(),
-        }
-
-        # 最低限の保険（空ならユーザーに追記を促す）
-        if not result["today_work"]:
-            result["today_work"] = "・（要確認）本日の作業内容を追記してください"
-        if not result["tomorrow_plan"]:
-            result["tomorrow_plan"] = "・（要確認）明日の予定を追記してください"
-
-        return JsonResponse(result, status=200)
-
-    except json.JSONDecodeError:
-        # AIの返答がJSONではない場合
-        return JsonResponse(
-            {"error": "AIの返答がJSONになっていない可能性があります"},
-            status=400
-        )
-
-    except Exception as e:
-        # Quota/429 の場合はダミー文章を返す（開発中の確認用）
-        msg = str(e)
-        if "insufficient_quota" in msg or "Error code: 429" in msg:
-            return JsonResponse({
-                "today_work": "・（ダミー）会議資料作成\n・（ダミー）バグ修正\n・（ダミー）顧客対応",
-                "reflection": "・（ダミー）優先順位付けを改善すると効率が上がりそうです",
-                "tomorrow_plan": "・（ダミー）テスト実施\n・（ダミー）仕様確認",
-                "note": "（ダミー）API利用枠がないためダミー文章を返しています",
-                "warning": "insufficient_quota"
-            }, status=200)
+        result = json.loads(response.output_text)
 
         return JsonResponse({
-            "error": msg,
-            "traceback": traceback.format_exc(),
-        }, status=500)
+            "today_work": result.get("today_work", ""),
+            "reflection": result.get("reflection", ""),
+            "tomorrow_plan": result.get("tomorrow_plan", ""),
+            "note": result.get("note", ""),
+            "warning": result.get("warning", ""),
+        })
+
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "リクエスト形式が不正です"}, status=400)
+
+    except Exception as e:
+        print("ai_generate_report error:", e)
+        return JsonResponse({"error": "AI生成に失敗しました"}, status=500)
 # =====================================
 # Slack設定
 # =====================================
@@ -447,6 +396,25 @@ def slack_post(request):
         r = requests.post(webhook_url, json={"text": text}, timeout=10)
     except requests.RequestException as e:
         return JsonResponse({"ok": False, "error": f"Slack通信エラー: {e}"}, status=502)
+
+    if r.status_code == 200:
+        return JsonResponse({"ok": True})
+
+    return JsonResponse({"ok": False, "error": r.text}, status=400)
+    text = request.POST.get("text", "").strip()
+    if not text:
+        return JsonResponse({"ok": False, "error": "text が空です"}, status=400)
+
+    # 🔽 ここはあなたのSlack設定保存モデルに合わせる
+    setting = IntegrationSetting.objects.get(user=request.user)
+
+    if not setting.slack_enabled:
+        return JsonResponse({"ok": False, "error": "Slack連携がOFFです"}, status=400)
+
+    if not setting.slack_webhook_url:
+        return JsonResponse({"ok": False, "error": "Webhook URLが未設定です"}, status=400)
+
+    r = requests.post(setting.slack_webhook_url, json={"text": text}, timeout=10)
 
     if r.status_code == 200:
         return JsonResponse({"ok": True})
@@ -601,93 +569,23 @@ def send_teams_webhook(webhook_url: str, text: str) -> tuple[bool, str]:
 
     except Exception as e:
         return False, str(e)
-
 # =====================================
-# テンプレート画面
+# Gmail通知（メール送信）
 # =====================================
-client = OpenAI(api_key=settings.OPENAI_API_KEY)
-print("OPENAI_API_KEY exists =", bool(settings.OPENAI_API_KEY))
-@login_required
-@require_POST
-@login_required
-@require_POST
-def template_preview_api(request):
-    try:
-        data = json.loads(request.body.decode("utf-8"))
-        text = data.get("text", "").strip()
-        style = data.get("style", "formal")
 
-        if not text:
-            return JsonResponse({"preview_text": ""})
+def send_gmail(text, to_email):
 
-        style_instruction = {
-            "formal": "以下の文章を日本語の自然なビジネス向けの丁寧語に整えてください。意味は変えず、箇条書きや改行は可能な限り維持してください。",
-            "casual": "以下の文章を日本語の自然でややくだけた表現に整えてください。意味は変えず、箇条書きや改行は可能な限り維持してください。",
-        }.get(style, "以下の文章を自然な日本語に整えてください。")
-
-        response = client.responses.create(
-            model="gpt-5.4",
-            input=f"{style_instruction}\n\n{text}"
-        )
-
-        return JsonResponse({"preview_text": response.output_text})
-
-    except Exception as e:
-        msg = str(e)
-
-        # API利用枠不足時は画面確認用にフォールバック
-        if "insufficient_quota" in msg or "Error code: 429" in msg:
-            preview_text = text
-
-            if style == "formal":
-                preview_text = text.replace("やったこと", "実施した内容")
-            elif style == "casual":
-                preview_text = text.replace("今日は", "今日").replace("実施した内容", "やったこと")
-
-            return JsonResponse({
-                "preview_text": preview_text,
-                "warning": "OpenAI APIの利用枠不足のため簡易プレビューを返しています"
-            }, status=200)
-
-        import traceback
-        return JsonResponse({
-            "error": msg,
-            "traceback": traceback.format_exc(),
-        }, status=500)
-
-
-@login_required
-def template_view(request):
-    if request.method == "POST":
-        saved_template1 = request.POST.get("template_text", "")
-        saved_tone = request.POST.get("tone", "formal")
-
-        request.session["saved_template1"] = saved_template1
-        request.session["saved_tone"] = saved_tone
-
-        messages.success(request, "テンプレートを保存しました")
-        return redirect("template")
-
-    saved_template1 = request.session.get(
-        "saved_template1",
-        "今日はやったこと\n・（ダミー）会議資料作成\n・（ダミー）バグ修正\n・（ダミー）顧客対応"
+    send_mail(
+        "Daily 日報",
+        text,
+        settings.DEFAULT_FROM_EMAIL,
+        [to_email],
+        fail_silently=False,
     )
-    saved_tone = request.session.get("saved_tone", "formal")
+    
+# =====================================
+# Teams通知（メール送信）
+# =====================================
 
-    return render(request, "reports/template.html", {
-        "saved_template1": saved_template1,
-        "saved_tone": saved_tone,
-    })
 
-def mail_test(request):
-    try:
-        result = send_mail(
-            subject="テストメール",
-            message="Django からの送信テストです。",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=["rsp10111011@gmail.com  "],
-            fail_silently=False,
-        )
-        return HttpResponse(f"送信成功 result={result}")
-    except Exception as e:
-        return HttpResponse(f"送信失敗: {str(e)}")
+
