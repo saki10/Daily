@@ -132,37 +132,53 @@ def report_create(request):
         form = DailyReportForm()
 
     return render(request, "reports/report_form.html", {"form": form})
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.shortcuts import render
+from .models import DailyReport
+
+
+# =====================================
+# 画面：ホーム
+# =====================================
+@login_required
+def home(request):
+    latest_reports = DailyReport.objects.filter(user=request.user).order_by("-report_date", "-id")[:3]
+
+    context = {
+        "latest_reports": latest_reports,
+    }
+    return render(request, "reports/home.html", context)
+
 # =====================================
 # 画面：日報一覧（検索付き）
 # =====================================
 @login_required
 def report_list(request):
-    """
-    日報一覧（検索機能付き）
-    - q があれば today_work / reflection / note に部分一致検索
-    """
     q = request.GET.get("q", "").strip()
 
-    reports = DailyReport.objects.all().order_by("-id")
+    reports = DailyReport.objects.filter(user=request.user).order_by("-report_date", "-id")
 
     if q:
         reports = reports.filter(
             Q(today_work__icontains=q) |
             Q(reflection__icontains=q) |
+            Q(tomorrow_plan__icontains=q) |
             Q(note__icontains=q)
         )
 
-    return render(request, "reports/report_list.html", {"reports": reports, "q": q})
-
-
+    context = {
+        "reports": reports,
+        "q": q,
+        "result_count": reports.count(),
+    }
+    return render(request, "reports/report_list.html", context)
+    
 # =====================================
-# 画面：設定トップ
+# 画面：設定
 # =====================================
-@login_required
 def settings_view(request):
-    """設定画面トップ"""
     return render(request, "reports/settings.html")
-
 
 # =====================================
 # 設定：メール変更
@@ -232,7 +248,7 @@ def password_change(request):
     else:
         form = PasswordChangeForm(request.user)
 
-    return render(request, "reports/password_change.html", {"form": form})
+    return render(request, "templates/registration/signup.html", {"form": form})
 
 
 # =====================================
@@ -241,22 +257,18 @@ def password_change(request):
 def signup(request):
     """
     新規登録
-    - SignupForm の password / password_confirm を利用
+    - SignupForm（UserCreationForm継承）を利用
     """
     if request.method == "POST":
         form = SignupForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data["password"])
-            user.save()
-            login(request, user)
-            return redirect("report_list")
+            form.save()
+            messages.success(request, "新規登録が完了しました。ログインしてください。")
+            return redirect("login")
     else:
         form = SignupForm()
 
     return render(request, "registration/signup.html", {"form": form})
-
-
 # =====================================
 # アカウント：削除
 # =====================================

@@ -5,8 +5,8 @@
 <div class="list-wrap">
   <div class="list-head">
     <div>
-      <h1 class="list-title">日報一覧</h1>
-      <p class="list-sub">キーワードで検索できます（本文の一部一致）</p>
+      <h1 class="list-title">日報検索</h1>
+      <p class="list-sub">キーワードで過去の日報を検索できます</p>
     </div>
 
     <div class="list-actions">
@@ -28,51 +28,55 @@
     {% endif %}
   </form>
 
-  <div class="list-meta">
-    <span>件数：{{ reports|length }}件</span>
-    {% if q %}<span class="badge">検索：{{ q }}</span>{% endif %}
+  <div class="search-status">
+    {% if q %}
+      <p>検索キーワード：<span>{{ q }}</span></p>
+      <p>検索結果：<span>{{ result_count }}件</span></p>
+    {% else %}
+      <p>全件表示：<span>{{ result_count }}件</span></p>
+    {% endif %}
   </div>
 
   {% if reports %}
-    <div class="cards">
-      {% for r in reports %}
-        <article class="card">
-          <div class="card-top">
-            <div class="card-title">ID: {{ r.id }}</div>
-            <div class="card-date">
-              {% if r.created_at %}{{ r.created_at|date:"Y/m/d H:i" }}{% endif %}
+    <div class="report-accordion-list">
+      {% for report in reports %}
+        <details class="report-accordion">
+          <summary class="report-summary">
+            <span class="report-summary-date">
+              {{ report.report_date|date:"Y.m.d" }}
+            </span>
+            <span class="report-summary-text">
+              {{ report.today_work|truncatechars:60 }}
+            </span>
+          </summary>
+
+          <div class="report-detail">
+            <div class="report-detail-item">
+              <h3>今日やったこと</h3>
+              <p>{{ report.today_work|linebreaksbr }}</p>
+            </div>
+
+            <div class="report-detail-item">
+              <h3>振り返り</h3>
+              <p>{{ report.reflection|default:"未入力"|linebreaksbr }}</p>
+            </div>
+
+            <div class="report-detail-item">
+              <h3>明日の予定</h3>
+              <p>{{ report.tomorrow_plan|default:"未入力"|linebreaksbr }}</p>
+            </div>
+
+            <div class="report-detail-item">
+              <h3>メモ</h3>
+              <p>{{ report.note|default:"未入力"|linebreaksbr }}</p>
             </div>
           </div>
-
-          <div class="card-section">
-            <div class="card-label">今日やったこと</div>
-            <div class="card-text">{{ r.today_work|default:"" }}</div>
-          </div>
-
-          <div class="card-section">
-            <div class="card-label">振り返り</div>
-            <div class="card-text">{{ r.reflection|default:"" }}</div>
-          </div>
-
-          <div class="card-section">
-            <div class="card-label">明日の予定</div>
-            <div class="card-text">{{ r.tomorrow_plan|default:"" }}</div>
-          </div>
-
-          {% if r.note %}
-          <div class="card-section">
-            <div class="card-label">備考</div>
-            <div class="card-text">{{ r.note }}</div>
-          </div>
-          {% endif %}
-        </article>
+        </details>
       {% endfor %}
     </div>
   {% else %}
-    <div class="empty">
-      <div class="empty-title">日報がまだありません</div>
-      <div class="empty-text">「新規作成」から最初の日報を作ってみましょう。</div>
-      <a class="btn btn-primary" href="{% url 'create' %}">＋ 新規作成</a>
+    <div class="empty-box">
+      <p>該当する日報はありません。</p>
     </div>
   {% endif %}
 </div>

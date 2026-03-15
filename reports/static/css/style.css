@@ -1184,3 +1184,1084 @@ body {
   font-size: 14px;
   color: #555;
 }
+
+/* =========================
+   日報検索画面
+========================= */
+.search-page {
+  min-height: calc(100vh - 80px);
+  padding: 40px 24px;
+  background-color: #f4f6f9;
+  box-sizing: border-box;
+}
+
+.search-container {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.search-page-title {
+  margin: 0 0 28px;
+  font-size: 34px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* =========================
+   検索フォーム
+========================= */
+.report-search-form {
+  margin-bottom: 28px;
+}
+
+.report-search-box {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px 18px;
+  background: #e9ecef;
+  border: 1px solid #b8bec7;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+}
+
+.report-search-input {
+  flex: 1;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid #9ca3af;
+  border-radius: 6px;
+  font-size: 16px;
+  background: #ffffff;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.report-search-input:focus {
+  border-color: #4a86e8;
+  box-shadow: 0 0 0 3px rgba(74, 134, 232, 0.15);
+}
+
+.report-search-btn {
+  min-width: 96px;
+  height: 44px;
+  border: none;
+  border-radius: 6px;
+  background: #4a86e8;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.report-search-btn:hover {
+  background: #3b74d1;
+}
+
+/* =========================
+   検索結果エリア
+========================= */
+.report-result-area {
+  background: #ffffff;
+  border: 1px solid #b8bec7;
+  padding: 24px 28px;
+  min-height: 420px;
+  box-sizing: border-box;
+}
+
+.report-result-summary {
+  margin: 0 0 24px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.report-result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.report-result-item {
+  padding-bottom: 18px;
+  border-bottom: 1px solid #d7dce2;
+}
+
+.report-result-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.report-result-date {
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.report-result-text {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #374151;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.report-empty-message {
+  padding: 40px 0;
+  text-align: center;
+  font-size: 15px;
+  color: #6b7280;
+}
+
+/* =========================
+   レスポンシブ
+========================= */
+@media (max-width: 768px) {
+  .search-page {
+    padding: 24px 16px;
+  }
+
+  .search-page-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+
+  .report-search-box {
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 20px;
+  }
+
+  .report-search-btn {
+    width: 100%;
+  }
+
+  .report-result-area {
+    padding: 20px 16px;
+  }
+}
+
+/* =========================
+   日報一覧（検索込み）
+========================= */
+.report-list-page {
+  padding: 28px 24px 36px;
+  background: #f5f7fb;
+  min-height: calc(100vh - 80px);
+  box-sizing: border-box;
+}
+
+.report-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.report-list-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.report-list-subtitle {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.report-list-actions {
+  flex-shrink: 0;
+}
+
+.report-create-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  background: #3b82f6;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.report-create-btn:hover {
+  background: #2563eb;
+}
+
+/* 検索フォーム */
+.report-search-form {
+  margin-bottom: 12px;
+}
+
+.report-search-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.report-search-input {
+  flex: 1;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  background: #ffffff;
+  font-size: 14px;
+  color: #111827;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.report-search-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.10);
+}
+
+.report-search-btn,
+.report-clear-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.report-search-btn {
+  border: none;
+  background: #3b82f6;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.report-search-btn:hover {
+  background: #2563eb;
+}
+
+.report-clear-btn {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.report-clear-btn:hover {
+  background: #d1d5db;
+}
+
+/* 件数・検索ワード */
+.report-search-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.report-count {
+  margin: 0;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.report-keyword {
+  margin: 0;
+  padding: 6px 12px;
+  border: 1px solid #c7d2fe;
+  border-radius: 999px;
+  background: #eef2ff;
+  font-size: 13px;
+  color: #475569;
+}
+
+/* カード一覧 */
+.report-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.report-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.report-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.report-card-id {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.report-card-date {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.report-section {
+  margin-bottom: 14px;
+}
+
+.report-section:last-child {
+  margin-bottom: 0;
+}
+
+.report-section-title {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #243b64;
+}
+
+.report-section-body {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #374151;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.report-empty {
+  padding: 28px 18px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* レスポンシブ */
+@media (max-width: 900px) {
+  .report-list-page {
+    padding: 20px 16px 28px;
+  }
+
+  .report-list-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .report-create-btn {
+    width: 100%;
+  }
+
+  .report-search-row {
+    flex-wrap: wrap;
+  }
+
+  .report-search-input {
+    width: 100%;
+  }
+
+  .report-search-btn,
+  .report-clear-btn {
+    flex: 1;
+  }
+
+  .report-card-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .report-card-date {
+    white-space: normal;
+  }
+}
+
+/* =========================
+   ホーム画面
+========================= */
+.home-wrap,
+.list-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+}
+
+.home-head,
+.list-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.home-title,
+.list-title {
+  margin: 0 0 8px;
+  font-size: 30px;
+  font-weight: 700;
+  color: #222;
+}
+
+.home-sub,
+.list-sub {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.home-actions,
+.list-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* =========================
+   セクション
+========================= */
+.latest-section,
+.search-status,
+.empty-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #222;
+}
+
+.more-link,
+.text-link {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.more-link:hover,
+.text-link:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   検索バー
+========================= */
+.search-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 240px;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid #d9deea;
+  border-radius: 10px;
+  font-size: 14px;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.search-status {
+  margin-bottom: 20px;
+}
+
+.search-status p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.search-status span {
+  font-weight: 700;
+  color: #222;
+}
+
+/* =========================
+   カード一覧
+========================= */
+.report-card-list {
+  display: grid;
+  gap: 16px;
+}
+
+.report-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.report-card-date {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4f46e5;
+  margin-bottom: 10px;
+}
+
+.report-card-title {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #222;
+}
+
+.report-card-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #555;
+}
+
+.report-card-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f2f7;
+}
+
+.empty-box p {
+  margin: 0;
+  color: #666;
+}
+
+/* =========================
+   ホーム画面 / 検索画面 共通
+========================= */
+.home-wrap,
+.list-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+  box-sizing: border-box;
+}
+
+.home-head,
+.list-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.home-title,
+.list-title {
+  margin: 0 0 8px;
+  font-size: 30px;
+  font-weight: 700;
+  color: #222;
+}
+
+.home-sub,
+.list-sub {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.home-actions,
+.list-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* =========================
+   セクション
+========================= */
+.latest-section,
+.search-status,
+.empty-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.latest-section {
+  margin-top: 8px;
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #222;
+}
+
+.more-link {
+  color: #4f46e5;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.more-link:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   検索バー
+========================= */
+.search-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 240px;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid #d9deea;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #4f46e5;
+}
+
+/* =========================
+   検索状態
+========================= */
+.search-status {
+  margin-bottom: 20px;
+}
+
+.search-status p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.search-status span {
+  font-weight: 700;
+  color: #222;
+}
+
+/* =========================
+   日報カード一覧
+========================= */
+.report-card-list {
+  display: grid;
+  gap: 16px;
+}
+
+.report-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.report-card-date {
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4f46e5;
+}
+
+.report-card-title {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #222;
+}
+
+.report-card-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #555;
+  word-break: break-word;
+}
+
+.empty-box {
+  margin-top: 8px;
+}
+
+.empty-box p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+/* =========================
+   ボタン（既存があれば不要）
+========================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  box-sizing: border-box;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  background: #eef1f7;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background: #e4e8f1;
+}
+
+/* =========================
+   レスポンシブ
+========================= */
+@media (max-width: 768px) {
+  .home-wrap,
+  .list-wrap {
+    padding: 24px 16px 40px;
+  }
+
+  .home-title,
+  .list-title {
+    font-size: 24px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .report-card {
+    padding: 16px;
+  }
+}
+
+/* =========================
+   日報プルダウン表示
+========================= */
+.report-accordion-list {
+  display: grid;
+  gap: 14px;
+}
+
+.report-accordion {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.report-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+}
+
+.report-summary::-webkit-details-marker {
+  display: none;
+}
+
+.report-summary-date {
+  flex-shrink: 0;
+  color: #4f46e5;
+  font-weight: 700;
+}
+
+.report-summary-text {
+  flex: 1;
+  color: #555;
+  text-align: left;
+}
+
+.report-detail {
+  padding: 0 20px 20px;
+  border-top: 1px solid #eef1f7;
+  background: #fcfcfe;
+}
+
+.report-detail-item {
+  padding-top: 16px;
+}
+
+.report-detail-item h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #222;
+}
+
+.report-detail-item p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #555;
+  word-break: break-word;
+}
+
+/* =========================
+   ログイン画面
+========================= */
+.login-page {
+  min-height: calc(100vh - 88px);
+  padding: 20px 20px 40px;
+  background-color: #f4f6f9;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 780px;
+  background: #ffffff;
+  border-radius: 0;
+  padding: 28px 54px 36px;
+  box-sizing: border-box;
+}
+
+
+.login-subtitle {
+  margin: 18px 0 34px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #64748b;
+}
+
+.login-form {
+  width: 100%;
+}
+
+.login-actions {
+  margin-top: 8px;
+}
+
+.login-links {
+  margin-top: 24px;
+}
+
+.login-links p {
+  margin: 0 0 12px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.login-links a {
+  color: #6d28d9;
+  text-decoration: underline;
+}
+
+
+/* =========================
+   共通フォーム調整
+   signup と login で使える
+========================= */
+.form-group {
+  margin-bottom: 28px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  height: 64px;
+  padding: 0 18px;
+  font-size: 17px;
+  color: #111827;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group textarea {
+  min-height: 140px;
+  padding: 16px 18px;
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #4f86f7;
+  box-shadow: 0 0 0 3px rgba(79, 134, 247, 0.15);
+}
+
+.primary-btn {
+  min-width: 180px;
+  height: 50px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 999px;
+  background: #3b82f6;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: #3f76e8;
+}
+
+.primary-btn:active {
+  transform: scale(0.98);
+}
+
+.form-error-box,
+.field-error,
+.form-help-text {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  box-sizing: border-box;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+.form-error-box,
+.field-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+.form-help-text {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+.form-error-box p,
+.field-error p,
+.form-help-text p {
+  margin: 0;
+}
+
+/* =========================
+   レスポンシブ
+========================= */
+@media (max-width: 768px) {
+  .login-page {
+    padding: 24px 16px 40px;
+  }
+
+  .login-card {
+    padding: 40px 24px 32px;
+    border-radius: 20px;
+  }
+
+  .login-title {
+    font-size: 30px;
+  }
+
+  .login-subtitle {
+    margin: 16px 0 28px;
+    font-size: 16px;
+  }
+
+  .form-label {
+    font-size: 16px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    height: 58px;
+    font-size: 16px;
+  }
+
+  .primary-btn {
+    width: 100%;
+    min-width: auto;
+    height: 58px;
+    font-size: 22px;
+  }
+
+  .login-links p {
+    font-size: 16px;
+  }
+}
