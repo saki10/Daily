@@ -3,7 +3,7 @@ from . import views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', views.report_list, name='home'),
     path('create/', views.report_create, name='create'),
     path('create/autosave/', views.report_autosave, name='report_autosave'),
     path('ai/generate/', views.ai_generate_report, name='ai_generate_report'),
@@ -62,7 +62,6 @@ urlpatterns = [
     ),
 
     path('settings/username/', views.username_change, name='username_change'),
-    path('settings/delete/', views.account_delete, name='account_delete'),
     path('ai/generate/', views.ai_generate_report, name='ai_generate_report'),
     path("integrations/", views.integrations, name="integrations"),
     path("integrations/slack/", views.slack_settings, name="slack_settings"),

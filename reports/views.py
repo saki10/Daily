@@ -394,22 +394,6 @@ def signup(request):
     return render(request, "registration/signup.html", {"form": form})
 
 
-# =====================================
-# アカウント：削除
-# =====================================
-@login_required
-def account_delete(request):
-    """
-    アカウント削除
-    - POST: ログアウトしてから削除
-    """
-    if request.method == "POST":
-        user = request.user
-        logout(request)
-        user.delete()
-        return redirect("login")
-
-    return render(request, "reports/account_delete.html")
 
 
 # =====================================
