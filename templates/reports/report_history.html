@@ -1,0 +1,64 @@
+{% extends "reports/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="list-wrap">
+  <div class="list-head">
+    <div>
+      <h1 class="list-title">日報一覧</h1>
+      <p class="list-sub">これまでに作成した日報を確認できます</p>
+    </div>
+
+    <div class="list-actions">
+      <a class="btn btn-primary" href="{% url 'create' %}">＋ 新規作成</a>
+    </div>
+  </div>
+
+  <div class="search-status">
+    <p>全件表示：<span>{{ result_count }}件</span></p>
+  </div>
+
+  {% if reports %}
+    <div class="report-accordion-list">
+      {% for report in reports %}
+        <details class="report-accordion">
+          <summary class="report-summary">
+            <span class="report-summary-date">
+              {{ report.report_date|date:"Y.m.d" }}
+            </span>
+            <span class="report-summary-text">
+              {{ report.today_work|truncatechars:60 }}
+            </span>
+          </summary>
+
+          <div class="report-detail">
+            <div class="report-detail-item">
+              <h3>今日やったこと</h3>
+              <p>{{ report.today_work|linebreaksbr }}</p>
+            </div>
+
+            <div class="report-detail-item">
+              <h3>振り返り</h3>
+              <p>{{ report.reflection|default:"未入力"|linebreaksbr }}</p>
+            </div>
+
+            <div class="report-detail-item">
+              <h3>明日の予定</h3>
+              <p>{{ report.tomorrow_plan|default:"未入力"|linebreaksbr }}</p>
+            </div>
+
+            <div class="report-detail-item">
+              <h3>メモ</h3>
+              <p>{{ report.note|default:"未入力"|linebreaksbr }}</p>
+            </div>
+          </div>
+        </details>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-box">
+      <p>まだ日報はありません。</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

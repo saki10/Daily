@@ -220,9 +220,3 @@ staticfiles/
 # macOS
 .DS_Store
 
-# venv/
-.venv/
-venv/
-__pycache__/
-*.pyc
-.env

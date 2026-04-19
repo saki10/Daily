@@ -1,0 +1,39 @@
+{% extends "reports/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="settings-page">
+  <div class="settings-card email-card">
+    <h1 class="settings-title">Gmail設定</h1>
+    <p class="settings-subtitle">
+      日報の送付先メールアドレスを設定してください。
+    </p>
+
+    <form method="post" action="{% url 'gmail_settings' %}" class="settings-form">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="gmail_email" class="form-label">送付先Gmailアドレス</label>
+        <input
+          type="email"
+          name="gmail_email"
+          id="gmail_email"
+          class="form-input"
+          value="{{ integration.gmail_email }}"
+          placeholder="example@gmail.com"
+        >
+      </div>
+
+      <div class="settings-actions">
+        <a href="{% url 'integrations' %}" class="btn btn-secondary">戻る</a>
+        <button type="submit" name="action" value="test" class="btn btn-secondary">
+          テスト送信
+        </button>
+        <button type="submit" name="action" value="save" class="btn btn-primary">
+          保存する
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

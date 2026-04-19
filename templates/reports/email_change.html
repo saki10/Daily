@@ -1,0 +1,49 @@
+{% extends "reports/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="settings-page">
+  <div class="settings-card email-card">
+    <h1 class="settings-title">メールアドレス変更</h1>
+    <p class="settings-subtitle">
+      新しいメールアドレスを入力してください。
+    </p>
+
+    <form method="post" action="{% url 'email_change' %}" class="settings-form">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="form-error-box">
+          {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="form-group">
+        <label for="id_email" class="form-label">新しいメールアドレス</label>
+        <input
+          type="email"
+          name="email"
+          id="id_email"
+          class="form-input"
+          value="{{ form.email.value|default_if_none:'' }}"
+          placeholder="新しいメールアドレスを入力"
+        >
+        {% if form.email.errors %}
+          <div class="field-error">
+            {% for error in form.email.errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+    <div class="form-actions">
+      <button type="submit" class="primary-btn">更新する</button>
+      <a href="{% url 'settings' %}" class="secondary-btn">戻る</a>
+    </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

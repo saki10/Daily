@@ -1,0 +1,58 @@
+{% load static %}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Daily</title>
+    <link rel="stylesheet" href="{% static 'css/settings.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  <body>
+    <div class="layout">
+      {% if request.resolver_match.url_name != 'signup' and request.resolver_match.url_name != 'login' %}
+        <!-- サイドバー -->
+        <aside class="sidebar">
+          <a class="sidebar-item" href="{% url 'home' %}">ホーム</a>
+          <a class="sidebar-item" href="{% url 'create' %}">AI文章生成機能</a>
+          <a class="sidebar-item" href="{% url 'report_list' %}">日報検索</a>
+          <a class="sidebar-item" href="{% url 'integrations' %}">外部連携設定</a>
+          <a class="sidebar-item" href="{% url 'settings' %}">設定</a>
+        </aside>
+      {% endif %}
+
+      <!-- 右側 -->
+      <div class="main">
+        <header class="header">
+          <div class="header-left">
+            <span class="header-title">Daily</span>
+          </div>
+
+          <div class="header-right">
+            <span id="realtime-datetime"></span>
+
+            {% if request.user.is_authenticated and request.resolver_match.url_name != 'signup' and request.resolver_match.url_name != 'login' %}
+              <form method="post" action="{% url 'logout' %}" style="display: inline">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">ログアウト</button>
+              </form>
+            {% endif %}
+          </div>
+        </header>
+
+        <main class="content {% if request.resolver_match.url_name == 'signup' or request.resolver_match.url_name == 'login' %}content-auth{% endif %}">
+          {% block content %}{% endblock %}
+        </main>
+      </div>
+    </div>
+
+    <script src="{% static 'js/base.js' %}"></script>
+
+    {% if messages %}
+      <script>
+        {% for message in messages %}
+          alert("{{ message|escapejs }}");
+        {% endfor %}
+      </script>
+    {% endif %}
+  </body>
+</html>

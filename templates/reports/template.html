@@ -1,0 +1,73 @@
+{% extends "reports/base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/template.css' %}">
+
+<div class="page template-page">
+  <h1 class="page-title">テンプレート画面</h1>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="template-wrap">
+
+      <section class="template-preview-card">
+        <div class="template-preview-body">
+          <div
+            id="preview-box"
+            class="template-preview-box"
+            data-preview-url="{% url 'template_preview_api' %}"
+            >{{ saved_template1|linebreaks }}
+           </div>
+      </section>
+
+      <div class="template-center">
+
+        <section class="template-setting-card">
+          <div class="template-setting-body">
+
+            <h2 class="template-setting-title">テンプレ設定</h2>
+
+            <div class="template-edit-group">
+              <label class="template-label" for="template-text">テンプレート</label>
+              <textarea
+                id="template-text"
+                name="template_text"
+                class="template-textarea"
+              >{{ saved_template1 }}</textarea>
+            </div>
+
+            <input type="hidden" id="tone" name="tone" value="{{ saved_tone|default:'formal' }}">
+
+            <div class="template-toggle-row">
+              <span class="template-toggle-label">フォーマル</span>
+              <label class="toggle">
+                <input type="checkbox" id="formal">
+                <span class="toggle-ui"></span>
+              </label>
+            </div>
+
+            <div class="template-toggle-row">
+              <span class="template-toggle-label">カジュアル</span>
+              <label class="toggle">
+                <input type="checkbox" id="casual">
+                <span class="toggle-ui"></span>
+              </label>
+            </div>
+
+          </div>
+        </section>
+
+        <div class="template-save-wrap">
+          <button type="submit" class="template-save-btn">下書き保存</button>
+        </div>
+
+      </div>
+
+    </div>
+  </form>
+</div>
+
+<script src="{% static 'js/template.js' %}"></script>
+{% endblock %}
