@@ -33,7 +33,6 @@
             <span id="realtime-datetime" class="header-time"></span>
 
             {% if request.user.is_authenticated %}
-            <a href="{% url 'settings' %}" class="header-link-btn">設定</a>
             <form method="post" action="{% url 'logout' %}" class="logout-form">
               {% csrf_token %}
               <button type="submit" class="header-link-btn logout-btn">

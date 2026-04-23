@@ -223,18 +223,22 @@ body {
 }
 
 /* ログアウト画面 */
+.logout-form {
+  margin: 0;
+}
+
 .logout-btn {
-  margin-left: 15px;
-  padding: 6px 12px;
-  border: none;
-  background: #e53935;
-  color: white;
-  border-radius: 6px;
+  background: #dc2626 !important;
+  border: 1px solid #dc2626 !important;
+  color: #ffffff !important;
+  font: inherit;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .logout-btn:hover {
-  background: #c62828;
+  background: #b91c1c !important;
+  border-color: #b91c1c !important;
 }
 
 /* 新規作成画面 */
@@ -2402,6 +2406,16 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.logout-form {
+  margin: 0;
+}
+
+
+.logout-btn:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
 }
 
 .header-link-btn {

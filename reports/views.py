@@ -44,19 +44,26 @@ SLACK_WEBHOOK_RE = re.compile(
 # =====================================
 # 画面：日報作成（report_form）
 # =====================================
-@login_required
 def report_create(request):
     print("HIT report_create:", request.method)
 
     """
     日報作成画面
-    - GET : 今日の下書きがあれば復元
-    - POST: 入力を保存 → Slack/Teams/Gmail通知 → 同じ画面へリダイレクト
+    - GET : ログイン済みなら今日の下書きがあれば復元
+    - POST: ログイン済みのみ保存
+    - 未ログイン: AI生成のみ利用可能
     """
 
     today = timezone.localdate()
 
     if request.method == "POST":
+        if not request.user.is_authenticated:
+            messages.error(
+                request,
+                "日報の保存にはログインが必要です。AI生成のみご利用いただけます。"
+            )
+            return redirect("login")
+
         form = DailyReportForm(request.POST)
         print("POST received")
 
@@ -179,15 +186,18 @@ def report_create(request):
             "ai_memo": request.POST.get("ai_memo", ""),
         })
 
-    # GET: 今日の下書き or 今日の日報を復元
-    report = DailyReport.objects.filter(
-        user=request.user,
-        report_date=today
-    ).first()
+    if request.user.is_authenticated:
+        report = DailyReport.objects.filter(
+            user=request.user,
+            report_date=today
+        ).first()
 
-    if report:
-        form = DailyReportForm(instance=report)
-        ai_memo = report.ai_memo
+        if report:
+            form = DailyReportForm(instance=report)
+            ai_memo = report.ai_memo
+        else:
+            form = DailyReportForm()
+            ai_memo = ""
     else:
         form = DailyReportForm()
         ai_memo = ""
@@ -196,7 +206,6 @@ def report_create(request):
         "form": form,
         "ai_memo": ai_memo,
     })
-
 # =====================================
 # 画面：自動保存
 # =====================================

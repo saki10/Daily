@@ -60,7 +60,7 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
-
+    path("create/", views.report_create, name="create"),
     path('settings/username/', views.username_change, name='username_change'),
     path('ai/generate/', views.ai_generate_report, name='ai_generate_report'),
     path("integrations/", views.integrations, name="integrations"),
@@ -70,4 +70,4 @@ urlpatterns = [
     path("integrations/gmail/", views.gmail_settings, name="gmail_settings"),
     path("settings/slack/", views.slack_settings, name="slack_settings"),
     path("slack/post/", views.slack_post, name="slack_post"),
-]
+] 
