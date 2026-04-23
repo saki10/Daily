@@ -6,8 +6,13 @@
   <div class="settings-card username-card">
     <h1 class="settings-title">ユーザー名変更</h1>
     <p class="settings-subtitle">
-      新しいユーザー名を入力してください。
+      現在のユーザー名を確認して、新しいユーザー名を入力してください。
     </p>
+
+    <div class="username-current-box">
+      <p class="username-current-label">現在のユーザー名</p>
+      <p class="username-current-value">{{ request.user.username }}</p>
+    </div>
 
     <form method="post" class="settings-form">
       {% csrf_token %}
@@ -39,7 +44,7 @@
         {% endif %}
       </div>
 
-      <div class="form-actions">
+      <div class="form-actions username-form-actions">
         <button type="submit" class="primary-btn">更新する</button>
         <a href="{% url 'settings' %}" class="secondary-btn">設定に戻る</a>
       </div>
