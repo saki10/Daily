@@ -60,6 +60,7 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
+    
     path("create/", views.report_create, name="create"),
     path('settings/username/', views.username_change, name='username_change'),
     path('ai/generate/', views.ai_generate_report, name='ai_generate_report'),
