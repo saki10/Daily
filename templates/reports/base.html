@@ -1,78 +1,86 @@
 {% load static %}
 <!doctype html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Daily</title>
-    <link rel="stylesheet" href="{% static 'css/settings.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-  </head>
-  <body>
-    {% with current_url=request.resolver_match.url_name %}
-    <div class="layout">
-      {% if current_url != 'signup' and current_url != 'login' %}
-      <aside class="sidebar">
-        <a class="sidebar-item" href="{% url 'home' %}">ホーム</a>
-        <a class="sidebar-item" href="{% url 'create' %}">AI文章生成機能</a>
-        <a class="sidebar-item" href="{% url 'integrations' %}">外部連携設定</a>
-        <a class="sidebar-item" href="{% url 'settings' %}">設定</a>
-      </aside>
-      {% endif %}
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Daily{% endblock %}</title>
 
-      <div class="main">
-        <header class="header">
-          <div class="header-left">
-            <a href="{% url 'home' %}" class="header-title-link">
-              <span class="header-title">Daily</span>
-            </a>
-          </div>
-
-          <div class="header-right">
-            <span id="realtime-datetime"></span>
-
-{% if not request.user.is_authenticated %}
-  <div class="auth-header-links header-left-links">
-    {% if current_url == 'login' or current_url == 'signup' %}
-      <a href="{% url 'create' %}" class="header-link-btn">AI文章生成機能</a>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/settings.css' %}">
+</head>
+<body>
+  {% with current_url=request.resolver_match.url_name %}
+  <div class="layout">
+    {% if current_url != 'signup' and current_url != 'login' %}
+    <aside class="sidebar">
+      <a class="sidebar-item" href="{% url 'home' %}">ホーム</a>
+      <a class="sidebar-item" href="{% url 'create' %}">AI文章生成機能</a>
+      <a class="sidebar-item" href="{% url 'integrations' %}">外部連携設定</a>
+      <a class="sidebar-item" href="{% url 'settings' %}">設定</a>
+    </aside>
     {% endif %}
 
-    {% if current_url != 'login' %}
-      <a
-        href="{% url 'login' %}"
-        class="header-link-btn {% if current_url == 'signup' %}header-link-btn-primary{% endif %}"
-      >
-        ログイン
-      </a>
-    {% endif %}
+    <div class="main">
+      <header class="header">
+        <div class="header-left">
+          <a href="{% url 'home' %}" class="header-title-link">
+            <span class="header-title">Daily</span>
+          </a>
+        </div>
 
-    {% if current_url != 'signup' %}
-      <a
-        href="{% url 'signup' %}"
-        class="header-link-btn {% if current_url == 'login' or current_url == 'create' %}header-link-btn-primary{% endif %}"
-      >
-        新規登録
-      </a>
-    {% endif %}
-  </div>
-{% endif %}
-          </div>
-        </header>
+        <div class="header-right">
+          <span id="realtime-datetime" class="header-time"></span>
 
-        <main
-          class="content {% if current_url == 'signup' or current_url == 'login' %}content-auth{% endif %}"
-        >
-          {% if messages %}
-          <div class="message-area">
-            {% for message in messages %}
-            <div class="message-box {{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-          </div>
-          {% endif %} {% block content %}{% endblock %}
-        </main>
-      </div>
+          {% if request.user.is_authenticated %}
+            <a href="{% url 'settings' %}" class="header-link-btn">設定</a>
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+              {% csrf_token %}
+              <button type="submit" class="header-link-btn logout-btn">ログアウト</button>
+            </form>
+          {% else %}
+            <div class="auth-header-links header-left-links">
+              {% if current_url == 'login' or current_url == 'signup' %}
+                <a href="{% url 'create' %}" class="header-link-btn">AI文章生成機能</a>
+              {% endif %}
+
+              {% if current_url != 'login' %}
+                <a
+                  href="{% url 'login' %}"
+                  class="header-link-btn {% if current_url == 'signup' %}header-link-btn-primary{% endif %}"
+                >
+                  ログイン
+                </a>
+              {% endif %}
+
+              {% if current_url != 'signup' %}
+                <a
+                  href="{% url 'signup' %}"
+                  class="header-link-btn {% if current_url == 'login' or current_url == 'create' %}header-link-btn-primary{% endif %}"
+                >
+                  新規登録
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </header>
+
+      <main class="content {% if current_url == 'signup' or current_url == 'login' %}content-auth{% endif %}">
+        {% if messages %}
+        <div class="message-area">
+          {% for message in messages %}
+          <div class="message-box {{ message.tags }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+      </main>
     </div>
-    {% endwith %}
+  </div>
+  {% endwith %}
 
-    <script src="{% static 'js/base.js' %}"></script>
-  </body>
+  <script src="{% static 'js/base.js' %}"></script>
+</body>
 </html>
