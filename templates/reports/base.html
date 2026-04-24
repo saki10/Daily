@@ -47,18 +47,14 @@
               <a href="{% url 'create' %}" class="header-link-btn">
                 AI文章生成機能
               </a>
-              {% endif %}
-
-              {% if current_url != 'login' %}
+              {% endif %} {% if current_url != 'login' %}
               <a
                 href="{% url 'login' %}"
                 class="header-link-btn {% if current_url == 'signup' %}header-link-btn-primary{% endif %}"
               >
                 ログイン
               </a>
-              {% endif %}
-
-              {% if current_url != 'signup' %}
+              {% endif %} {% if current_url != 'signup' %}
               <a
                 href="{% url 'signup' %}"
                 class="header-link-btn header-link-btn-primary"
@@ -80,15 +76,12 @@
             <div class="message-box {{ message.tags }}">{{ message }}</div>
             {% endfor %}
           </div>
-          {% endif %}
-
-          {% block content %}{% endblock %}
+          {% endif %} {% block content %}{% endblock %}
         </main>
       </div>
     </div>
     {% endwith %}
 
-    <script src="{% static 'js/base.js' %}"></script>
     <script src="{% static 'js/header_time.js' %}"></script>
   </body>
 </html>
