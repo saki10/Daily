@@ -228,6 +228,8 @@
   margin-bottom: 0;
 }
 
+
+
 /* ==============================
    設定変更画面 エラーメッセージ
 ============================== */
@@ -366,4 +368,13 @@
     width: 100%;
     min-width: auto;
   }
+}
+/* ==============================
+   パスワード再設定完了画面 ボタン位置
+============================== */
+.password-card .form-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 32px;
 }

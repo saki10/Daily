@@ -50,7 +50,10 @@
               {% endif %}
 
               {% if current_url != 'login' %}
-              <a href="{% url 'login' %}" class="header-link-btn">
+              <a
+                href="{% url 'login' %}"
+                class="header-link-btn {% if current_url == 'signup' %}header-link-btn-primary{% endif %}"
+              >
                 ログイン
               </a>
               {% endif %}
