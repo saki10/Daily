@@ -411,6 +411,8 @@ def signup(request):
 @require_POST
 def ai_generate_report(request):
     try:
+        from openai import OpenAI
+
         body = json.loads(request.body.decode("utf-8"))
         user_prompt = (body.get("prompt") or "").strip()
         tone = (body.get("tone") or "formal").strip().lower()
@@ -437,6 +439,8 @@ def ai_generate_report(request):
 【素材】
 {user_prompt}
 """.strip()
+
+        client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
         response = client.responses.create(
             model="gpt-4.1-mini",
@@ -495,7 +499,6 @@ def ai_generate_report(request):
     except Exception as e:
         traceback.print_exc()
         return JsonResponse({"error": f"{type(e).__name__}: {str(e)}"}, status=500)
-
 
 # =====================================
 # Slack設定
