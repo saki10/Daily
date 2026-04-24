@@ -794,7 +794,6 @@ a {
 
 .login-card,
 .signup-card {
-  width: 100%;
   max-width: 780px;
   padding: 28px 54px 36px;
   background: #ffffff;
@@ -804,8 +803,7 @@ a {
 .login-title,
 .signup-title {
   margin: 0 0 22px;
-  font-size: 40px;
-  font-weight: 700;
+  
   line-height: 1.2;
   color: #111827;
 }
@@ -842,17 +840,12 @@ a {
 .signup-form input[type="email"],
 .signup-form input[type="password"] {
   width: 100%;
-  height: 64px;
+  
   padding: 0 18px;
   border: 1px solid #d1d5db;
-  border-radius: 14px;
   background: #ffffff;
   color: #111827;
-  font-size: 17px;
   outline: none;
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
 }
 
 .login-form input[type="text"]:focus,
@@ -1744,11 +1737,6 @@ a {
   .settings-page > .settings-card {
     padding: 28px 20px 24px;
     border-radius: 16px;
-  }
-
-  .login-title,
-  .signup-title {
-    font-size: 30px;
   }
 
   .settings-title {
