@@ -1,7 +1,4 @@
-{% extends "reports/base.html" %}
-{% load static %}
-
-{% block content %}
+{% extends "reports/base.html" %} {% load static %} {% block content %}
 <div class="settings-page">
   <div class="settings-card email-card">
     <h1 class="settings-title">メールアドレス変更</h1>
@@ -12,23 +9,18 @@
     <div class="email-current-box">
       <p class="email-current-label">現在のメールアドレス</p>
       <p class="email-current-value">
-        {% if request.user.email %}
-          {{ request.user.email }}
-        {% else %}
-          未設定
+        {% if request.user.email %} {{ request.user.email }} {% else %} 未設定
         {% endif %}
       </p>
     </div>
 
     <form method="post" action="{% url 'email_change' %}" class="settings-form">
-      {% csrf_token %}
-
-      {% if form.non_field_errors %}
-        <div class="form-error-box">
-          {% for error in form.non_field_errors %}
-            <p>{{ error }}</p>
-          {% endfor %}
-        </div>
+      {% csrf_token %} {% if form.non_field_errors %}
+      <div class="form-error-box">
+        {% for error in form.non_field_errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+      </div>
       {% endif %}
 
       <div class="form-group">
@@ -40,19 +32,22 @@
           class="form-input"
           value="{{ form.email.value|default_if_none:'' }}"
           placeholder="新しいメールアドレスを入力"
-        >
+        />
         {% if form.email.errors %}
-          <div class="field-error">
-            {% for error in form.email.errors %}
-              <p>{{ error }}</p>
-            {% endfor %}
-          </div>
+        <div class="field-error">
+          {% for error in form.email.errors %}
+          <p>{{ error }}</p>
+          {% endfor %}
+        </div>
         {% endif %}
       </div>
 
-      <div class="form-actions email-form-actions">
-        <button type="submit" class="primary-btn">更新する</button>
-        <a href="{% url 'settings' %}" class="secondary-btn">設定に戻る</a>
+      <div class="settings-actions">
+        <button type="submit" class="settings-submit-btn">変更する</button>
+
+        <a href="{% url 'settings' %}" class="settings-back-btn">
+          設定に戻る
+        </a>
       </div>
     </form>
   </div>

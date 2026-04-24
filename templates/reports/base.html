@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link rel="stylesheet" href="{% static 'css/settings.css' %}" />
   </head>
+
   <body>
     {% with current_url=request.resolver_match.url_name %}
     <div class="layout">
@@ -39,23 +40,25 @@
                 ログアウト
               </button>
             </form>
+
             {% else %}
             <div class="auth-header-links header-left-links">
               {% if current_url == 'login' or current_url == 'signup' %}
-              <a href="{% url 'create' %}" class="header-link-btn"
-                >AI文章生成機能</a
-              >
-              {% endif %} {% if current_url != 'login' %}
-              <a
-                href="{% url 'login' %}"
-                class="header-link-btn {% if current_url == 'signup' %}header-link-btn-primary{% endif %}"
-              >
+              <a href="{% url 'create' %}" class="header-link-btn">
+                AI文章生成機能
+              </a>
+              {% endif %}
+
+              {% if current_url != 'login' %}
+              <a href="{% url 'login' %}" class="header-link-btn">
                 ログイン
               </a>
-              {% endif %} {% if current_url != 'signup' %}
+              {% endif %}
+
+              {% if current_url != 'signup' %}
               <a
                 href="{% url 'signup' %}"
-                class="header-link-btn {% if current_url == 'login' or current_url == 'create' %}header-link-btn-primary{% endif %}"
+                class="header-link-btn header-link-btn-primary"
               >
                 新規登録
               </a>
@@ -74,7 +77,9 @@
             <div class="message-box {{ message.tags }}">{{ message }}</div>
             {% endfor %}
           </div>
-          {% endif %} {% block content %}{% endblock %}
+          {% endif %}
+
+          {% block content %}{% endblock %}
         </main>
       </div>
     </div>

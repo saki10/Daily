@@ -1,7 +1,4 @@
-{% extends "reports/base.html" %}
-{% load static %}
-
-{% block content %}
+{% extends "reports/base.html" %} {% load static %} {% block content %}
 <div class="settings-page">
   <div class="settings-card username-card">
     <h1 class="settings-title">ユーザー名変更</h1>
@@ -15,14 +12,12 @@
     </div>
 
     <form method="post" class="settings-form">
-      {% csrf_token %}
-
-      {% if form.non_field_errors %}
-        <div class="form-error-box">
-          {% for error in form.non_field_errors %}
-            <p>{{ error }}</p>
-          {% endfor %}
-        </div>
+      {% csrf_token %} {% if form.non_field_errors %}
+      <div class="form-error-box">
+        {% for error in form.non_field_errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+      </div>
       {% endif %}
 
       <div class="form-group">
@@ -34,19 +29,22 @@
           class="form-input"
           value="{{ request.user.username }}"
           placeholder="新しいユーザー名を入力"
-        >
+        />
         {% if form.username.errors %}
-          <div class="field-error">
-            {% for error in form.username.errors %}
-              <p>{{ error }}</p>
-            {% endfor %}
-          </div>
+        <div class="field-error">
+          {% for error in form.username.errors %}
+          <p>{{ error }}</p>
+          {% endfor %}
+        </div>
         {% endif %}
       </div>
 
-      <div class="form-actions username-form-actions">
-        <button type="submit" class="primary-btn">更新する</button>
-        <a href="{% url 'settings' %}" class="secondary-btn">設定に戻る</a>
+      <div class="settings-actions">
+        <button type="submit" class="settings-submit-btn">変更する</button>
+
+        <a href="{% url 'settings' %}" class="settings-back-btn">
+          設定に戻る
+        </a>
       </div>
     </form>
   </div>
