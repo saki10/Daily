@@ -19,9 +19,6 @@ from .utils import format_for_teams
 from django.utils import timezone
 
 
-
-client = OpenAI()  # 環境変数 OPENAI_API_KEY を使用
-
 SYSTEM_PROMPT = """
 あなたは日本語の「業務日報」を作るアシスタントです。
 ユーザーのメモを、読みやすい日報に整形してください。
@@ -438,42 +435,41 @@ def ai_generate_report(request):
 
 【素材】
 {user_prompt}
+
+必ず次のJSONオブジェクトのみを返してください。
+説明文やコードブロックは不要です。
+
+{{
+  "today_work": "",
+  "reflection": "",
+  "tomorrow_plan": "",
+  "note": "",
+  "warning": ""
+}}
 """.strip()
 
         client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
-        response = client.responses.create(
+        completion = client.chat.completions.create(
             model="gpt-4.1-mini",
-            instructions=SYSTEM_PROMPT,
-            input=prompt,
-            text={
-                "format": {
-                    "type": "json_schema",
-                    "name": "daily_report",
-                    "strict": True,
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "today_work": {"type": "string"},
-                            "reflection": {"type": "string"},
-                            "tomorrow_plan": {"type": "string"},
-                            "note": {"type": "string"},
-                            "warning": {"type": "string"}
-                        },
-                        "required": [
-                            "today_work",
-                            "reflection",
-                            "tomorrow_plan",
-                            "note",
-                            "warning"
-                        ],
-                        "additionalProperties": False
-                    }
-                }
-            }
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        SYSTEM_PROMPT
+                        + "\n出力は必ずJSONオブジェクトのみで返してください。"
+                        + "\nキーは today_work, reflection, tomorrow_plan, note, warning のみ使用してください。"
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": prompt,
+                },
+            ],
+            response_format={"type": "json_object"},
         )
 
-        raw_text = (response.output_text or "").strip()
+        raw_text = (completion.choices[0].message.content or "").strip()
         print("OpenAI raw_text:", raw_text)
 
         if not raw_text:
