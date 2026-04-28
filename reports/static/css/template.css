@@ -1,19 +1,29 @@
+/* ==============================
+   テンプレート画面
+============================== */
 .template-page {
+  width: 100%;
   max-width: 1100px;
   margin: 0 auto;
   padding: 0;
-}
-
-.page-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 8px 0 16px;
   color: #111827;
 }
 
+/* style.css の .page-title とぶつからないように限定 */
+.template-page .page-title {
+  margin: 8px 0 16px;
+  color: #111827;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* ==============================
+   レイアウト
+============================== */
 .template-wrap {
   display: grid;
-  grid-template-columns: 1fr 1.1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
   gap: 16px;
   align-items: start;
   margin-top: 0;
@@ -21,27 +31,36 @@
 
 .template-preview-card,
 .template-setting-card {
-  background: #fff;
-  border: 1px solid #dcdcdc;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  min-width: 0;
   min-height: 420px;
+  background: #ffffff;
+  border: 1px solid #dcdcdc;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
 }
 
 .template-preview-body,
 .template-setting-body {
-  padding: 14px;
+  padding: 16px;
 }
 
+/* ==============================
+   プレビュー
+============================== */
 .template-preview-box {
+  width: 100%;
   min-height: 360px;
+  color: #222222;
   font-size: 14px;
-  line-height: 1.6;
-  color: #222;
+  line-height: 1.7;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
+/* ==============================
+   設定フォーム
+============================== */
 .template-center {
   display: flex;
   flex-direction: column;
@@ -49,35 +68,39 @@
 }
 
 .template-setting-title {
-  font-size: 16px;
-  font-weight: 700;
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   color: #111827;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 .template-edit-group {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .template-label {
   display: block;
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   color: #374151;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 .template-textarea {
   width: 100%;
   min-height: 220px;
+  padding: 12px;
   border: 1px solid #cfcfcf;
-  border-radius: 8px;
-  padding: 10px;
-  resize: vertical;
-  font-size: 14px;
-  line-height: 1.5;
-  box-sizing: border-box;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #111827;
   font-family: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+  box-sizing: border-box;
 }
 
 .template-textarea:focus {
@@ -86,31 +109,39 @@
   box-shadow: 0 0 0 3px rgba(43, 111, 232, 0.12);
 }
 
+/* ==============================
+   トグル
+   ※ 他画面の .toggle とぶつからないように限定
+============================== */
 .template-toggle-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   margin-top: 12px;
 }
 
 .template-toggle-label {
-  font-size: 13px;
-  font-weight: 600;
   color: #374151;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
 }
 
-.toggle {
+/* .toggle は template-page の中だけに効かせる */
+.template-page .toggle {
   position: relative;
+  display: inline-block;
+  flex-shrink: 0;
   width: 52px;
   height: 28px;
-  display: inline-block;
 }
 
-.toggle input {
+.template-page .toggle input {
   display: none;
 }
 
-.toggle-ui {
+.template-page .toggle-ui {
   position: absolute;
   inset: 0;
   background: #cbd5e1;
@@ -118,47 +149,68 @@
   transition: 0.2s;
 }
 
-.toggle-ui::before {
+.template-page .toggle-ui::before {
   content: "";
   position: absolute;
+  top: 3px;
+  left: 3px;
   width: 22px;
   height: 22px;
-  left: 3px;
-  top: 3px;
-  background: #fff;
+  background: #ffffff;
   border-radius: 50%;
   transition: 0.2s;
 }
 
-.toggle input:checked + .toggle-ui {
+.template-page .toggle input:checked + .toggle-ui {
   background: #22c55e;
 }
 
-.toggle input:checked + .toggle-ui::before {
+.template-page .toggle input:checked + .toggle-ui::before {
   transform: translateX(24px);
 }
 
+/* ==============================
+   保存ボタン
+============================== */
 .template-save-wrap {
   display: flex;
   justify-content: flex-end;
+  margin-top: 16px;
 }
 
 .template-save-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 44px;
+  padding: 0 18px;
   border: none;
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
+  border-radius: 999px;
   background: #2b6fe8;
-  color: #fff;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .template-save-btn:hover {
-  opacity: 0.95;
+  background: #1d5fd3;
 }
 
+/* ==============================
+   タブレット対応
+============================== */
 @media (max-width: 900px) {
+  .template-page {
+    max-width: 100%;
+  }
+
   .template-wrap {
     grid-template-columns: 1fr;
   }
@@ -168,7 +220,103 @@
     min-height: auto;
   }
 
+  .template-preview-box {
+    min-height: 280px;
+  }
+
+  .template-textarea {
+    min-height: 200px;
+  }
+}
+
+/* ==============================
+   スマホ対応
+============================== */
+@media (max-width: 640px) {
+  .template-page {
+    padding: 0;
+  }
+
+  .template-page .page-title {
+    margin: 4px 0 14px;
+    font-size: 22px;
+  }
+
+  .template-wrap {
+    gap: 14px;
+  }
+
+  .template-preview-card,
+  .template-setting-card {
+    border-radius: 14px;
+  }
+
+  .template-preview-body,
+  .template-setting-body {
+    padding: 14px;
+  }
+
+  .template-setting-title {
+    font-size: 16px;
+  }
+
+  .template-label,
+  .template-toggle-label {
+    font-size: 14px;
+  }
+
+  .template-preview-box {
+    min-height: 220px;
+    font-size: 14px;
+  }
+
+  .template-textarea {
+    min-height: 180px;
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+
+  .template-toggle-row {
+    align-items: center;
+  }
+
   .template-save-wrap {
-    justify-content: flex-end;
+    justify-content: stretch;
+  }
+
+  .template-save-btn {
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    font-size: 15px;
+  }
+}
+
+/* ==============================
+   小さめスマホ対応
+============================== */
+@media (max-width: 420px) {
+  .template-page .page-title {
+    font-size: 20px;
+  }
+
+  .template-preview-body,
+  .template-setting-body {
+    padding: 12px;
+  }
+
+  .template-preview-box {
+    min-height: 200px;
+    font-size: 13px;
+  }
+
+  .template-textarea {
+    min-height: 160px;
+    font-size: 14px;
+  }
+
+  .template-toggle-row {
+    gap: 10px;
   }
 }

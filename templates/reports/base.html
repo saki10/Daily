@@ -13,7 +13,7 @@
   <body>
     {% with current_url=request.resolver_match.url_name %}
     <div class="layout">
-      {% if current_url != 'signup' and current_url != 'login' %}
+      {% if user.is_authenticated %}
       <aside class="sidebar">
         <a class="sidebar-item" href="{% url 'home' %}">ホーム</a>
         <a class="sidebar-item" href="{% url 'create' %}">AI文章生成機能</a>

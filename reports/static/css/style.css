@@ -110,16 +110,21 @@ a {
    ヘッダー
 ============================== */
 .header {
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 280px; /* サイドバー幅に合わせる */
-  right: 0;
-  height: 56px;
+  z-index: 1000;
+
+  width: 100%;
+  min-height: 56px;
   padding: 0 18px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+
+  background: #f5f6fa;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .header-left,
@@ -154,17 +159,21 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   min-width: 92px;
   height: 36px;
   padding: 0 14px;
+
   border: 1px solid #d1d5db;
   border-radius: 9999px;
   background: #ffffff;
   color: #374151;
+
   font-size: 14px;
   font-weight: 700;
   line-height: 1;
   text-decoration: none;
+
   transition: 0.2s ease;
 }
 
@@ -203,6 +212,143 @@ a {
   background: #b91c1c !important;
   border-color: #b91c1c !important;
 }
+
+
+/* ==============================
+   ヘッダー：スマホ対応
+============================== */
+@media (max-width: 768px) {
+  .header {
+    min-height: 56px;
+    padding: 10px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .header-left,
+  .header-left-links,
+  .header-right,
+  .auth-header-links {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .header-left {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .header-right {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+
+  .header-title,
+  .header-datetime,
+  .header-time {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .header-link-btn,
+  .header-auth-btn {
+    min-width: auto;
+    height: 34px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+}
+
+
+/* ==============================
+   ヘッダー：小さめスマホ
+   Daily 左 / 時刻 右
+   ボタンは2行目右側
+============================== */
+@media (max-width: 640px) {
+  .header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    align-items: center;
+    gap: 8px 10px;
+  }
+
+  .header-left {
+    grid-column: 1;
+    grid-row: 1;
+
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 0;
+  }
+
+  .header-title,
+  .header-title-link {
+    white-space: nowrap;
+  }
+
+  .header-right {
+    display: contents;
+  }
+
+  #realtime-datetime,
+  #current-time,
+  .header-datetime,
+  .header-time {
+    grid-column: 2;
+    grid-row: 1;
+
+    justify-self: end;
+    text-align: right;
+    white-space: nowrap;
+
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .auth-header-links,
+  .header-left-links {
+    grid-column: 1 / -1;
+    grid-row: 2;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    width: 100%;
+  }
+
+  .header-link-btn,
+  .header-auth-btn {
+    min-width: auto;
+    height: 34px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .header {
+    padding: 8px 10px;
+  }
+
+  .header-link-btn,
+  .header-auth-btn {
+    height: 32px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+}
+
+
 
 /* ==============================
    共通ボタン
@@ -1852,3 +1998,576 @@ a {
   margin: 0 auto 32px;
 }
 
+/* ==============================
+   レスポンシブ修正版 追記用
+============================== */
+
+/* 固定ヘッダーのズレ防止 */
+.header {
+  position: sticky;
+  top: 0;
+  left: auto;
+  right: auto;
+  z-index: 100;
+  width: 100%;
+  min-height: 56px;
+  background: #f5f6fa;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* 横はみ出し防止 */
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+img,
+video,
+iframe,
+table,
+pre,
+code {
+  max-width: 100%;
+}
+
+input,
+select,
+textarea,
+button {
+  max-width: 100%;
+}
+
+/* PC側の微調整 */
+.main {
+  min-width: 0;
+}
+
+.content {
+  width: 100%;
+}
+
+/* ==============================
+   タブレット以下
+============================== */
+@media (max-width: 900px) {
+  .content {
+    padding: 24px 18px;
+  }
+
+  .page-title,
+  .search-page-title,
+  .home-title,
+  .list-title,
+  .report-list-title {
+    font-size: 24px;
+    line-height: 1.35;
+  }
+
+  .ai-gen,
+  .ai-grid,
+  .integrations-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-panel,
+  .panel {
+    min-height: auto;
+  }
+
+  .ai-actions,
+  .panel-actions,
+  .ai-right-actions,
+  .panel-actions.right {
+    justify-content: stretch;
+    flex-wrap: wrap;
+  }
+
+  .ai-actions .btn,
+  .panel-actions .btn,
+  .ai-right-actions .btn,
+  .panel-actions.right .btn,
+  .ai-actions .btn-primary,
+  .panel-actions .btn-primary,
+  .ai-right-actions .btn-primary,
+  .panel-actions.right .btn-primary,
+  .ai-actions .primary-btn,
+  .panel-actions .primary-btn,
+  .ai-right-actions .primary-btn,
+  .panel-actions.right .primary-btn {
+    flex: 1;
+  }
+
+  .report-search-box {
+    max-width: 100%;
+  }
+
+  .report-result-area {
+    min-height: auto;
+  }
+}
+
+/* ==============================
+   スマホ版
+============================== */
+@media (max-width: 768px) {
+  /* 全体を縦並びにする */
+  .layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .main {
+    width: 100%;
+    min-height: auto;
+  }
+
+  /* サイドバーを上部ナビに変更 */
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    padding: 12px 12px 10px;
+    position: static;
+  }
+
+  .sidebar-brand {
+    margin: 0 4px 10px;
+    font-size: 16px;
+  }
+
+  .sidebar-title {
+    margin: 0 4px 10px;
+    font-size: 16px;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar-item,
+  .sidebar-link {
+    flex: 0 0 auto;
+    padding: 8px 11px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  /* ヘッダーをスマホで折り返し可能にする */
+  .header {
+    height: auto;
+    min-height: 56px;
+    padding: 10px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .header-left,
+  .header-left-links,
+  .header-right,
+  .auth-header-links {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .header-left {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .header-right {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+
+  .header-title,
+  .header-datetime,
+  .header-time {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .header-link-btn,
+  .header-auth-btn {
+    min-width: auto;
+    height: 34px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  /* 余白をスマホ用に詰める */
+  .content,
+  .content-auth,
+  .content.content-auth {
+    padding: 20px 14px 32px;
+  }
+
+  .home-wrap,
+  .list-wrap,
+  .search-page,
+  .report-list-page {
+    padding: 20px 14px 32px;
+  }
+
+  .settings-page {
+    padding: 20px 14px 32px;
+  }
+
+  .settings-page > .settings-card,
+  .login-card,
+  .signup-card,
+  .auth-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 24px 18px;
+    border-radius: 16px;
+  }
+
+  .login-page,
+  .signup-page {
+    padding: 18px 14px 32px;
+    min-height: auto;
+  }
+
+  .settings-title,
+  .login-title,
+  .signup-title,
+  .auth-title {
+    font-size: 24px;
+    line-height: 1.35;
+  }
+
+  .settings-subtitle,
+  .login-subtitle,
+  .login-subtext,
+  .signup-subtitle {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .form-group,
+  .form-row,
+  .login-form .form-group,
+  .signup-form .form-group,
+  .settings-form .form-group {
+    margin-bottom: 18px;
+  }
+
+  .login-label,
+  .login-form .form-label,
+  .signup-form .form-label,
+  .settings-form .form-label,
+  .form-label {
+    font-size: 14px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .auth-form input,
+  .auth-form select,
+  .settings-form input,
+  .settings-form select,
+  .login-form input[type="text"],
+  .login-form input[type="email"],
+  .login-form input[type="password"],
+  .signup-form input[type="text"],
+  .signup-form input[type="email"],
+  .signup-form input[type="password"] {
+    height: 46px;
+    min-height: 46px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+
+  textarea,
+  .form-group textarea,
+  .auth-form textarea,
+  .form-field textarea,
+  .settings-form textarea,
+  .ai-memo,
+  .ai-block textarea {
+    font-size: 15px;
+    min-height: 120px;
+  }
+
+  /* ボタンを押しやすく */
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-blue,
+  .primary-btn,
+  .sub-btn,
+  .settings-submit-btn,
+  .settings-back-btn,
+  .settings-form .primary-btn,
+  .settings-form .secondary-btn,
+  .login-btn,
+  .signup-actions .primary-btn {
+    width: 100%;
+    min-width: 0;
+    height: 46px;
+    font-size: 15px;
+  }
+
+  .login-actions,
+  .signup-actions,
+  .auth-actions,
+  .settings-actions,
+  .username-form-actions,
+  .settings-form .form-actions,
+  .password-card .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  /* 検索フォーム */
+  .search-bar,
+  .report-search-row,
+  .report-search-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input,
+  .report-search-input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .report-search-btn,
+  .report-clear-btn,
+  .report-create-btn {
+    width: 100%;
+  }
+
+  /* カード系 */
+  .latest-section,
+  .empty-box,
+  .empty,
+  .report-empty,
+  .report-card,
+  .card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .card-top,
+  .report-card-head,
+  .home-head,
+  .list-head,
+  .report-list-header,
+  .section-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home-actions,
+  .list-actions,
+  .report-list-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .card-date,
+  .report-card-date {
+    white-space: normal;
+  }
+
+  /* 日報アコーディオン */
+  .report-summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 16px;
+  }
+
+  .report-summary-date {
+    min-width: 0;
+  }
+
+  .report-detail {
+    padding: 0 16px 16px;
+  }
+
+  /* 外部連携設定 */
+  .integration-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .service-name {
+    width: 100%;
+  }
+
+  .btn-blue,
+  .btn-placeholder {
+    width: 100%;
+  }
+
+  .toggle {
+    align-self: flex-start;
+  }
+
+  /* 文体トグル */
+  .tone-switch,
+  .tone-toggle-box {
+    align-items: stretch;
+  }
+
+  .tone-option {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* ==============================
+   小さめスマホ
+============================== */
+@media (max-width: 480px) {
+  body {
+    font-size: 15px;
+  }
+
+  .content,
+  .content-auth,
+  .content.content-auth {
+    padding: 16px 12px 28px;
+  }
+
+  .sidebar {
+    padding: 10px;
+  }
+
+  .sidebar-brand {
+    font-size: 15px;
+  }
+
+  .header {
+    padding: 8px 10px;
+  }
+
+  .header-right {
+    justify-content: flex-start;
+  }
+
+  .header-link-btn,
+  .header-auth-btn {
+    height: 32px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .page-title,
+  .search-page-title,
+  .home-title,
+  .list-title,
+  .report-list-title,
+  .settings-title,
+  .login-title,
+  .signup-title,
+  .auth-title {
+    font-size: 22px;
+  }
+
+  .ai-panel,
+  .panel,
+  .settings-page > .settings-card,
+  .login-card,
+  .signup-card,
+  .auth-card,
+  .report-card,
+  .card {
+    padding: 16px;
+  }
+
+  .report-result-area {
+    padding: 16px 14px;
+  }
+
+  .message-box,
+  .form-error-box,
+  .field-error,
+  .form-help-text {
+    font-size: 13px;
+  }
+}
+
+/* ==============================
+   SP版のみ：ヘッダー配置
+   Daily 左 / 時刻 右
+   ボタンは2行目の右側
+============================== */
+@media (max-width: 640px) {
+  .header {
+    display: grid !important;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    align-items: center;
+    gap: 8px 10px;
+    padding: 10px 12px;
+  }
+
+  /* 1行目 左：Daily */
+  .header-left {
+    grid-column: 1;
+    grid-row: 1;
+    width: auto;
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 0;
+  }
+
+  .header-title,
+  .header-title-link {
+    white-space: nowrap;
+  }
+
+  /* header-right の中身を header の grid に直接乗せる */
+  .header-right {
+    display: contents !important;
+  }
+
+  /* 1行目 右：時刻 */
+  #realtime-datetime,
+  #current-time,
+  .header-datetime,
+  .header-time {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    text-align: right;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  /* 2行目 右：ボタン */
+  .auth-header-links,
+  .header-left-links {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .header-link-btn,
+  .header-auth-btn {
+    min-width: auto;
+    height: 34px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+}

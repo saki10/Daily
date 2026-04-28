@@ -1,51 +1,76 @@
 /* ==============================
+   設定画面 共通
+============================== */
+* {
+  box-sizing: border-box;
+}
+
+.settings-container,
+.settings-page {
+  color: #111827;
+}
+
+
+
+/* ==============================
    設定一覧画面
 ============================== */
 .settings-container {
-  width: 420px;
-  margin: 80px auto;
+  width: 100%;
+  max-width: 460px;
+  margin: 72px auto;
+  padding: 0 20px;
   text-align: center;
 }
 
 .settings-container h1 {
-  margin: 0 0 40px;
+  margin: 0 0 32px;
   font-size: 28px;
-  font-weight: 500;
+  font-weight: 700;
+  line-height: 1.4;
   color: #111827;
 }
 
 .settings-container .settings-card {
-  margin-bottom: 15px;
-  padding: 18px;
+  margin-bottom: 16px;
+  padding: 18px 20px;
   background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
-  transition: 0.2s ease;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .settings-container .settings-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  border-color: #dbe3ef;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
 }
 
 .settings-container .settings-card a {
-  font-size: 16px;
-  text-decoration: none;
+  display: block;
   color: #111827;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.6;
+  text-decoration: none;
 }
 
 .settings-container .settings-card.delete a {
   color: #dc2626;
-  font-weight: 700;
 }
 
 .back-link {
-  margin-top: 30px;
+  margin-top: 28px;
 }
 
 .back-link a {
-  color: #555555;
+  color: #4b5563;
   font-size: 14px;
+  font-weight: 600;
   text-decoration: none;
 }
 
@@ -54,69 +79,73 @@
 }
 
 /* ==============================
-   設定変更画面 共通レイアウト
+   設定変更画面 レイアウト
 ============================== */
 .settings-page {
+  width: 100%;
   min-height: calc(100vh - 80px);
   padding: 56px 24px;
   background: #f4f6f9;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  box-sizing: border-box;
 }
 
-.settings-card,
-.username-card,
-.email-card,
-.password-card {
+.settings-page > .settings-card,
+.settings-page > .username-card,
+.settings-page > .email-card,
+.settings-page > .password-card,
+.settings-page .username-card,
+.settings-page .email-card,
+.settings-page .password-card {
   width: 100%;
   max-width: 760px;
   margin: 0 auto;
-  padding: 42px 54px;
+  padding: 42px 54px 44px;
   background: #ffffff;
-  border-radius: 20px;
+  border: 1px solid #edf0f5;
+  border-radius: 22px;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-  box-sizing: border-box;
 }
 
 /* ==============================
-   設定変更画面 タイトル・説明文
+   タイトル・説明文
 ============================== */
 .settings-title {
   margin: 0;
+  color: #111827;
   font-size: 28px;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.4;
   text-align: center;
-  color: #111827;
 }
 
 .settings-subtitle {
-  margin: 14px 0 32px;
+  margin: 14px 0 34px;
+  color: #64748b;
   font-size: 15px;
-  line-height: 1.7;
+  line-height: 1.8;
   text-align: center;
-  color: #666;
 }
 
 /* ==============================
-   設定変更画面 フォーム
+   フォーム
 ============================== */
 .settings-form {
   width: 100%;
 }
 
 .settings-form .form-group {
-  margin-bottom: 28px;
+  margin-bottom: 26px;
 }
 
 .settings-form .form-label {
   display: block;
   margin-bottom: 10px;
+  color: #111827;
   font-size: 16px;
   font-weight: 700;
-  color: #111827;
+  line-height: 1.5;
 }
 
 .settings-form input[type="text"],
@@ -126,13 +155,11 @@
 .settings-form textarea,
 .settings-form .form-input {
   width: 100%;
-  padding: 0 16px;
-  font-size: 16px;
-  color: #111827;
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
   background: #ffffff;
-  border: 1px solid #d5dbe5;
-  border-radius: 12px;
-  box-sizing: border-box;
+  color: #111827;
+  font-size: 16px;
   outline: none;
   transition:
     border-color 0.2s ease,
@@ -145,12 +172,12 @@
 .settings-form select,
 .settings-form .form-input {
   height: 52px;
+  padding: 0 16px;
 }
 
 .settings-form textarea {
   min-height: 120px;
-  padding-top: 14px;
-  padding-bottom: 14px;
+  padding: 14px 16px;
   line-height: 1.7;
   resize: vertical;
 }
@@ -166,32 +193,33 @@
 }
 
 /* ==============================
-   設定変更画面 現在値表示
+   現在値表示
 ============================== */
 .username-current-box,
 .email-current-box {
-  margin: 22px 0 24px;
-  padding: 16px 18px;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
+  margin: 22px 0 28px;
+  padding: 18px 20px;
   background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
 }
 
 .username-current-label,
 .email-current-label {
-  margin: 0 0 6px;
-  font-size: 13px;
-  font-weight: 600;
+  margin: 0 0 8px;
   color: #6b7280;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 .username-current-value,
 .email-current-value {
   margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.5;
   color: #111827;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.6;
   word-break: break-word;
 }
 
@@ -200,27 +228,32 @@
 }
 
 /* ==============================
-   設定変更画面 補足説明
+   補足説明
 ============================== */
 .settings-form .form-help,
 .settings-form .form-help-text {
-  margin-top: 8px;
-  padding: 14px 18px;
+  margin-top: 10px;
+  padding: 12px 14px;
   background: #f8fafc;
-  border: 1px solid #e5eaf0;
-  border-radius: 10px;
-  font-size: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  color: #4b5563;
+  font-size: 13px;
   line-height: 1.7;
-  color: #555555;
+}
+
+.settings-form .form-help p,
+.settings-form .form-help-text p {
+  margin: 0;
 }
 
 .settings-form ul {
-  margin: 0;
-  padding-left: 20px;
+  margin: 8px 0 0 18px;
+  padding: 0;
 }
 
 .settings-form li {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   line-height: 1.7;
 }
 
@@ -228,113 +261,142 @@
   margin-bottom: 0;
 }
 
-
-
 /* ==============================
-   設定変更画面 エラーメッセージ
+   エラーメッセージ
 ============================== */
 .settings-form .form-error-box {
   margin-bottom: 20px;
   padding: 12px 14px;
-  border-radius: 10px;
-  background: #fff1f1;
-  border: 1px solid #f0b4b4;
-  color: #c62828;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  color: #dc2626;
   font-size: 14px;
   line-height: 1.6;
 }
 
 .settings-form .field-error {
   margin-top: 8px;
-  color: #c62828;
+  color: #dc2626;
   font-size: 14px;
+  line-height: 1.6;
 }
 
 .settings-form .field-error p,
 .settings-form .form-error-box p {
-  margin: 4px 0;
+  margin: 0;
 }
 
 /* ==============================
-   設定変更画面 共通ボタン
+   ボタン
 ============================== */
 .settings-actions,
 .username-form-actions,
-.email-form-actions {
+.email-form-actions,
+.password-card .form-actions,
+.settings-form .form-actions {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
-  margin-top: 32px;
+  gap: 22px;
+  margin-top: 34px;
   flex-wrap: wrap;
 }
 
 .settings-submit-btn,
-.settings-back-btn {
+.settings-back-btn,
+.settings-form .primary-btn,
+.settings-form .secondary-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 150px;
   height: 50px;
   padding: 0 24px;
-  border-radius: 30px;
-  font-size: 17px;
+  border-radius: 999px;
+  font-size: 16px;
   font-weight: 700;
   line-height: 1;
+  text-align: center;
   text-decoration: none;
-  box-sizing: border-box;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
-.settings-submit-btn {
+.settings-submit-btn,
+.settings-form .primary-btn {
   background: #2563eb;
+  border: 1px solid #2563eb;
   color: #ffffff;
-  border: none;
 }
 
-.settings-submit-btn:hover {
+.settings-submit-btn:hover,
+.settings-form .primary-btn:hover {
   background: #1d4ed8;
+  border-color: #1d4ed8;
 }
 
-.settings-back-btn {
+.settings-back-btn,
+.settings-form .secondary-btn {
   background: #ffffff;
+  border: 1.5px solid #9ca3af;
   color: #111827;
-  border: 1.5px solid #999999;
 }
 
-.settings-back-btn:hover {
+.settings-back-btn:hover,
+.settings-form .secondary-btn:hover {
   background: #f3f4f6;
 }
 
 /* ==============================
-   設定画面 レスポンシブ
+   タブレット対応
 ============================== */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .settings-container {
-    width: auto;
-    margin: 40px 16px;
+    max-width: 520px;
+    margin: 48px auto;
+    padding: 0 18px;
+  }
+
+  .settings-container h1 {
+    margin-bottom: 28px;
+    font-size: 26px;
   }
 
   .settings-page {
-    padding: 24px 16px;
+    min-height: auto;
+    padding: 32px 18px 48px;
   }
 
-  .settings-card,
-  .username-card,
-  .email-card,
-  .password-card {
-    padding: 28px 20px;
-    border-radius: 16px;
+  .settings-page > .settings-card,
+  .settings-page > .username-card,
+  .settings-page > .email-card,
+  .settings-page > .password-card,
+  .settings-page .username-card,
+  .settings-page .email-card,
+  .settings-page .password-card {
+    max-width: 100%;
+    padding: 34px 28px 36px;
+    border-radius: 18px;
   }
 
   .settings-title {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .settings-subtitle {
-    margin-bottom: 28px;
+    margin-bottom: 30px;
     font-size: 14px;
+  }
+
+  .settings-form .form-group {
+    margin-bottom: 22px;
   }
 
   .settings-form .form-label {
@@ -346,8 +408,77 @@
   .settings-form input[type="password"],
   .settings-form select,
   .settings-form .form-input {
-    height: 48px;
+    height: 50px;
     font-size: 15px;
+  }
+
+  .settings-actions,
+  .username-form-actions,
+  .email-form-actions,
+  .password-card .form-actions,
+  .settings-form .form-actions {
+    gap: 14px;
+  }
+}
+
+/* ==============================
+   スマホ対応
+============================== */
+@media (max-width: 640px) {
+  .settings-container {
+    margin: 36px auto;
+    padding: 0 14px;
+  }
+
+  .settings-container h1 {
+    margin-bottom: 24px;
+    font-size: 24px;
+  }
+
+  .settings-container .settings-card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .settings-container .settings-card a {
+    font-size: 15px;
+  }
+
+  .settings-page {
+    padding: 24px 14px 40px;
+  }
+
+  .settings-page > .settings-card,
+  .settings-page > .username-card,
+  .settings-page > .email-card,
+  .settings-page > .password-card,
+  .settings-page .username-card,
+  .settings-page .email-card,
+  .settings-page .password-card {
+    padding: 26px 18px 28px;
+    border-radius: 16px;
+  }
+
+  .settings-title {
+    font-size: 23px;
+  }
+
+  .settings-subtitle {
+    margin: 12px 0 24px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .username-current-box,
+  .email-current-box {
+    margin: 18px 0 22px;
+    padding: 14px 16px;
+    border-radius: 14px;
+  }
+
+  .username-current-label,
+  .email-current-label {
+    font-size: 13px;
   }
 
   .username-current-value,
@@ -355,26 +486,100 @@
     font-size: 16px;
   }
 
+  .settings-form .form-group {
+    margin-bottom: 20px;
+  }
+
+  .settings-form .form-label {
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  .settings-form input[type="text"],
+  .settings-form input[type="email"],
+  .settings-form input[type="password"],
+  .settings-form select,
+  .settings-form .form-input {
+    height: 48px;
+    padding: 0 14px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+
+  .settings-form textarea {
+    min-height: 110px;
+    padding: 12px 14px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+
+  .settings-form .form-help,
+  .settings-form .form-help-text,
+  .settings-form .form-error-box {
+    padding: 11px 12px;
+    font-size: 13px;
+  }
+
   .settings-actions,
   .username-form-actions,
-  .email-form-actions {
+  .email-form-actions,
+  .password-card .form-actions,
+  .settings-form .form-actions {
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
+    margin-top: 28px;
   }
 
   .settings-submit-btn,
-  .settings-back-btn {
+  .settings-back-btn,
+  .settings-form .primary-btn,
+  .settings-form .secondary-btn {
     width: 100%;
-    min-width: auto;
+    min-width: 0;
+    height: 48px;
+    font-size: 15px;
   }
 }
+
 /* ==============================
-   パスワード再設定完了画面 ボタン位置
+   小さめスマホ対応
 ============================== */
-.password-card .form-actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 32px;
+@media (max-width: 420px) {
+  .settings-container {
+    margin: 28px auto;
+    padding: 0 12px;
+  }
+
+  .settings-page {
+    padding: 20px 12px 32px;
+  }
+
+  .settings-page > .settings-card,
+  .settings-page > .username-card,
+  .settings-page > .email-card,
+  .settings-page > .password-card,
+  .settings-page .username-card,
+  .settings-page .email-card,
+  .settings-page .password-card {
+    padding: 22px 14px 24px;
+  }
+
+  .settings-title {
+    font-size: 21px;
+  }
+
+  .settings-subtitle {
+    font-size: 13px;
+  }
+
+  .settings-form input[type="text"],
+  .settings-form input[type="email"],
+  .settings-form input[type="password"],
+  .settings-form select,
+  .settings-form .form-input,
+  .settings-form textarea {
+    font-size: 14px;
+  }
 }
+
