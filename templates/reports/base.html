@@ -14,17 +14,34 @@
     {% with current_url=request.resolver_match.url_name %}
     <div class="layout">
       {% if user.is_authenticated %}
-      <aside class="sidebar">
+      <aside class="sidebar" id="sidebar">
         <a class="sidebar-item" href="{% url 'home' %}">ホーム</a>
         <a class="sidebar-item" href="{% url 'create' %}">AI文章生成機能</a>
         <a class="sidebar-item" href="{% url 'integrations' %}">外部連携設定</a>
         <a class="sidebar-item" href="{% url 'settings' %}">設定</a>
       </aside>
+
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
       {% endif %}
 
       <div class="main">
         <header class="header">
           <div class="header-left">
+            {% if user.is_authenticated %}
+            <button
+              type="button"
+              class="hamburger-btn"
+              id="hamburgerBtn"
+              aria-label="メニューを開く"
+              aria-controls="sidebar"
+              aria-expanded="false"
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            {% endif %}
+
             <a href="{% url 'home' %}" class="header-title-link">
               <span class="header-title">Daily</span>
             </a>
@@ -40,21 +57,24 @@
                 ログアウト
               </button>
             </form>
-
             {% else %}
             <div class="auth-header-links header-left-links">
               {% if current_url == 'login' or current_url == 'signup' %}
               <a href="{% url 'create' %}" class="header-link-btn">
                 AI文章生成機能
               </a>
-              {% endif %} {% if current_url != 'login' %}
+              {% endif %}
+
+              {% if current_url != 'login' %}
               <a
                 href="{% url 'login' %}"
                 class="header-link-btn {% if current_url == 'signup' %}header-link-btn-primary{% endif %}"
               >
                 ログイン
               </a>
-              {% endif %} {% if current_url != 'signup' %}
+              {% endif %}
+
+              {% if current_url != 'signup' %}
               <a
                 href="{% url 'signup' %}"
                 class="header-link-btn header-link-btn-primary"
@@ -67,20 +87,22 @@
           </div>
         </header>
 
-        <main
-          class="content {% if current_url == 'signup' or current_url == 'login' %}content-auth{% endif %}"
-        >
+        <main class="content {% if current_url == 'signup' or current_url == 'login' %}content-auth{% endif %}">
           {% if messages %}
           <div class="message-area">
             {% for message in messages %}
             <div class="message-box {{ message.tags }}">{{ message }}</div>
             {% endfor %}
           </div>
-          {% endif %} {% block content %}{% endblock %}
+          {% endif %}
+
+          {% block content %}{% endblock %}
         </main>
       </div>
     </div>
     {% endwith %}
+
     <script src="{% static 'js/header_time.js' %}"></script>
+    <script src="{% static 'js/hamburger_menu.js' %}"></script>
   </body>
 </html>

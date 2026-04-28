@@ -2571,3 +2571,86 @@ button {
     font-size: 13px;
   }
 }
+
+/* =====================================
+   SP版のみ：ハンバーガーメニュー
+   PC版レイアウトには影響させない
+===================================== */
+
+/* PCでは完全に非表示 */
+.hamburger-btn {
+  display: none;
+}
+
+.sidebar-overlay {
+  display: none;
+}
+
+/* 768px以下だけ適用 */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: inline-flex !important;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    background: #1f5ca8;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .hamburger-btn span {
+    width: 20px;
+    height: 2px;
+    background: #ffffff;
+    border-radius: 999px;
+  }
+
+  .sidebar {
+    position: fixed !important;
+    top: 64px !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 280px !important;
+    max-width: 82vw !important;
+    height: calc(100dvh - 64px) !important;
+    z-index: 1100 !important;
+    transform: translateX(-105%) !important;
+    transition: transform 0.25s ease;
+    overflow-y: auto;
+    box-shadow: 16px 0 28px rgba(15, 23, 42, 0.22);
+  }
+
+  body.is-menu-open .sidebar {
+    transform: translateX(0) !important;
+  }
+
+  .sidebar-overlay {
+    display: block !important;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    background: rgba(15, 23, 42, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+
+  body.is-menu-open .sidebar-overlay {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  body.is-menu-open {
+    overflow: hidden;
+  }
+}
