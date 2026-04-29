@@ -2001,6 +2001,33 @@ a {
   transform: translateX(24px);
 }
 
+
+/* ==============================
+   PC版：外部連携設定の保存ボタンを右寄せ＋小さめ＋少し上へ
+============================== */
+@media (min-width: 769px) {
+  .integrations-wrap .save-area {
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+
+    /* ここで位置を少し上にする */
+    margin-top: 16px !important;
+  }
+
+  .integrations-wrap .save-area .btn-blue,
+  .integrations-wrap .save-area .btn,
+  .integrations-wrap .save-area .btn-primary {
+    width: 120px !important;
+    min-width: 120px !important;
+    height: 40px !important;
+    padding: 0 18px !important;
+
+    font-size: 15px !important;
+    border-radius: 999px !important;
+  }
+}
+
 /* ==============================
    SP版：外部連携設定ボタンの調整
 ============================== */
