@@ -2085,6 +2085,182 @@ a {
 }
 
 /* ==============================
+   外部連携 詳細設定画面
+   Slack / Teams / Gmail 共通
+============================== */
+.integration-detail-page {
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  padding: 48px 24px;
+  background: #f5f6fa;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.integration-detail-card {
+  width: 100%;
+  max-width: 760px;
+  padding: 42px 52px 44px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 22px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.integration-detail-title {
+  margin: 0 0 34px;
+
+  color: #111827;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.integration-detail-form {
+  width: 100%;
+}
+
+.integration-detail-group {
+  margin-bottom: 28px;
+}
+
+.integration-detail-label {
+  display: block;
+  margin-bottom: 10px;
+
+  color: #111827;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.integration-detail-input {
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #111827;
+
+  font-size: 15px;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.integration-detail-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.integration-detail-note {
+  margin: 12px 0 0;
+
+  color: #4b5563;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.integration-detail-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.integration-detail-save-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 160px;
+  height: 48px;
+  padding: 0 28px;
+
+  border: none;
+  border-radius: 999px;
+  background: #2563eb;
+  color: #ffffff;
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.integration-detail-save-btn:hover {
+  background: #1d4ed8;
+}
+
+.integration-detail-help {
+  margin-top: 34px;
+  padding: 18px 20px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #f8fafc;
+
+  color: #374151;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+
+/* ==============================
+   SP版：外部連携 詳細設定画面
+============================== */
+@media (max-width: 768px) {
+  .integration-detail-page {
+    min-height: auto;
+    padding: 28px 14px 40px;
+  }
+
+  .integration-detail-card {
+    max-width: 100%;
+    padding: 28px 22px 30px;
+    border-radius: 18px;
+  }
+
+  .integration-detail-title {
+    margin-bottom: 28px;
+    font-size: 26px;
+    text-align: left;
+  }
+
+  .integration-detail-input {
+    height: 46px;
+    padding: 0 14px;
+    font-size: 14px;
+    border-radius: 12px;
+  }
+
+  .integration-detail-actions {
+    justify-content: flex-end;
+    margin-top: 26px;
+  }
+
+  .integration-detail-save-btn {
+    min-width: 120px;
+    height: 40px;
+    padding: 0 22px;
+    font-size: 14px;
+  }
+
+  .integration-detail-help {
+    margin-top: 28px;
+    padding: 16px;
+    font-size: 14px;
+    border-radius: 14px;
+  }
+}
+
+/* ==============================
    テンプレート画面
 ============================== */
 .template-setting-title {

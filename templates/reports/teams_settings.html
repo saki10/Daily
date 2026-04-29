@@ -1,23 +1,39 @@
-{% extends "reports/base.html" %}
-{% block content %}
-<h1>Microsoft Teams設定</h1>
+{% extends "reports/base.html" %} {% load static %} {% block content %}
+<div class="integration-detail-page">
+  <section class="integration-detail-card">
+    <h1 class="integration-detail-title">Microsoft Teams設定</h1>
 
-<form method="post">
-  {% csrf_token %}
-  <label>Webhook URL</label><br>
+    <form method="post" class="integration-detail-form">
+      {% csrf_token %}
 
-  <input type="url"
-         name="teams_webhook_url"
-         style="width: 520px;"
-         value="{{ integration.teams_webhook_url }}"
-         placeholder="https://xxxx.webhook.office.com/webhookb2/..." />
+      <div class="integration-detail-group">
+        <label for="teams_webhook_url" class="integration-detail-label">
+          Webhook URL
+        </label>
 
-  <br><br>
-  <button type="submit">保存</button>
-</form>
+        <input
+          type="url"
+          id="teams_webhook_url"
+          name="teams_webhook_url"
+          class="integration-detail-input"
+          placeholder="Teams Webhook URLを入力してください"
+          value="{{ form.teams_webhook_url.value|default:'' }}"
+        />
 
-<p style="margin-top:16px;">
-  Microsoft Teams の Incoming Webhook を作成し、Webhook URL を入力してください。
-</p>
+        <p class="integration-detail-note">
+          現在Webhookは設定済みです。変更する場合のみ入力してください。
+        </p>
+      </div>
 
+      <div class="integration-detail-actions">
+        <button type="submit" class="integration-detail-save-btn">保存</button>
+      </div>
+    </form>
+
+    <div class="integration-detail-help">
+      Microsoft Teams の Incoming Webhook を作成し、Webhook URL
+      を入力してください。
+    </div>
+  </section>
+</div>
 {% endblock %}

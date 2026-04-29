@@ -1,31 +1,44 @@
 {% extends "reports/base.html" %}
+
 {% block content %}
-<h1>Slack設定</h1>
+<div class="integration-detail-page">
+  <section class="integration-detail-card">
+    <h1 class="integration-detail-title">Slack設定</h1>
 
-<form method="post">
-  {% csrf_token %}
+    <form method="post" class="integration-detail-form">
+      {% csrf_token %}
 
-  <label for="slack_webhook_url">Webhook URL</label><br>
-  <input
-    type="url"
-    name="slack_webhook_url"
-    id="slack_webhook_url"
-    style="width: 520px;"
-    value=""
-    placeholder="Slack Webhook URLを入力してください"
-  />
+      <div class="integration-detail-group">
+        <label for="slack_webhook_url" class="integration-detail-label">
+          Webhook URL
+        </label>
 
-  {% if integration.slack_webhook_url %}
-    <p style="margin-top:8px; color:#666;">
-      現在Webhookは設定済みです。変更する場合のみ入力してください。
-    </p>
-  {% endif %}
+        <input
+          type="url"
+          name="slack_webhook_url"
+          id="slack_webhook_url"
+          class="integration-detail-input"
+          value=""
+          placeholder="Slack Webhook URLを入力してください"
+        >
 
-  <br><br>
-  <button type="submit">保存</button>
-</form>
+        {% if integration.slack_webhook_url %}
+          <p class="integration-detail-note">
+            現在Webhookは設定済みです。変更する場合のみ入力してください。
+          </p>
+        {% endif %}
+      </div>
 
-<p style="margin-top:16px;">
-  Slack App の Incoming Webhooks を有効化して、Webhook URL を発行してください。
-</p>
+      <div class="integration-detail-actions">
+        <button type="submit" class="integration-detail-save-btn">
+          保存
+        </button>
+      </div>
+    </form>
+
+    <div class="integration-detail-help">
+      Slack App の Incoming Webhooks を有効化して、Webhook URL を発行してください。
+    </div>
+  </section>
+</div>
 {% endblock %}
