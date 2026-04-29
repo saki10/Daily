@@ -213,6 +213,21 @@ a {
   border-color: #b91c1c !important;
 }
 
+/* ==============================
+   SP版：ログアウトボタンを右側へ
+============================== */
+@media (max-width: 640px) {
+  .header .logout-form {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: end;
+  }
+
+  .header .logout-btn {
+    width: auto;
+    min-width: 92px;
+  }
+}
 
 /* ==============================
    ヘッダー：スマホ対応
@@ -348,7 +363,204 @@ a {
   }
 }
 
+/* ==============================
+   SP版：時刻とログアウトの間隔を詰める
+============================== */
+@media (max-width: 640px) {
+  .header {
+    gap: 2px 10px !important;
+    padding: 8px 12px !important;
+    align-content: start;
+  }
 
+  .header .logout-form {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
+    margin-top: 0;
+  }
+
+  .header .logout-btn {
+    width: auto;
+    min-width: 92px;
+    height: 34px;
+  }
+
+  #realtime-datetime,
+  #current-time,
+  .header-datetime,
+  .header-time {
+    margin-bottom: 0;
+  }
+}
+
+/* ==============================
+   SP版：新規作成ボタン・検索ボタンを同じサイズに統一
+============================== */
+@media (max-width: 768px) {
+  /* 新規作成ボタンの親 */
+  .list-actions,
+  .home-actions,
+  .report-list-actions {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+  }
+
+  /* 検索フォーム */
+  .search-bar,
+  .report-search-row,
+  .report-search-box {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 10px !important;
+  }
+
+  /* 検索入力欄は横幅いっぱい */
+  .search-input,
+  .report-search-input {
+    width: 100% !important;
+    min-width: 0 !important;
+    align-self: stretch !important;
+  }
+
+  /* 新規作成・検索ボタンを同じ大きさにする */
+  .list-actions .btn,
+  .home-actions .btn,
+  .report-list-actions .btn,
+  .search-bar .btn,
+  .report-search-row .btn,
+  .report-search-box .btn {
+    width: 136px !important;
+    min-width: 136px !important;
+    height: 38px !important;
+    padding: 0 16px !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    border-radius: 999px !important;
+  }
+}
+
+/* ==============================
+   SP版：新規作成ボタンを右側に配置
+============================== */
+@media (max-width: 768px) {
+  .list-head,
+  .home-head,
+  .report-list-header {
+    align-items: stretch !important;
+  }
+
+  .list-actions,
+  .home-actions,
+  .report-list-actions {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+  }
+
+  .list-actions .btn,
+  .list-actions .btn-primary,
+  .home-actions .btn,
+  .home-actions .btn-primary,
+  .report-list-actions .btn,
+  .report-list-actions .btn-primary {
+    width: 136px !important;
+    min-width: 136px !important;
+    height: 38px !important;
+    padding: 0 16px !important;
+    font-size: 14px !important;
+    border-radius: 999px !important;
+  }
+}
+
+/* ==============================
+   SP版：ログアウトを非会員ヘッダー風に1行配置
+============================== */
+@media (max-width: 640px) {
+  .header {
+    display: grid !important;
+    grid-template-columns: auto 1fr auto !important;
+    grid-template-rows: auto !important;
+    align-items: center !important;
+    column-gap: 8px !important;
+    row-gap: 0 !important;
+    padding: 8px 10px !important;
+    min-height: 56px !important;
+  }
+
+  /* 左側：ハンバーガー + Daily */
+  .header-left {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+
+  /* 右側：時刻 + ログアウト */
+  .header-right {
+    grid-column: 2 / 4 !important;
+    grid-row: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 6px !important;
+    width: auto !important;
+    margin-left: 0 !important;
+    min-width: 0 !important;
+  }
+
+  /* 時刻 */
+  #realtime-datetime,
+  #current-time,
+  .header-datetime,
+  .header-time {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    justify-self: auto !important;
+    white-space: nowrap !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+  }
+
+  /* ログアウトフォーム */
+  .header .logout-form {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    justify-self: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* ログアウトボタン */
+  .header .logout-btn {
+    width: auto !important;
+    min-width: 74px !important;
+    height: 30px !important;
+    padding: 0 10px !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+    border-radius: 999px !important;
+  }
+
+  .header-title,
+  .header-title-link {
+    white-space: nowrap !important;
+    font-size: 13px !important;
+  }
+}
 
 /* ==============================
    共通ボタン
