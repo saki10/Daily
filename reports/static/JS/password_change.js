@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   if (newPassword2) {
-    newPassword2.placeholder = "新しいパスワード（確認）を入力";
+    newPassword2.placeholder = "再度新しいパスワードを入力";
   }
 
   const errorElements = document.querySelectorAll(".js-password-error");
