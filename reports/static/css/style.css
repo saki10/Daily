@@ -1235,6 +1235,9 @@ a {
 
 .login-links,
 .signup-links {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
   margin-top: 24px;
 }
 
