@@ -23,7 +23,7 @@ a {
 ============================== */
 .layout {
   display: flex;
-  min-height: 100vh;
+  min-height: calc(100vh - 56px);
 }
 
 .main {
@@ -52,9 +52,10 @@ a {
 ============================== */
 .sidebar {
   width: 240px;
-  min-height: 100vh;
+  min-height: calc(100vh - 84px);
   flex-shrink: 0;
   padding: 18px 14px;
+  margin-top: 50px;
   background: #184b8a;
   color: #ffffff;
 }
@@ -113,16 +114,13 @@ a {
   position: sticky;
   top: 0;
   z-index: 1000;
-
   width: 100%;
   min-height: 56px;
   padding: 0 18px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-
   background: #f5f6fa;
   border-bottom: 1px solid #e5e7eb;
 }
@@ -276,7 +274,6 @@ a {
   }
 }
 
-
 /* ==============================
    ヘッダー：小さめスマホ
    Daily 左 / 時刻 右
@@ -348,7 +345,6 @@ a {
     font-size: 13px;
   }
 }
-
 
 @media (max-width: 480px) {
   .header {
@@ -1163,7 +1159,7 @@ a {
 .login-title,
 .signup-title {
   margin: 0 0 22px;
-  
+
   line-height: 1.2;
   color: #111827;
 }
@@ -1200,7 +1196,7 @@ a {
 .signup-form input[type="email"],
 .signup-form input[type="password"] {
   width: 100%;
-  
+
   padding: 0 18px;
   border: 1px solid #d1d5db;
   background: #ffffff;
@@ -2001,7 +1997,6 @@ a {
   transform: translateX(24px);
 }
 
-
 /* ==============================
    PC版：外部連携設定の保存ボタンを右寄せ＋小さめ＋少し上へ
 ============================== */
@@ -2238,7 +2233,6 @@ a {
   line-height: 1.8;
 }
 
-
 /* ==============================
    SP版：外部連携 詳細設定画面
 ============================== */
@@ -2471,9 +2465,7 @@ a {
   display: flex;
   flex-direction: column;
   gap: 22px;
-
 }
-
 
 /* ==============================
    認証系 共通
@@ -3202,7 +3194,9 @@ button {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
+    transition:
+      opacity 0.2s ease,
+      visibility 0.2s ease;
   }
 
   body.is-menu-open .sidebar-overlay {
