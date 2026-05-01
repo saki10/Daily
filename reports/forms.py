@@ -45,3 +45,5 @@ class SignupForm(UserCreationForm):
         self.fields["username"].widget.attrs.update({"class": "form-input"})
         self.fields["password1"].widget.attrs.update({"class": "form-input"})
         self.fields["password2"].widget.attrs.update({"class": "form-input"})
+
+        
