@@ -3,19 +3,69 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import DailyReport, ReportTemplate
 from django.contrib.auth.forms import AuthenticationForm
-
+from .models import DailyReport
+from django.contrib.auth import authenticate, get_user_model
 # 一覧/作成で使う（日報）
 class DailyReportForm(forms.ModelForm):
     class Meta:
         model = DailyReport
         exclude = ["report_date", "user"]
 
+
 class LoginForm(AuthenticationForm):
+    username = forms.EmailField(
+        label="メールアドレス",
+        widget=forms.EmailInput(
+            attrs={
+                "placeholder": "メールアドレスを入力",
+                "autocomplete": "email",
+            }
+        ),
+    )
+
+    password = forms.CharField(
+        label="パスワード",
+        strip=False,
+        widget=forms.PasswordInput(
+            attrs={
+                "placeholder": "パスワードを入力",
+                "autocomplete": "current-password",
+            }
+        ),
+    )
+
     error_messages = {
-        "invalid_login": "ユーザー名またはパスワードが正しくありません。",
+        "invalid_login": "メールアドレスまたはパスワードが正しくありません。",
         "inactive": "このアカウントは無効です。",
     }
 
+    def clean(self):
+        email = self.cleaned_data.get("username")
+        password = self.cleaned_data.get("password")
+
+        if email and password:
+            UserModel = get_user_model()
+            users = UserModel.objects.filter(email__iexact=email)
+
+            self.user_cache = None
+
+            for user in users:
+                authenticated_user = authenticate(
+                    self.request,
+                    username=user.get_username(),
+                    password=password,
+                )
+
+                if authenticated_user is not None:
+                    self.user_cache = authenticated_user
+                    break
+
+            if self.user_cache is None:
+                raise self.get_invalid_login_error()
+
+            self.confirm_login_allowed(self.user_cache)
+
+        return self.cleaned_data
 # テンプレート
 class ReportTemplateForm(forms.ModelForm):
     class Meta:
