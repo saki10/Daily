@@ -1,8 +1,11 @@
 from django.urls import path
 from . import views
-from django.contrib.auth import views as auth_views
+from django.contrib.auth import views as auth_views 
+from reports.forms import LoginForm
+from django.contrib.auth.views import LoginView
 
 urlpatterns = [
+    
     path('', views.report_list, name='home'),
     path('create/', views.report_create, name='create'),
     path('create/autosave/', views.report_autosave, name='report_autosave'),
@@ -71,4 +74,12 @@ urlpatterns = [
     path("integrations/gmail/", views.gmail_settings, name="gmail_settings"),
     path("settings/slack/", views.slack_settings, name="slack_settings"),
     path("slack/post/", views.slack_post, name="slack_post"),
+    path(
+        "accounts/login/",
+        LoginView.as_view(
+            template_name="registration/login.html",
+            authentication_form=LoginForm,
+        ),
+        name="login",
+    ),
 ] 

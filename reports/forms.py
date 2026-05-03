@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import DailyReport, ReportTemplate
-
+from django.contrib.auth.forms import AuthenticationForm
 
 # 一覧/作成で使う（日報）
 class DailyReportForm(forms.ModelForm):
@@ -10,6 +10,11 @@ class DailyReportForm(forms.ModelForm):
         model = DailyReport
         exclude = ["report_date", "user"]
 
+class LoginForm(AuthenticationForm):
+    error_messages = {
+        "invalid_login": "ユーザー名またはパスワードが正しくありません。",
+        "inactive": "このアカウントは無効です。",
+    }
 
 # テンプレート
 class ReportTemplateForm(forms.ModelForm):
@@ -45,5 +50,3 @@ class SignupForm(UserCreationForm):
         self.fields["username"].widget.attrs.update({"class": "form-input"})
         self.fields["password1"].widget.attrs.update({"class": "form-input"})
         self.fields["password2"].widget.attrs.update({"class": "form-input"})
-
-        
