@@ -619,6 +619,9 @@ a {
   cursor: not-allowed;
 }
 
+
+
+
 /* ==============================
    メッセージ表示
 ============================== */
@@ -1169,9 +1172,12 @@ a {
 .signup-subtitle {
   margin: 0 0 34px;
   color: #64748b;
-  font-size: 16px;
-  line-height: 1.7;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: nowrap;
 }
+
+
 
 .login-form .form-group,
 .signup-form .form-group,
@@ -1225,11 +1231,9 @@ a {
 
 .login-btn,
 .signup-actions .primary-btn {
-  min-width: 180px;
-  height: 58px;
   padding: 0 24px;
   border-radius: 999px;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -2389,7 +2393,13 @@ a {
   .login-subtitle,
   .signup-subtitle {
     margin-bottom: 28px;
+    
   }
+@media screen and (max-width: 768px) {
+  .signup-subtitle {
+  }
+}
+  
 
   .report-search-box {
     flex-direction: column;
