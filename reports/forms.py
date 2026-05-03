@@ -6,7 +6,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from .models import DailyReport
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.forms import PasswordResetForm
-
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm
 
 # 一覧/作成で使う（日報）
 class DailyReportForm(forms.ModelForm):
@@ -132,11 +133,29 @@ class SignupForm(UserCreationForm):
 
         return email
 # パスワード再設定で使う
+# パスワード再設定で使う
 class CustomPasswordResetForm(PasswordResetForm):
-    """
-    同じメールアドレスのユーザーが複数存在する場合でも、
-    最初の1アカウントにだけパスワード再設定メールを送信する。
-    """
+    email = forms.EmailField(
+        label="メールアドレス",
+        widget=forms.EmailInput(
+            attrs={
+                "class": "form-input",
+                "placeholder": "登録済みのメールアドレスを入力",
+                "autocomplete": "email",
+            }
+        ),
+    )
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email", "").strip().lower()
+        UserModel = get_user_model()
+
+        if not UserModel.objects.filter(email__iexact=email, is_active=True).exists():
+            raise forms.ValidationError(
+                "登録されていないメールアドレスには、パスワード再設定メールは届きません。"
+            )
+
+        return email
 
     def get_users(self, email):
         UserModel = get_user_model()

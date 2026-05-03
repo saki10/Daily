@@ -29,7 +29,7 @@ urlpatterns = [
             email_template_name="registration/password_reset_email.html",
             subject_template_name="registration/password_reset_subject.txt",
             success_url="/accounts/password_reset/done/",
-            from_email="Daily <noreply@example.com>",
+            form_class=CustomPasswordResetForm,
         ),
         name="password_reset",
     ),
