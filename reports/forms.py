@@ -80,7 +80,12 @@ class ReportTemplateForm(forms.ModelForm):
 class SignupForm(UserCreationForm):
     email = forms.EmailField(
         label="メールアドレス",
-        widget=forms.EmailInput(attrs={"class": "form-input"})
+        widget=forms.EmailInput(
+            attrs={
+                "class": "form-input",
+                "placeholder": "メールアドレスを入力",
+            }
+        ),
     )
 
     class Meta:
@@ -97,6 +102,17 @@ class SignupForm(UserCreationForm):
         self.fields["password1"].label = "パスワード"
         self.fields["password2"].label = "パスワード確認"
 
-        self.fields["username"].widget.attrs.update({"class": "form-input"})
-        self.fields["password1"].widget.attrs.update({"class": "form-input"})
-        self.fields["password2"].widget.attrs.update({"class": "form-input"})
+        self.fields["username"].widget.attrs.update({
+            "class": "form-input",
+            "placeholder": "ユーザー名を入力",
+        })
+
+        self.fields["password1"].widget.attrs.update({
+            "class": "form-input",
+            "placeholder": "英数字を含む8文字以上で入力",
+        })
+
+        self.fields["password2"].widget.attrs.update({
+            "class": "form-input",
+            "placeholder": "再度パスワードを入力",
+        })
