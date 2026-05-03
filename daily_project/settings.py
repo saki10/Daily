@@ -148,3 +148,7 @@ SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 # OpenAI API設定
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+# サイトURL設定
+SITE_DOMAIN = os.environ.get("SITE_DOMAIN", "")
+SITE_USE_HTTPS = os.environ.get("SITE_USE_HTTPS", "True").lower() == "true"

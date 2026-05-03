@@ -22,6 +22,9 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login
+from .forms import CustomPasswordResetForm
+from django.contrib.auth.views import PasswordResetView
+from django.http import HttpResponseRedirect
 
 SYSTEM_PROMPT = """
 あなたは日本語の「業務日報」を作るアシスタントです。
@@ -776,3 +779,27 @@ class CustomPasswordChangeView(PasswordChangeView):
     def form_valid(self, form):
         messages.success(self.request, "パスワードを変更しました。")
         return super().form_valid(form)
+
+class CustomPasswordResetView(PasswordResetView):
+    template_name = "registration/password_reset_form.html"
+    email_template_name = "registration/password_reset_email.html"
+    subject_template_name = "registration/password_reset_subject.txt"
+    success_url = reverse_lazy("password_reset_done")
+    form_class = CustomPasswordResetForm
+    from_email = settings.DEFAULT_FROM_EMAIL
+
+    def form_valid(self, form):
+        opts = {
+            "use_https": settings.SITE_USE_HTTPS,
+            "token_generator": self.token_generator,
+            "from_email": settings.DEFAULT_FROM_EMAIL,
+            "email_template_name": self.email_template_name,
+            "subject_template_name": self.subject_template_name,
+            "request": self.request,
+            "html_email_template_name": self.html_email_template_name,
+            "extra_email_context": self.extra_email_context,
+            "domain_override": settings.SITE_DOMAIN,
+        }
+
+        form.save(**opts)
+        return HttpResponseRedirect(self.get_success_url())

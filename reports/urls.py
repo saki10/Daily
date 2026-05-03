@@ -63,15 +63,8 @@ urlpatterns = [
     ),
     # パスワード再設定
     path(
-        "accounts/password_reset/",
-        auth_views.PasswordResetView.as_view(
-            template_name="registration/password_reset_form.html",
-            email_template_name="registration/password_reset_email.html",
-            subject_template_name="registration/password_reset_subject.txt",
-            success_url="/accounts/password_reset/done/",
-            form_class=CustomPasswordResetForm,
-             from_email=settings.DEFAULT_FROM_EMAIL,
-        ),
-        name="password_reset",
+    "accounts/password_reset/",
+    views.CustomPasswordResetView.as_view(),
+    name="password_reset",
     ),
 ]
