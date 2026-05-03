@@ -3,6 +3,7 @@ from . import views
 from django.contrib.auth import views as auth_views
 from reports.forms import LoginForm
 from django.contrib.auth.views import LoginView
+from reports.forms import LoginForm, CustomPasswordResetForm
 
 urlpatterns = [
     path('', views.report_list, name='home'),
@@ -28,6 +29,7 @@ urlpatterns = [
             email_template_name="registration/password_reset_email.html",
             subject_template_name="registration/password_reset_subject.txt",
             success_url="/accounts/password_reset/done/",
+            from_email="Daily <noreply@example.com>",
         ),
         name="password_reset",
     ),
@@ -53,7 +55,6 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
-
     path("create/", views.report_create, name="create"),
     path('settings/username/', views.username_change, name='username_change'),
     path('ai/generate/', views.ai_generate_report, name='ai_generate_report'),
@@ -71,5 +72,17 @@ urlpatterns = [
             authentication_form=LoginForm,
         ),
         name="login",
+    ),
+    # パスワード再設定
+    path(
+        "accounts/password_reset/",
+        auth_views.PasswordResetView.as_view(
+            template_name="registration/password_reset_form.html",
+            email_template_name="registration/password_reset_email.html",
+            subject_template_name="registration/password_reset_subject.txt",
+            success_url="/accounts/password_reset/done/",
+            form_class=CustomPasswordResetForm,
+        ),
+        name="password_reset",
     ),
 ]

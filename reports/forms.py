@@ -5,6 +5,9 @@ from .models import DailyReport, ReportTemplate
 from django.contrib.auth.forms import AuthenticationForm
 from .models import DailyReport
 from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.forms import PasswordResetForm
+
+
 # 一覧/作成で使う（日報）
 class DailyReportForm(forms.ModelForm):
     class Meta:
@@ -128,3 +131,23 @@ class SignupForm(UserCreationForm):
                 )
 
         return email
+# パスワード再設定で使う
+class CustomPasswordResetForm(PasswordResetForm):
+    """
+    同じメールアドレスのユーザーが複数存在する場合でも、
+    最初の1アカウントにだけパスワード再設定メールを送信する。
+    """
+
+    def get_users(self, email):
+        UserModel = get_user_model()
+
+        users = (
+            UserModel._default_manager
+            .filter(email__iexact=email, is_active=True)
+            .order_by("date_joined", "id")
+        )
+
+        for user in users:
+            if user.has_usable_password():
+                yield user
+                return
