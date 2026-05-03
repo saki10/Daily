@@ -116,3 +116,15 @@ class SignupForm(UserCreationForm):
             "class": "form-input",
             "placeholder": "再度パスワードを入力",
         })
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+
+        if email:
+            email = email.strip().lower()
+
+            if User.objects.filter(email__iexact=email).exists():
+                raise forms.ValidationError(
+                    "このメールアドレスはすでに登録されています。"
+                )
+
+        return email
