@@ -1,11 +1,10 @@
 from django.urls import path
 from . import views
-from django.contrib.auth import views as auth_views 
+from django.contrib.auth import views as auth_views
 from reports.forms import LoginForm
 from django.contrib.auth.views import LoginView
 
 urlpatterns = [
-    
     path('', views.report_list, name='home'),
     path('create/', views.report_create, name='create'),
     path('create/autosave/', views.report_autosave, name='report_autosave'),
@@ -15,20 +14,11 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('settings/email/', views.email_change, name='email_change'),
     path("history/", views.report_history, name="report_history"),
+
     path(
         "settings/password/",
-        auth_views.PasswordChangeView.as_view(
-            template_name="reports/password_change_form.html",
-            success_url="/settings/password/done/"
-        ),
+        views.CustomPasswordChangeView.as_view(),
         name="password_change",
-    ),
-    path(
-        "settings/password/done/",
-        auth_views.PasswordChangeDoneView.as_view(
-            template_name="reports/password_change_done.html"
-        ),
-        name="password_change_done",
     ),
 
     path(
@@ -63,7 +53,7 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
-    
+
     path("create/", views.report_create, name="create"),
     path('settings/username/', views.username_change, name='username_change'),
     path('ai/generate/', views.ai_generate_report, name='ai_generate_report'),
@@ -82,4 +72,4 @@ urlpatterns = [
         ),
         name="login",
     ),
-] 
+]

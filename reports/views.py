@@ -9,7 +9,6 @@ from django.contrib import messages
 from django.contrib.auth import logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.db.models import Q
-from openai import OpenAI
 from .models import DailyReport, UserIntegration
 from .forms import DailyReportForm, SignupForm
 from django.views.decorators.http import require_POST
@@ -17,7 +16,12 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .utils import format_for_teams
 from django.utils import timezone
-
+from django.contrib.auth import login, get_user_model
+from .forms import SignupForm
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth import get_user_model
+from django.contrib.auth import login
 
 SYSTEM_PROMPT = """
 あなたは日本語の「業務日報」を作るアシスタントです。
@@ -59,7 +63,7 @@ def report_create(request):
                 request,
                 "日報の保存にはログインが必要です。AI生成のみご利用いただけます。"
             )
-            return redirect("login")
+            return redirect("home")
 
         form = DailyReportForm(request.POST)
         print("POST received")
@@ -316,23 +320,28 @@ def report_history(request):
 def email_change(request):
     """
     メールアドレス変更
-    - POST: email / email_confirm が一致すれば更新
+    - POST: 入力された email を現在のユーザーに設定する
     """
     if request.method == "POST":
-        email = request.POST.get("email", "").strip()
-        email_confirm = request.POST.get("email_confirm", "").strip()
+        email = request.POST.get("email", "").strip().lower()
 
-        if email != email_confirm:
-            messages.error(request, "メールアドレスが一致しません")
+        if not email:
+            messages.error(request, "新しいメールアドレスを入力してください。")
+            return redirect("email_change")
+
+        UserModel = get_user_model()
+
+        if UserModel.objects.filter(email__iexact=email).exclude(pk=request.user.pk).exists():
+            messages.error(request, "このメールアドレスはすでに登録されています。")
             return redirect("email_change")
 
         request.user.email = email
         request.user.save()
-        messages.success(request, "メールアドレスを変更しました")
+
+        messages.success(request, "メールアドレスを変更しました。")
         return redirect("settings")
 
     return render(request, "reports/email_change.html")
-
 
 # =====================================
 # 設定：ユーザー名変更
@@ -340,22 +349,28 @@ def email_change(request):
 @login_required
 def username_change(request):
     """
-    ユーザー名変更
+    ユーザーネーム変更
     """
     if request.method == "POST":
         username = request.POST.get("username", "").strip()
 
         if not username:
-            messages.error(request, "ユーザー名を入力してください")
+            messages.error(request, "ユーザーネームを入力してください。")
+            return redirect("username_change")
+
+        UserModel = get_user_model()
+
+        if UserModel.objects.filter(username=username).exclude(pk=request.user.pk).exists():
+            messages.error(request, "このユーザーネームはすでに使用されています。")
             return redirect("username_change")
 
         request.user.username = username
         request.user.save()
-        messages.success(request, "ユーザー名を変更しました")
+
+        messages.success(request, "ユーザーネームを変更しました。")
         return redirect("settings")
 
     return render(request, "reports/username_change.html")
-
 
 # =====================================
 # 設定：パスワード変更
@@ -386,21 +401,23 @@ def password_change(request):
 def signup(request):
     """
     新規登録
-    - SignupForm（UserCreationForm継承）を利用
+    - 登録完了後、自動ログインしてホーム画面へ遷移
     """
+    if request.user.is_authenticated:
+        return redirect("home")
+
     if request.method == "POST":
         form = SignupForm(request.POST)
+
         if form.is_valid():
-            form.save()
-            messages.success(request, "新規登録が完了しました。ログインしてください。")
-            return redirect("login")
+            user = form.save()
+            login(request, user)
+            messages.success(request, "新規登録が完了しました。")
+            return redirect("home")
     else:
         form = SignupForm()
 
     return render(request, "registration/signup.html", {"form": form})
-
-
-
 
 # =====================================
 # AI：日報生成 API
@@ -748,3 +765,14 @@ def gmail_settings(request):
         "reports/gmail_settings.html",
         {"integration": integration}
     )
+
+# =====================================
+# PW変更完了画面
+# =====================================
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = "reports/password_change_form.html"
+    success_url = reverse_lazy("settings")
+
+    def form_valid(self, form):
+        messages.success(self.request, "パスワードを変更しました。")
+        return super().form_valid(form)
