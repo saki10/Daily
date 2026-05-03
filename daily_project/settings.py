@@ -9,11 +9,16 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
-from pathlib import Path
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# .envを先に読み込む
+load_dotenv(BASE_DIR / ".env", override=True)
 
 
 # Quick-start development settings - unsuitable for production
@@ -102,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE =  'ja'
+LANGUAGE_CODE = 'ja'
 
 TIME_ZONE = "Asia/Tokyo"
 
@@ -123,10 +128,12 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/list/'
-#LOGIN_REDIRECT_URL  ログイン成功 → 一覧へ移動
+# LOGIN_REDIRECT_URL  ログイン成功 → 一覧へ移動
 LOGOUT_REDIRECT_URL = '/accounts/login/'
-# LOGOUT_REDIRECT_URL ログアウト → ログ
+# LOGOUT_REDIRECT_URL ログアウト → ログイン画面へ移動
 
+
+# メール送信設定
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
@@ -135,16 +142,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = f"Daily <{EMAIL_HOST_USER}>"
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
-import os
-from pathlib import Path
-from dotenv import load_dotenv
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-load_dotenv(BASE_DIR / ".env")
+# OpenAI API設定
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-
-DEFAULT_FROM_EMAIL = "noreply@example.com"
