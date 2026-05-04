@@ -267,26 +267,12 @@ def report_autosave(request):
 
 
 # =====================================
-# 画面：ホーム
+# 画面：ホーム（日報検索付き）
 # =====================================
 @login_required
 def home(request):
-    latest_reports = DailyReport.objects.filter(
-        user=request.user
-    ).order_by("-report_date", "-id")[:3]
-
-    context = {
-        "latest_reports": latest_reports,
-    }
-    return render(request, "reports/home.html", context)
-
-
-# =====================================
-# 画面：日報一覧（検索付き）
-# =====================================
-@login_required
-def report_list(request):
     q = request.GET.get("q", "").strip()
+    report_date = request.GET.get("report_date", "").strip()
 
     reports = DailyReport.objects.filter(
         user=request.user
@@ -300,13 +286,22 @@ def report_list(request):
             Q(note__icontains=q)
         )
 
+    if report_date:
+        reports = reports.filter(report_date=report_date)
+
+    latest_reports = DailyReport.objects.filter(
+        user=request.user
+    ).order_by("-report_date", "-id")[:3]
+
     context = {
         "reports": reports,
+        "latest_reports": latest_reports,
         "q": q,
+        "report_date": report_date,
         "result_count": reports.count(),
     }
-    return render(request, "reports/report_list.html", context)
 
+    return render(request, "reports/home.html", context)
 
 # =====================================
 # 画面：設定

@@ -619,9 +619,6 @@ a {
   cursor: not-allowed;
 }
 
-
-
-
 /* ==============================
    メッセージ表示
 ============================== */
@@ -1176,8 +1173,6 @@ a {
   line-height: 1.5;
   white-space: nowrap;
 }
-
-
 
 .login-form .form-group,
 .signup-form .form-group,
@@ -2393,13 +2388,11 @@ a {
   .login-subtitle,
   .signup-subtitle {
     margin-bottom: 28px;
-    
   }
-@media screen and (max-width: 768px) {
-  .signup-subtitle {
+  @media screen and (max-width: 768px) {
+    .signup-subtitle {
+    }
   }
-}
-  
 
   .report-search-box {
     flex-direction: column;
@@ -3307,7 +3300,6 @@ button {
   margin-top: 32px;
 }
 
-
 /* =====================================
    AI文章生成 注意書き
 ===================================== */
@@ -3351,4 +3343,89 @@ button {
 ===================================== */
 .save-btn {
   min-width: 88px;
+}
+
+/* =====================================
+   ホーム：検索フォーム
+===================================== */
+.search-section {
+  margin: 20px 0 24px;
+}
+
+.home-search-form {
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid #dfe3ea;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+}
+
+.home-search-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.home-search-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.home-search-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.home-search-date,
+.home-search-input {
+  height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #cfd6e4;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #ffffff;
+}
+
+.home-search-date {
+  min-width: 170px;
+}
+
+.keyword-field {
+  flex: 1;
+  min-width: 260px;
+}
+
+.home-search-input {
+  width: 100%;
+}
+
+.home-search-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.section-sub {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: #667085;
+}
+
+@media (max-width: 768px) {
+  .home-search-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home-search-date,
+  .home-search-input {
+    width: 100%;
+  }
+
+  .home-search-actions {
+    justify-content: flex-end;
+  }
 }

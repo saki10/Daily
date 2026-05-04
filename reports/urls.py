@@ -6,11 +6,11 @@ from django.contrib.auth.views import LoginView
 from reports.forms import LoginForm, CustomPasswordResetForm
 from django.conf import settings
 urlpatterns = [
-    path('', views.report_list, name='home'),
+    path('', views.home, name='home'),
     path('create/', views.report_create, name='create'),
     path('create/autosave/', views.report_autosave, name='report_autosave'),
     path('ai/generate/', views.ai_generate_report, name='ai_generate_report'),
-    path('list/', views.report_list, name='report_list'),
+    path('list/', views.home, name='report_list'),
     path('settings/', views.settings_view, name='settings'),
     path('signup/', views.signup, name='signup'),
     path('settings/email/', views.email_change, name='email_change'),
