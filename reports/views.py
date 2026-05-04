@@ -53,12 +53,13 @@ def report_create(request):
 
     """
     日報作成画面
-    - GET : ログイン済みなら今日の下書きがあれば復元
-    - POST: ログイン済みのみ保存
+    - GET : ログイン済みなら今日の日報があれば復元
+    - POST: ログイン済みのみ保存・更新
     - 未ログイン: AI生成のみ利用可能
     """
 
     today = timezone.localdate()
+    is_update = False
 
     if request.method == "POST":
         if not request.user.is_authenticated:
@@ -179,15 +180,26 @@ def report_create(request):
             else:
                 print("Gmail skipped")
 
-            messages.success(request, "日報を保存しました")
-            return redirect("create")
+            if created:
+                messages.success(request, "日報を保存しました")
+            else:
+                messages.success(request, "日報を更新しました")
+
+            # 保存・更新後は、一覧を確認できるホーム画面へ遷移
+            return redirect("home")
 
         else:
             print("FORM invalid:", form.errors)
 
+        is_update = DailyReport.objects.filter(
+            user=request.user,
+            report_date=today
+        ).exists()
+
         return render(request, "reports/report_form.html", {
             "form": form,
             "ai_memo": request.POST.get("ai_memo", ""),
+            "is_update": is_update,
         })
 
     if request.user.is_authenticated:
@@ -199,16 +211,20 @@ def report_create(request):
         if report:
             form = DailyReportForm(instance=report)
             ai_memo = report.ai_memo
+            is_update = True
         else:
             form = DailyReportForm()
             ai_memo = ""
+            is_update = False
     else:
         form = DailyReportForm()
         ai_memo = ""
+        is_update = False
 
     return render(request, "reports/report_form.html", {
         "form": form,
         "ai_memo": ai_memo,
+        "is_update": is_update,
     })
 # =====================================
 # 画面：自動保存
