@@ -1,16 +1,27 @@
-{% extends "reports/base.html" %}
-
-{% block content %}
+{% extends "reports/base.html" %} {% block content %}
 <div class="integration-detail-page">
   <section class="integration-detail-card">
-    <h1 class="integration-detail-title">Slack設定</h1>
+    <div class="integration-detail-header">
+      <div>
+        <h1 class="integration-detail-title">Slack設定</h1>
+        <p class="integration-detail-subtitle">
+          Dailyで作成した日報をSlackへ自動送信するための設定です。
+        </p>
+      </div>
+
+      {% if integration.slack_webhook_url %}
+      <span class="integration-status-badge is-set">設定済み</span>
+      {% else %}
+      <span class="integration-status-badge is-unset">未設定</span>
+      {% endif %}
+    </div>
 
     <form method="post" class="integration-detail-form">
       {% csrf_token %}
 
       <div class="integration-detail-group">
         <label for="slack_webhook_url" class="integration-detail-label">
-          Webhook URL
+          Slack Webhook URL
         </label>
 
         <input
@@ -19,26 +30,60 @@
           id="slack_webhook_url"
           class="integration-detail-input"
           value=""
-          placeholder="Slack Webhook URLを入力してください"
-        >
+          placeholder="https://hooks.slack.com/services/..."
+        />
 
         {% if integration.slack_webhook_url %}
-          <p class="integration-detail-note">
-            現在Webhookは設定済みです。変更する場合のみ入力してください。
-          </p>
+        <p class="integration-detail-note">
+          現在Webhook
+          URLは設定済みです。変更する場合のみ、新しいURLを入力してください。
+        </p>
+        {% else %}
+        <p class="integration-detail-note">
+          Slackへ日報を送信する場合は、Webhook URLを入力してください。
+        </p>
         {% endif %}
+
+        <div class="webhook-help">
+          <div class="webhook-help-head">
+            <div class="webhook-help-icon">?</div>
+            <div>
+              <p class="webhook-help-title">Webhook URLとは？</p>
+              <p class="webhook-help-text">
+                DailyからSlackへ日報を自動送信するための専用URLです。
+                Slackで通知先チャンネルを選んで発行したURLを入力してください。
+              </p>
+            </div>
+          </div>
+
+          <details class="webhook-details">
+            <summary>Slack Webhook URLの取得方法を見る</summary>
+            <ol>
+              <li>Slack APIの「Your Apps」からSlackアプリを作成します。</li>
+              <li>作成したアプリで「Incoming Webhooks」を有効にします。</li>
+              <li>「Add New Webhook to Workspace」を押します。</li>
+              <li>日報を送信したいチャンネルを選択します。</li>
+              <li>
+                発行されたWebhook URLをコピーして、この画面に貼り付けます。
+              </li>
+            </ol>
+          </details>
+        </div>
       </div>
 
       <div class="integration-detail-actions">
-        <button type="submit" class="integration-detail-save-btn">
+        <a
+          href="{% url 'integrations' %}"
+          class="btn integration-action-btn btn-secondary"
+        >
+          戻る
+        </a>
+
+        <button type="submit" class="btn integration-action-btn btn-primary">
           保存
         </button>
       </div>
     </form>
-
-    <div class="integration-detail-help">
-      Slack App の Incoming Webhooks を有効化して、Webhook URL を発行してください。
-    </div>
   </section>
 </div>
 {% endblock %}

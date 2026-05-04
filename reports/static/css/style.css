@@ -3429,3 +3429,263 @@ button {
     justify-content: flex-end;
   }
 }
+
+/* =====================================
+   外部連携 詳細画面
+===================================== */
+.integration-detail-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.integration-detail-card {
+  background: #ffffff;
+  border: 1px solid #dfe3ea;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.integration-detail-header {
+  position: relative;
+  display: block;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #edf0f5;
+  text-align: center;
+}
+
+.integration-detail-header > div {
+  width: 100%;
+  text-align: center;
+}
+
+.integration-detail-title {
+  text-align: center;
+}
+
+.integration-detail-subtitle {
+  text-align: center;
+}
+
+.integration-status-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.integration-detail-kicker {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4f7cff;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.integration-detail-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.integration-detail-subtitle {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #667085;
+}
+
+.integration-status-badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.integration-status-badge.is-set {
+  background: #ecfdf3;
+  color: #027a48;
+  border: 1px solid #abefc6;
+}
+
+.integration-status-badge.is-unset {
+  background: #fff7e6;
+  color: #8a5a00;
+  border: 1px solid #ffd591;
+}
+
+.integration-detail-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.integration-detail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.integration-detail-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #344054;
+}
+
+.integration-detail-input {
+  width: 100%;
+  height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #cfd6e4;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #111827;
+  background: #ffffff;
+}
+
+.integration-detail-input:focus {
+  outline: none;
+  border-color: #4f7cff;
+  box-shadow: 0 0 0 3px rgba(79, 124, 255, 0.16);
+}
+
+.integration-detail-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #667085;
+}
+
+/* =====================================
+   Webhook URL 説明ボックス
+===================================== */
+.webhook-help {
+  margin-top: 8px;
+  padding: 16px;
+  background: #f8fafc;
+  border: 1px solid #dbe3ef;
+  border-radius: 14px;
+}
+
+.webhook-help-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.webhook-help-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #4f7cff;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.webhook-help-title {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.webhook-help-text {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #475467;
+}
+
+.webhook-details {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e4e7ec;
+}
+
+.webhook-details summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.webhook-details ol {
+  margin: 10px 0 0;
+  padding-left: 20px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #475467;
+}
+
+.webhook-details li + li {
+  margin-top: 4px;
+}
+
+/* =====================================
+   ボタン
+===================================== */
+.integration-detail-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.integration-detail-save-btn {
+  min-width: 96px;
+  height: 40px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.integration-detail-save-btn:hover {
+  background: #1d4ed8;
+}
+
+/* =====================================
+   スマホ対応
+===================================== */
+@media (max-width: 768px) {
+  .integration-detail-page {
+    padding: 20px 14px;
+  }
+
+  .integration-detail-card {
+    padding: 20px;
+    border-radius: 14px;
+  }
+
+  .integration-detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .integration-detail-title {
+    font-size: 24px;
+  }
+
+  .integration-detail-actions {
+    justify-content: flex-end;
+  }
+}
+

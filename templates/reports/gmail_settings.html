@@ -1,39 +1,89 @@
-{% extends "reports/base.html" %}
-{% load static %}
-
-{% block content %}
-<div class="settings-page">
-  <div class="settings-card email-card">
-    <h1 class="settings-title">Gmail設定</h1>
-    <p class="settings-subtitle">
-      日報の送付先メールアドレスを設定してください。
-    </p>
-
-    <form method="post" action="{% url 'gmail_settings' %}" class="settings-form">
-      {% csrf_token %}
-
-      <div class="form-group">
-        <label for="gmail_email" class="form-label">送付先Gmailアドレス</label>
-        <input
-          type="email"
-          name="gmail_email"
-          id="gmail_email"
-          class="form-input"
-          value="{{ integration.gmail_email }}"
-          placeholder="example@gmail.com"
-        >
+{% extends "reports/base.html" %} {% load static %} {% block content %}
+<div class="integration-detail-page">
+  <section class="integration-detail-card">
+    <div class="integration-detail-header">
+      <div>
+        <h1 class="integration-detail-title">Gmail設定</h1>
+        <p class="integration-detail-subtitle">
+          Dailyで作成した日報をGmailへ自動送信するための設定です。
+        </p>
       </div>
 
-      <div class="settings-actions">
-        <a href="{% url 'integrations' %}" class="btn btn-secondary">戻る</a>
-        <button type="submit" name="action" value="test" class="btn btn-secondary">
-          テスト送信
-        </button>
-        <button type="submit" name="action" value="save" class="btn btn-primary">
-          保存する
+      {% if integration.gmail_email %}
+      <span class="integration-status-badge is-set">設定済み</span>
+      {% else %}
+      <span class="integration-status-badge is-unset">未設定</span>
+      {% endif %}
+    </div>
+
+    <form method="post" class="integration-detail-form">
+      {% csrf_token %}
+
+      <div class="integration-detail-group">
+        <label for="gmail_email" class="integration-detail-label">
+          送信先メールアドレス
+        </label>
+
+        <input
+          type="email"
+          id="gmail_email"
+          name="gmail_email"
+          class="integration-detail-input"
+          placeholder="example@gmail.com"
+          value="{{ form.gmail_email.value|default:integration.gmail_email|default:'' }}"
+        />
+
+        {% if integration.gmail_email %}
+        <p class="integration-detail-note">
+          現在Gmail送信先は設定済みです。変更する場合のみ、新しいメールアドレスを入力してください。
+        </p>
+        {% else %}
+        <p class="integration-detail-note">
+          Gmailへ日報を送信する場合は、送信先メールアドレスを入力してください。
+        </p>
+        {% endif %}
+
+        <div class="webhook-help">
+          <div class="webhook-help-head">
+            <div class="webhook-help-icon">?</div>
+            <div>
+              <p class="webhook-help-title">Gmail設定とは？</p>
+              <p class="webhook-help-text">
+                Dailyで保存した日報を、指定したメールアドレス宛に自動送信するための設定です。<br />
+                <span
+                  >Gmail送信を利用するには、管理側でメール送信設定が有効になっている必要があります。</span
+                >
+              </p>
+            </div>
+          </div>
+
+          <details class="webhook-details">
+            <summary>Gmail送信の利用方法を見る</summary>
+            <ol>
+              <li>送信先にしたいメールアドレスを入力します。</li>
+              <li>保存ボタンを押して設定を保存します。</li>
+              <li>外部連携設定画面でGmail連携をONにします。</li>
+              <li>
+                日報を保存すると、設定したメールアドレス宛に日報が送信されます。
+              </li>
+            </ol>
+          </details>
+        </div>
+      </div>
+
+      <div class="integration-detail-actions">
+        <a
+          href="{% url 'integrations' %}"
+          class="btn integration-action-btn btn-secondary"
+        >
+          戻る
+        </a>
+
+        <button type="submit" class="btn integration-action-btn btn-primary">
+          保存
         </button>
       </div>
     </form>
-  </div>
+  </section>
 </div>
 {% endblock %}
