@@ -105,7 +105,7 @@ def report_create(request):
                 f"■ 今日やったこと\n{report.today_work}\n\n"
                 f"■ 振り返り\n{report.reflection}\n\n"
                 f"■ 明日の予定\n{report.tomorrow_plan}\n\n"
-                f"■ 備考\n{report.note}"
+                f"■ 連絡事項\n{report.note}"
             )
 
             today_work = format_for_teams(report.today_work)
@@ -121,7 +121,7 @@ def report_create(request):
                 f"{reflection}\n\n"
                 "**■ 明日の予定**\n\n"
                 f"{tomorrow_plan}\n\n"
-                "**■ 備考**\n\n"
+                "**■ 連絡事項**\n\n"
                 f"{note}"
             )
 
@@ -159,7 +159,7 @@ def report_create(request):
                         f"■ 今日やったこと\n{report.today_work}\n\n"
                         f"■ 振り返り\n{report.reflection}\n\n"
                         f"■ 明日の予定\n{report.tomorrow_plan}\n\n"
-                        f"■ 備考\n{report.note}"
+                        f"■ 連絡事項\n{report.note}"
                     )
 
                     send_mail(
