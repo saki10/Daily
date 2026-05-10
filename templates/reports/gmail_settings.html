@@ -1,4 +1,7 @@
-{% extends "reports/base.html" %} {% load static %} {% block content %}
+{% extends "reports/base.html" %}
+{% load static %}
+
+{% block content %}
 <div class="integration-detail-page">
   <section class="integration-detail-card">
     <div class="integration-detail-header">
@@ -10,9 +13,9 @@
       </div>
 
       {% if integration.gmail_email %}
-      <span class="integration-status-badge is-set">設定済み</span>
+        <span class="integration-status-badge is-set">設定済み</span>
       {% else %}
-      <span class="integration-status-badge is-unset">未設定</span>
+        <span class="integration-status-badge is-unset">未設定</span>
       {% endif %}
     </div>
 
@@ -30,17 +33,17 @@
           name="gmail_email"
           class="integration-detail-input"
           placeholder="example@gmail.com"
-          value="{{ form.gmail_email.value|default:integration.gmail_email|default:'' }}"
+          value="{{ integration.gmail_email|default_if_none:'' }}"
         />
 
         {% if integration.gmail_email %}
-        <p class="integration-detail-note">
-          現在Gmail送信先は設定済みです。変更する場合のみ、新しいメールアドレスを入力してください。
-        </p>
+          <p class="integration-detail-note">
+            現在Gmail送信先は設定済みです。変更する場合のみ、新しいメールアドレスを入力してください。
+          </p>
         {% else %}
-        <p class="integration-detail-note">
-          Gmailへ日報を送信する場合は、送信先メールアドレスを入力してください。
-        </p>
+          <p class="integration-detail-note">
+            Gmailへ日報を送信する場合は、送信先メールアドレスを入力してください。
+          </p>
         {% endif %}
 
         <div class="webhook-help">
@@ -50,9 +53,9 @@
               <p class="webhook-help-title">Gmail設定とは？</p>
               <p class="webhook-help-text">
                 Dailyで保存した日報を、指定したメールアドレス宛に自動送信するための設定です。<br />
-                <span
-                  >Gmail送信を利用するには、管理側でメール送信設定が有効になっている必要があります。</span
-                >
+                <span>
+                  Gmail送信を利用するには、管理側でメール送信設定が有効になっている必要があります。
+                </span>
               </p>
             </div>
           </div>
@@ -79,8 +82,22 @@
           戻る
         </a>
 
-        <button type="submit" class="btn integration-action-btn btn-primary">
+        <button
+          type="submit"
+          name="action"
+          value="save"
+          class="btn integration-action-btn btn-primary"
+        >
           保存
+        </button>
+
+        <button
+          type="submit"
+          name="action"
+          value="test"
+          class="btn integration-action-btn btn-blue"
+        >
+          テスト送信
         </button>
       </div>
     </form>

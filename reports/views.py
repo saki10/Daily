@@ -2,29 +2,29 @@ import re
 import json
 import traceback
 import requests
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.contrib.auth import logout, update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
-from django.db.models import Q
-from .models import DailyReport, UserIntegration
-from .forms import DailyReportForm, SignupForm
-from django.views.decorators.http import require_POST
-from django.core.mail import send_mail
+
+from django import forms
 from django.conf import settings
-from .utils import format_for_teams
-from django.utils import timezone
-from django.contrib.auth import login, get_user_model
-from .forms import SignupForm
+from django.contrib import messages
+from django.contrib.auth import login, get_user_model, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
+from django.contrib.auth.views import PasswordChangeView, PasswordResetView
+from django.core.mail import send_mail
+from django.db.models import Q
+from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.contrib.auth.views import PasswordChangeView
-from django.contrib.auth import get_user_model
-from django.contrib.auth import login
-from .forms import CustomPasswordResetForm
-from django.contrib.auth.views import PasswordResetView
-from django.http import HttpResponseRedirect
+from django.utils import timezone
+from django.views.decorators.http import require_POST
+
+from .forms import DailyReportForm, SignupForm
+from .models import DailyReport, UserIntegration
+from .utils import format_for_teams
+
+
+User = get_user_model()
+
 
 SYSTEM_PROMPT = """
 あなたは日本語の「業務日報」を作るアシスタントです。
@@ -40,9 +40,17 @@ SYSTEM_PROMPT = """
 - warning には注意事項がなければ空文字を入れる
 """.strip()
 
+
 SLACK_WEBHOOK_RE = re.compile(
     r"^https://hooks\.slack\.com/services/[\w-]+/[\w-]+/[\w-]+$"
 )
+
+
+# =====================================
+# ポートフォリオ画面
+# =====================================
+def portfolio(request):
+    return render(request, "reports/portfolio.html")
 
 
 # =====================================
@@ -50,13 +58,6 @@ SLACK_WEBHOOK_RE = re.compile(
 # =====================================
 def report_create(request):
     print("HIT report_create:", request.method)
-
-    """
-    日報作成画面
-    - GET : ログイン済みなら今日の日報があれば復元
-    - POST: ログイン済みのみ保存・更新
-    - 未ログイン: AI生成のみ利用可能
-    """
 
     today = timezone.localdate()
     is_update = False
@@ -185,11 +186,9 @@ def report_create(request):
             else:
                 messages.success(request, "日報を更新しました")
 
-            # 保存・更新後は、一覧を確認できるホーム画面へ遷移
             return redirect("home")
 
-        else:
-            print("FORM invalid:", form.errors)
+        print("FORM invalid:", form.errors)
 
         is_update = DailyReport.objects.filter(
             user=request.user,
@@ -226,16 +225,14 @@ def report_create(request):
         "ai_memo": ai_memo,
         "is_update": is_update,
     })
+
+
 # =====================================
 # 画面：自動保存
 # =====================================
 @login_required
 @require_POST
 def report_autosave(request):
-    """
-    create画面の入力内容を下書き保存する
-    ここでは外部連携は送らない
-    """
     try:
         body = json.loads(request.body.decode("utf-8"))
         today = timezone.localdate()
@@ -303,6 +300,7 @@ def home(request):
 
     return render(request, "reports/home.html", context)
 
+
 # =====================================
 # 画面：設定
 # =====================================
@@ -332,10 +330,6 @@ def report_history(request):
 # =====================================
 @login_required
 def email_change(request):
-    """
-    メールアドレス変更
-    - POST: 入力された email を現在のユーザーに設定する
-    """
     if request.method == "POST":
         email = request.POST.get("email", "").strip().lower()
 
@@ -357,14 +351,12 @@ def email_change(request):
 
     return render(request, "reports/email_change.html")
 
+
 # =====================================
 # 設定：ユーザー名変更
 # =====================================
 @login_required
 def username_change(request):
-    """
-    ユーザーネーム変更
-    """
     if request.method == "POST":
         username = request.POST.get("username", "").strip()
 
@@ -386,18 +378,15 @@ def username_change(request):
 
     return render(request, "reports/username_change.html")
 
+
 # =====================================
 # 設定：パスワード変更
 # =====================================
 @login_required
 def password_change(request):
-    """
-    パスワード変更
-    - PasswordChangeForm を使用
-    - update_session_auth_hash でログイン維持
-    """
     if request.method == "POST":
         form = PasswordChangeForm(request.user, request.POST)
+
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
@@ -413,10 +402,6 @@ def password_change(request):
 # アカウント：新規登録
 # =====================================
 def signup(request):
-    """
-    新規登録
-    - 登録完了後、自動ログインしてホーム画面へ遷移
-    """
     if request.user.is_authenticated:
         return redirect("home")
 
@@ -432,6 +417,7 @@ def signup(request):
         form = SignupForm()
 
     return render(request, "registration/signup.html", {"form": form})
+
 
 # =====================================
 # AI：日報生成 API
@@ -527,13 +513,15 @@ def ai_generate_report(request):
         traceback.print_exc()
         return JsonResponse({"error": f"{type(e).__name__}: {str(e)}"}, status=500)
 
+
 # =====================================
-# Slack設定
+# Slack送信API
 # =====================================
 @login_required
 @require_POST
 def slack_post(request):
     text = request.POST.get("text", "").strip()
+
     if not text:
         return JsonResponse({"ok": False, "error": "text が空です"}, status=400)
 
@@ -543,6 +531,7 @@ def slack_post(request):
         return JsonResponse({"ok": False, "error": "Slack連携がOFFです"}, status=400)
 
     webhook_url = (getattr(setting, "slack_webhook_url", "") or "").strip()
+
     if not webhook_url:
         return JsonResponse({"ok": False, "error": "Webhook URLが未設定です"}, status=400)
 
@@ -561,7 +550,7 @@ def slack_post(request):
 
 
 # =====================================
-# Teams設定
+# Teams送信API
 # =====================================
 @login_required
 @require_POST
@@ -592,55 +581,79 @@ def teams_post(request):
 # =====================================
 @login_required
 def integrations(request):
-    """外部連携設定（Slack/Teams/GmailのON/OFFを保存）"""
     integration, _ = UserIntegration.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        integration.slack_enabled = ("slack" in request.POST)
-        integration.teams_enabled = ("teams" in request.POST)
-        integration.gmail_enabled = ("gmail" in request.POST)
+        slack_values = request.POST.getlist("slack")
+        teams_values = request.POST.getlist("teams")
+        gmail_values = request.POST.getlist("gmail")
 
-        if integration.slack_enabled and not integration.slack_webhook_url:
-            integration.slack_enabled = False
-            messages.warning(request, "SlackをONにするにはWebhook URLの設定が必要です")
+        slack_enabled = "on" in slack_values
+        teams_enabled = "on" in teams_values
+        gmail_enabled = "on" in gmail_values
 
-        if integration.teams_enabled and not integration.teams_webhook_url:
-            integration.teams_enabled = False
-            messages.warning(request, "TeamsをONにするにはWebhook URLの設定が必要です")
-
-        if integration.gmail_enabled and not integration.gmail_email:
-            integration.gmail_enabled = False
+        if slack_enabled and not integration.slack_webhook_url:
+            slack_enabled = False
             messages.warning(
                 request,
-                "GmailをONにするにはGmail設定画面で送付先メールアドレスの登録が必要です"
+                "SlackをONにするにはSlack設定画面でWebhook URLの登録が必要です。"
             )
 
+        if teams_enabled and not integration.teams_webhook_url:
+            teams_enabled = False
+            messages.warning(
+                request,
+                "Microsoft TeamsをONにするにはTeams設定画面でWebhook URLの登録が必要です。"
+            )
+
+        if gmail_enabled and not integration.gmail_email:
+            gmail_enabled = False
+            messages.warning(
+                request,
+                "GmailをONにするにはGmail設定画面で送付先メールアドレスの登録が必要です。"
+            )
+
+        integration.slack_enabled = slack_enabled
+        integration.teams_enabled = teams_enabled
+        integration.gmail_enabled = gmail_enabled
         integration.save()
-        messages.success(request, "外部連携設定を保存しました")
+
+        messages.success(request, "外部連携設定を保存しました。")
         return redirect("integrations")
 
     return render(request, "reports/integrations.html", {"integration": integration})
+
+
 # =====================================
 # Slack設定（Webhook URL 保存）
 # =====================================
 @login_required
 def slack_settings(request):
-    """Slack設定画面：Incoming Webhook URL を保存する"""
     integration, _ = UserIntegration.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
         url = (request.POST.get("slack_webhook_url") or "").strip()
 
-        if url and not SLACK_WEBHOOK_RE.match(url):
-            messages.error(request, "Webhook URLの形式が正しくありません")
+        if not url:
+            messages.error(request, "Slack Webhook URLを入力してください。")
+            return redirect("slack_settings")
+
+        if not SLACK_WEBHOOK_RE.match(url):
+            messages.error(request, "Webhook URLの形式が正しくありません。")
             return redirect("slack_settings")
 
         integration.slack_webhook_url = url
+        integration.slack_enabled = True
         integration.save()
-        messages.success(request, "Slack Webhook URLを保存しました")
-        return redirect("integrations")
 
-    return render(request, "reports/slack_settings.html", {"integration": integration})
+        messages.success(request, "Slack設定を保存しました。")
+        return redirect("slack_settings")
+
+    return render(
+        request,
+        "reports/slack_settings.html",
+        {"integration": integration}
+    )
 
 
 # =====================================
@@ -651,9 +664,17 @@ def teams_settings(request):
     integration, _ = UserIntegration.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        integration.teams_webhook_url = (request.POST.get("teams_webhook_url") or "").strip()
+        url = (request.POST.get("teams_webhook_url") or "").strip()
+
+        if not url:
+            messages.error(request, "Microsoft Teams Webhook URLを入力してください。")
+            return redirect("teams_settings")
+
+        integration.teams_webhook_url = url
+        integration.teams_enabled = True
         integration.save()
-        messages.success(request, "Teams設定を保存しました")
+
+        messages.success(request, "Microsoft Teams設定を保存しました。")
         return redirect("teams_settings")
 
     return render(
@@ -664,10 +685,56 @@ def teams_settings(request):
 
 
 # =====================================
+# Gmail設定
+# =====================================
+@login_required
+def gmail_settings(request):
+    integration, _ = UserIntegration.objects.get_or_create(user=request.user)
+
+    if request.method == "POST":
+        gmail_email = request.POST.get("gmail_email", "").strip()
+        action = request.POST.get("action", "save")
+
+        if not gmail_email:
+            messages.error(request, "送付先のGmailアドレスを入力してください。")
+            return redirect("gmail_settings")
+
+        integration.gmail_email = gmail_email
+        integration.gmail_enabled = True
+
+        if action == "save":
+            integration.save()
+            messages.success(request, "Gmail設定を保存しました。")
+            return redirect("gmail_settings")
+
+        if action == "test":
+            integration.save()
+
+            try:
+                send_mail(
+                    "【テスト送信】Daily Gmail連携",
+                    "DailyアプリからGmailへテスト送信できています。",
+                    settings.DEFAULT_FROM_EMAIL,
+                    [integration.gmail_email],
+                    fail_silently=False,
+                )
+                messages.success(request, "テストメールを送信しました。")
+            except Exception as e:
+                messages.error(request, f"Gmail送信に失敗しました: {e}")
+
+            return redirect("gmail_settings")
+
+    return render(
+        request,
+        "reports/gmail_settings.html",
+        {"integration": integration}
+    )
+
+
+# =====================================
 # Slack通知（Webhook送信）
 # =====================================
 def send_slack_webhook(webhook_url: str, text: str) -> tuple[bool, str]:
-    """Slack Incoming Webhook にメッセージを投稿する"""
     try:
         r = requests.post(webhook_url, json={"text": text}, timeout=10)
         print("Slack status code:", r.status_code)
@@ -724,65 +791,29 @@ def send_teams_webhook(webhook_url: str, text: str) -> tuple[bool, str]:
 # =====================================
 def send_gmail(text, to_email):
     send_mail(
-    "Daily 日報",
-    body,
-    settings.DEFAULT_FROM_EMAIL,
-    [integration.gmail_email],
-    fail_silently=False,
+        "Daily 日報",
+        text,
+        settings.DEFAULT_FROM_EMAIL,
+        [to_email],
+        fail_silently=False,
     )
 
-# =====================================
-# 画面：Gmail設定
-# =====================================
-@login_required
-def gmail_settings(request):
-    integration, _ = UserIntegration.objects.get_or_create(user=request.user)
 
-    if request.method == "POST":
-        gmail_email = request.POST.get("gmail_email", "").strip()
-        action = request.POST.get("action")
+# =====================================
+# パスワード再設定
+# =====================================
+class CustomPasswordResetForm(PasswordResetForm):
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
 
-        if not gmail_email:
-            messages.error(request, "送付先のGmailアドレスを入力してください。")
-            return render(
-                request,
-                "reports/gmail_settings.html",
-                {"integration": integration}
+        if email and not User.objects.filter(email__iexact=email, is_active=True).exists():
+            raise forms.ValidationError(
+                "このメールアドレスは登録されていません。新規登録をおこなってください。"
             )
 
-        integration.gmail_email = gmail_email
+        return email
 
-        if action == "save":
-            integration.gmail_enabled = True
-            integration.save()
-            messages.success(request, "Gmail設定を保存しました。")
-            return redirect("gmail_settings")
 
-        if action == "test":
-            integration.save()
-            try:
-                send_mail(
-                    "【テスト送信】Daily Gmail連携",
-                    "DailyアプリからGmailへテスト送信できています。",
-                    settings.DEFAULT_FROM_EMAIL,
-                    [integration.gmail_email],
-                    fail_silently=False,
-                )
-                messages.success(request, "テストメールを送信しました。")
-            except Exception as e:
-                messages.error(request, f"Gmail送信に失敗しました: {e}")
-
-            return redirect("gmail_settings")
-
-    return render(
-        request,
-        "reports/gmail_settings.html",
-        {"integration": integration}
-    )
-
-# =====================================
-# PW変更完了画面
-# =====================================
 class CustomPasswordChangeView(PasswordChangeView):
     template_name = "reports/password_change_form.html"
     success_url = reverse_lazy("settings")
@@ -790,6 +821,7 @@ class CustomPasswordChangeView(PasswordChangeView):
     def form_valid(self, form):
         messages.success(self.request, "パスワードを変更しました。")
         return super().form_valid(form)
+
 
 class CustomPasswordResetView(PasswordResetView):
     template_name = "registration/password_reset_form.html"

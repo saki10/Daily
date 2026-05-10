@@ -133,7 +133,6 @@ class SignupForm(UserCreationForm):
 
         return email
 # パスワード再設定で使う
-# パスワード再設定で使う
 class CustomPasswordResetForm(PasswordResetForm):
     email = forms.EmailField(
         label="メールアドレス",
@@ -152,7 +151,7 @@ class CustomPasswordResetForm(PasswordResetForm):
 
         if not UserModel.objects.filter(email__iexact=email, is_active=True).exists():
             raise forms.ValidationError(
-                "登録されていないメールアドレスには、パスワード再設定メールは届きません。"
+                "このメールアドレスは登録されていません。新規登録をおこなってください。"
             )
 
         return email
@@ -170,3 +169,18 @@ class CustomPasswordResetForm(PasswordResetForm):
             if user.has_usable_password():
                 yield user
                 return
+            
+#未登録メールの場合にエラー表示したい場合
+User = get_user_model()
+
+class CustomPasswordResetForm(PasswordResetForm):
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+
+        if email and not User.objects.filter(email__iexact=email, is_active=True).exists():
+            raise forms.ValidationError(
+                "このメールアドレスは登録されていません。新規登録をおこなってください。"
+            )
+
+        return email
+

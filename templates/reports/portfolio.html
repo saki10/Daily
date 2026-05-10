@@ -1,0 +1,79 @@
+{% extends "reports/base.html" %}
+{% load static %}
+
+{% block title %}ポートフォリオ | Daily{% endblock %}
+
+{% block content %}
+<div class="portfolio-page">
+  <section class="portfolio-hero">
+    <p class="portfolio-label">Portfolio</p>
+    <h1>AI日報作成アプリ Daily</h1>
+    <p class="portfolio-lead">
+      日々の業務メモからAIが日報文章を自動生成し、保存・検索・外部連携まで行えるWebアプリです。
+    </p>
+  </section>
+
+  <section class="portfolio-section">
+    <h2>アプリ概要</h2>
+    <p>
+      Dailyは、業務内容を簡単に入力するだけで、AIが日報形式の文章を生成するアプリです。
+      日報作成の時間を短縮し、振り返りや報告業務を効率化することを目的としています。
+    </p>
+  </section>
+
+  <section class="portfolio-section">
+    <h2>主な機能</h2>
+
+    <div class="portfolio-card-grid">
+      <div class="portfolio-card">
+        <h3>AI日報生成</h3>
+        <p>入力した業務メモをもとに、AIが自然な日報文章を生成します。</p>
+      </div>
+
+      <div class="portfolio-card">
+        <h3>日報保存</h3>
+        <p>ログインユーザーは生成した日報を保存できます。</p>
+      </div>
+
+      <div class="portfolio-card">
+        <h3>日報検索</h3>
+        <p>過去の日報を日付やキーワードで検索できます。</p>
+      </div>
+
+      <div class="portfolio-card">
+        <h3>外部連携</h3>
+        <p>Slack、Microsoft Teams、Gmailへの送信設定ができます。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="portfolio-section">
+    <h2>使用技術</h2>
+    <ul class="portfolio-skill-list">
+      <li>Python</li>
+      <li>HTML / CSS</li>
+      <li>JavaScript</li>
+      <li>SQLite</li>
+      <li>OpenAI API</li>
+      <li>Git / GitHub</li>
+      <li>PythonAnywhere</li>
+    </ul>
+  </section>
+
+  <section class="portfolio-section">
+    <h2>工夫した点</h2>
+    <ul>
+      <li>未ログイン時はAI生成のみ利用可能にし、保存機能はログイン後に制御</li>
+      <li>画面幅に応じてスマートフォンでも使いやすいレスポンシブ対応を実装</li>
+      <li>外部連携設定をユーザーごとに保存できるように設計</li>
+      <li>日報作成の流れが分かりやすいよう、入力・生成・保存の導線を整理</li>
+    </ul>
+  </section>
+
+  <section class="portfolio-actions">
+    <a href="{% url 'create' %}" class="portfolio-button">
+      AI文章生成機能を試す
+    </a>
+  </section>
+</div>
+{% endblock %}  

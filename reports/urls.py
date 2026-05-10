@@ -67,4 +67,13 @@ urlpatterns = [
     views.CustomPasswordResetView.as_view(),
     name="password_reset",
     ),
+    path("portfolio/", views.portfolio, name="portfolio"),
+    path(
+    "password_reset/",
+    auth_views.PasswordResetView.as_view(
+        template_name="reports/password_reset.html",
+        form_class=CustomPasswordResetForm,
+    ),
+    name="password_reset",
+),
 ]
