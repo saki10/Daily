@@ -583,3 +583,15 @@
   }
 }
 
+/* ==============================
+   外部連携詳細画面 ボタン間隔
+============================== */
+
+.integration-detail-actions {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 28px !important;
+  margin-top: 32px !important;
+}
+

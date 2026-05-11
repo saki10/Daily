@@ -30,10 +30,11 @@
     </form>
 
     <div class="login-link-area">
-      <a href="{% url 'signup' %}">新規登録はこちらから</a>
-      <a href="{% url 'password_reset' %}"
-        >パスワードを忘れてしまった場合はこちら</a
-      >
+      <a href="{% url 'signup' %}" class="login-link"> 新規登録はこちらから </a>
+
+      <a href="{% url 'password_reset' %}" class="login-link">
+        パスワードを忘れてしまった場合はこちら
+      </a>
     </div>
   </div>
 </div>
