@@ -30,8 +30,11 @@
         </button>
         {% endif %}
 
-        <a href="{% url 'home' %}" class="header-title-link">
-          <span class="header-title">Daily</span>
+        <a
+          href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'portfolio' %}{% endif %}"
+          class="header-logo"
+        >
+          Daily
         </a>
       </div>
 
