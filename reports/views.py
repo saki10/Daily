@@ -2,7 +2,6 @@ import re
 import json
 import traceback
 import requests
-
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -17,11 +16,11 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-
+from .forms import CustomPasswordChangeForm
 from .forms import DailyReportForm, SignupForm
 from .models import DailyReport, UserIntegration
 from .utils import format_for_teams
-
+from .forms import SignUpForm
 
 User = get_user_model()
 
@@ -402,22 +401,17 @@ def password_change(request):
 # アカウント：新規登録
 # =====================================
 def signup(request):
-    if request.user.is_authenticated:
-        return redirect("home")
-
     if request.method == "POST":
-        form = SignupForm(request.POST)
+        form = SignUpForm(request.POST)
 
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, "新規登録が完了しました。")
-            return redirect("home")
+            form.save()
+            messages.success(request, "アカウント登録が完了しました。ログインしてください。")
+            return redirect("login")
     else:
-        form = SignupForm()
+        form = SignUpForm()
 
     return render(request, "registration/signup.html", {"form": form})
-
 
 # =====================================
 # AI：日報生成 API
@@ -813,15 +807,9 @@ class CustomPasswordResetForm(PasswordResetForm):
 
         return email
 
-
-class CustomPasswordChangeView(PasswordChangeView):
-    template_name = "reports/password_change_form.html"
-    success_url = reverse_lazy("settings")
-
-    def form_valid(self, form):
-        messages.success(self.request, "パスワードを変更しました。")
-        return super().form_valid(form)
-
+# =====================================
+# 画面：日報作成（report_form）
+# =====================================
 
 class CustomPasswordResetView(PasswordResetView):
     template_name = "registration/password_reset_form.html"
@@ -846,3 +834,8 @@ class CustomPasswordResetView(PasswordResetView):
 
         form.save(**opts)
         return HttpResponseRedirect(self.get_success_url())
+
+class CustomPasswordChangeView(PasswordChangeView):
+    form_class = CustomPasswordChangeForm
+    template_name = "reports/password_change.html"
+    success_url = reverse_lazy("settings")

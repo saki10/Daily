@@ -1358,6 +1358,11 @@ a {
   resize: vertical;
 }
 
+#report-form textarea {
+  min-height: 110px;
+  height: 110px;
+}
+
 .ai-actions,
 .panel-actions {
   margin-top: 10px;
@@ -3928,3 +3933,69 @@ button {
     font-size: 15px;
   }
 }
+
+.form-button-area {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.secondary-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  color: #111827;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.secondary-btn:hover {
+  background: #d1d5db;
+}
+
+.panel-guide {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+/* ==============================
+   パスワード変更画面：ボタン調整
+============================== */
+
+.password-change-card .settings-button-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.password-change-card .settings-submit-btn,
+.password-change-card .settings-back-btn {
+  width: 160px;
+  height: 48px;
+  padding: 0;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 48px;
+}
+
+.password-change-card .settings-back-btn {
+  display: inline-block;
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #9ca3af;
+  text-decoration: none;
+}
+
+.password-change-card .settings-back-btn:hover {
+  background: #f3f4f6;
+}
+
+

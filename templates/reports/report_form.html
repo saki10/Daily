@@ -1,23 +1,26 @@
 {% extends "reports/base.html" %} {% load static %} {% block content %}
 <div class="ai-page" data-autosave-url="{% url 'report_autosave' %}">
   <h1 class="page-title">AI 文章生成</h1>
+
   <div class="ai-generate-note">
     <p>
-      日報は1日1つまで作成できます。すでに作成済みの場合は、保存時に内容が更新されます。
+      日報は1日1つ保存できます。すでに保存済みの場合は、保存時に内容が更新されます。
     </p>
 
     {% if not user.is_authenticated %}
     <p>
-      ログインしていない場合、AI文章生成は利用できますが、生成した内容は保存できません。
+      ログインしていない場合、AI生成は利用できますが、生成した内容は保存できません。
     </p>
     {% endif %}
   </div>
+
   <div class="ai-grid">
     <!-- 左：素材入力 -->
     <section class="panel">
       <div class="panel-head">
         <h2 class="panel-title">素材入力</h2>
         <p class="panel-help">日報と本日の業務予定はこちらから入力可能</p>
+        <p class="panel-guide">文字を入力すると数秒で日報が作成されます。</p>
       </div>
 
       <textarea
@@ -25,15 +28,13 @@
         name="ai_memo"
         form="report-form"
         class="ai-memo"
-        rows="14"
+        rows="8"
         placeholder="例：
 ・会議資料作成
 ・バグ修正
 ・顧客対応
 ・明日はテスト予定"
-      >
-{{ ai_memo|default:'' }}</textarea
-      >
+      >{{ ai_memo|default:'' }}</textarea>
 
       <!-- 文体設定 -->
       <div class="tone-panel">
@@ -68,7 +69,6 @@
         >
           AIで文章生成
         </button>
-
       </div>
 
       <p class="panel-note">※ 素材をもとにAIが一気に文章を書き上げます。</p>
@@ -78,42 +78,43 @@
     <section class="panel">
       <div class="panel-head">
         <h2 class="panel-title">生成結果（日報）</h2>
-        <p class="panel-help">文字を入力すると数秒で日報が作成されます</p>
       </div>
 
       <form method="post" id="report-form" class="form">
-        {% csrf_token %} {% if form.non_field_errors %}
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
         <div class="form-errors">{{ form.non_field_errors }}</div>
         {% endif %}
 
         <div class="form-row">
-          <label class="form-label" for="{{ form.today_work.id_for_label }}"
-            >本日の業務</label
-          >
+          <label class="form-label" for="{{ form.today_work.id_for_label }}">
+            本日の業務
+          </label>
           <div class="form-field">{{ form.today_work }}</div>
           {{ form.today_work.errors }}
         </div>
 
         <div class="form-row">
-          <label class="form-label" for="{{ form.reflection.id_for_label }}"
-            >振り返り</label
-          >
+          <label class="form-label" for="{{ form.reflection.id_for_label }}">
+            振り返り
+          </label>
           <div class="form-field">{{ form.reflection }}</div>
           {{ form.reflection.errors }}
         </div>
 
         <div class="form-row">
-          <label class="form-label" for="{{ form.tomorrow_plan.id_for_label }}"
-            >明日の予定</label
-          >
+          <label class="form-label" for="{{ form.tomorrow_plan.id_for_label }}">
+            明日の予定
+          </label>
           <div class="form-field">{{ form.tomorrow_plan }}</div>
           {{ form.tomorrow_plan.errors }}
         </div>
 
         <div class="form-row">
-          <label class="form-label" for="{{ form.note.id_for_label }}"
-            >連絡事項</label
-          >
+          <label class="form-label" for="{{ form.note.id_for_label }}">
+            連絡事項
+          </label>
           <div class="form-field">{{ form.note }}</div>
           {{ form.note.errors }}
         </div>
@@ -121,7 +122,7 @@
         <div class="panel-actions right">
           {% if user.is_authenticated %}
           <button type="submit" class="btn btn-primary save-btn">
-            {% if is_update %} 更新 {% else %} 確定（保存） {% endif %}
+            {% if is_update %}更新{% else %}確定（保存）{% endif %}
           </button>
           {% else %}
           <div class="login-save-notice">
