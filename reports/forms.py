@@ -30,63 +30,35 @@ def validate_password_rule(password):
     return True
 
 class CustomPasswordChangeForm(PasswordChangeForm):
+    error_messages = {
+        **PasswordChangeForm.error_messages,
+        "password_incorrect": "現在のパスワードが正しくありません。",
+        "password_mismatch": "新しいパスワードと確認用パスワードが一致しません",
+    }
+
     old_password = forms.CharField(
         label="現在のパスワード",
-        widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "現在のパスワードを入力してください",
-            }
-        ),
-        error_messages={
-            "required": "現在のパスワードを入力してください",
-        },
+        widget=forms.PasswordInput(attrs={
+            "class": "form-control",
+            "placeholder": "現在のパスワードを入力してください",
+        }),
     )
 
     new_password1 = forms.CharField(
         label="新しいパスワード",
-        widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "新しいパスワードを入力してください",
-            }
-        ),
-        error_messages={
-            "required": "パスワードを入力してください",
-        },
+        widget=forms.PasswordInput(attrs={
+            "class": "form-control",
+            "placeholder": "新しいパスワードを入力してください",
+        }),
     )
 
     new_password2 = forms.CharField(
-        label="新しいパスワード（確認用）",
-        widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "確認用パスワードを入力してください",
-            }
-        ),
-        error_messages={
-            "required": "確認用パスワードを入力してください",
-        },
+        label="新しいパスワード（確認）",
+        widget=forms.PasswordInput(attrs={
+            "class": "form-control",
+            "placeholder": "確認用パスワードを入力してください",
+        }),
     )
-
-    def clean_new_password1(self):
-        password = self.cleaned_data.get("new_password1")
-
-        if password and not validate_password_rule(password):
-            raise forms.ValidationError(PASSWORD_RULE_MESSAGE)
-
-        return password
-
-    def clean(self):
-        cleaned_data = super().clean()
-
-        password1 = cleaned_data.get("new_password1")
-        password2 = cleaned_data.get("new_password2")
-
-        if password1 and password2 and password1 != password2:
-            self.add_error("new_password2", PASSWORD_MISMATCH_MESSAGE)
-
-        return cleaned_data
 # ==============================
 # 新規登録画面用
 # ==============================

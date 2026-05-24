@@ -21,7 +21,7 @@ from .forms import DailyReportForm, SignupForm
 from .models import DailyReport, UserIntegration
 from .utils import format_for_teams
 from .forms import SignUpForm
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 User = get_user_model()
 
 
@@ -835,7 +835,11 @@ class CustomPasswordResetView(PasswordResetView):
         form.save(**opts)
         return HttpResponseRedirect(self.get_success_url())
 
-class CustomPasswordChangeView(PasswordChangeView):
-    form_class = CustomPasswordChangeForm
+class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     template_name = "reports/password_change.html"
+    form_class = CustomPasswordChangeForm
     success_url = reverse_lazy("settings")
+
+    def form_valid(self, form):
+        messages.success(self.request, "パスワードを変更しました。")
+        return super().form_valid(form)
