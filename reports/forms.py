@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm
 from django.contrib.auth.forms import PasswordChangeForm
-
+from django.contrib.auth import get_user_model
 User = get_user_model()
 
 # ==============================
@@ -163,7 +163,7 @@ class SignUpForm(forms.ModelForm):
         if password1 and password2 and password1 != password2:
             self.add_error(
                 "password2",
-                "パスワードと確認用パスワードが一致しません"
+                "パスワードと確認用パスワードが一致していません"
             )
 
         return cleaned_data
