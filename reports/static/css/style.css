@@ -3999,3 +3999,116 @@ button {
 }
 
 
+/* ==============================
+   SP版：ホーム検索の日付入力欄 修正
+============================== */
+
+.home-wrap input[type="date"],
+.search-section input[type="date"],
+.home-search-form input[type="date"] {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+
+  width: 100% !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  max-height: 52px !important;
+
+  padding: 0 44px 0 16px !important;
+
+  border: 1px solid #d1d5db !important;
+  border-radius: 14px !important;
+  background-color: #ffffff !important;
+  color: #111827 !important;
+
+  font-size: 16px !important;
+  line-height: 52px !important;
+  box-sizing: border-box !important;
+
+  opacity: 1 !important;
+  color-scheme: light;
+}
+
+.home-wrap input[type="date"]::-webkit-date-and-time-value,
+.search-section input[type="date"]::-webkit-date-and-time-value,
+.home-search-form input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
+  color: #111827;
+}
+
+.home-wrap input[type="date"]::-webkit-calendar-picker-indicator,
+.search-section input[type="date"]::-webkit-calendar-picker-indicator,
+.home-search-form input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0.75;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 480px) {
+  .home-wrap .search-section {
+    overflow: hidden !important;
+  }
+
+  .home-wrap .home-search-form {
+    width: 100% !important;
+  }
+
+  .home-wrap .home-search-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+  }
+
+  .home-wrap .home-search-row .form-group,
+  .home-wrap .form-group {
+    width: 100% !important;
+  }
+
+  .home-wrap input[type="date"] {
+    height: 52px !important;
+    min-height: 52px !important;
+    background-color: #ffffff !important;
+  }
+}
+
+/* ==============================
+   フォームエラー・成功メッセージ共通
+   signup / password_change 共通
+============================== */
+
+.field-error {
+  margin-top: 8px;
+  color: #dc2626;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.field-error p {
+  margin: 0;
+}
+
+.form-group.has-error .form-control,
+.form-group.has-error input {
+  border-color: #dc2626;
+  background: #fff7f7;
+}
+
+.password-rule-text {
+  margin: 8px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.form-success-box {
+  margin: 18px 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #ecfdf5;
+  color: #047857;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.form-success-box p {
+  margin: 0;
+}
