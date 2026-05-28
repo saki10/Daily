@@ -1,80 +1,145 @@
 import re
+
 from django import forms
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
-from .models import DailyReport, ReportTemplate
-from django.contrib.auth.forms import AuthenticationForm
-from .models import DailyReport
 from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    PasswordChangeForm,
+    PasswordResetForm,
+    UserCreationForm,
+)
+
+from .models import DailyReport, ReportTemplate
+
+
 User = get_user_model()
+
+
+# ==============================
+# パスワード共通ルール
+# ==============================
+
+PASSWORD_RULE_MESSAGE = "英語と数字を含む8文字以上にしましょう"
+PASSWORD_MISMATCH_MESSAGE = "パスワードと確認用パスワードが一致しません"
+NEW_PASSWORD_MISMATCH_MESSAGE = "新しいパスワードと確認用パスワードが一致しません"
+
+
+def validate_password_rule(password):
+    """
+    パスワード規定：
+    ・8文字以上
+    ・英字を含む
+    ・数字を含む
+    """
+    if not password:
+        return False
+
+    has_letter = re.search(r"[A-Za-z]", password)
+    has_number = re.search(r"\d", password)
+
+    return len(password) >= 8 and has_letter and has_number
+
+
+def add_error_once(form, field_name, message):
+    """
+    同じエラーメッセージが重複表示されないように追加する。
+    """
+    existing_errors = []
+
+    if getattr(form, "_errors", None) is not None and field_name in form._errors:
+        existing_errors = [str(error) for error in form._errors[field_name]]
+
+    if message not in existing_errors:
+        form.add_error(field_name, message)
+
 
 # ==============================
 # パスワード変更画面用
 # ==============================
 
-PASSWORD_RULE_MESSAGE = "英語と数字を含む8文字以上にしましょう"
-PASSWORD_MISMATCH_MESSAGE = "パスワードと確認用パスワードが一致しません"
-
-
-def validate_password_rule(password):
-    if len(password) < 8:
-        return False
-    if not re.search(r"[A-Za-z]", password):
-        return False
-    if not re.search(r"\d", password):
-        return False
-    return True
-
-class CustomPasswordChangeForm(PasswordChangeForm):
-    error_messages = {
-        **PasswordChangeForm.error_messages,
-        "password_incorrect": "現在のパスワードが正しくありません。",
-        "password_mismatch": "新しいパスワードと確認用パスワードが一致しません",
-    }
-
+class CustomPasswordChangeForm(forms.Form):
     old_password = forms.CharField(
         label="現在のパスワード",
-        widget=forms.PasswordInput(attrs={
-            "class": "form-control",
-            "placeholder": "現在のパスワードを入力してください",
-        }),
+        error_messages={
+            "required": "現在のパスワードを入力してください",
+        },
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "現在のパスワードを入力してください",
+            }
+        ),
     )
 
     new_password1 = forms.CharField(
         label="新しいパスワード",
-        widget=forms.PasswordInput(attrs={
-            "class": "form-control",
-            "placeholder": "新しいパスワードを入力してください",
-        }),
+        error_messages={
+            "required": "新しいパスワードを入力してください",
+        },
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "新しいパスワードを入力してください",
+            }
+        ),
     )
 
     new_password2 = forms.CharField(
         label="新しいパスワード（確認）",
-        widget=forms.PasswordInput(attrs={
-            "class": "form-control",
-            "placeholder": "確認用パスワードを入力してください",
-        }),
+        error_messages={
+            "required": "確認用パスワードを入力してください",
+        },
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "確認用パスワードを入力してください",
+            }
+        ),
     )
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def clean_old_password(self):
+        old_password = self.cleaned_data.get("old_password")
+
+        if old_password and not self.user.check_password(old_password):
+            raise forms.ValidationError("現在のパスワードが正しくありません。")
+
+        return old_password
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        new_password1 = self.data.get(self.add_prefix("new_password1"), "")
+        new_password2 = self.data.get(self.add_prefix("new_password2"), "")
+
+        if new_password1 and not validate_password_rule(new_password1):
+            self.add_error(
+                "new_password1",
+                PASSWORD_RULE_MESSAGE
+            )
+
+        if new_password1 and new_password2 and new_password1 != new_password2:
+            self.add_error(
+                "new_password2",
+                NEW_PASSWORD_MISMATCH_MESSAGE
+            )
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        password = self.cleaned_data["new_password1"]
+        self.user.set_password(password)
+
+        if commit:
+            self.user.save()
+
+        return self.user
 # ==============================
 # 新規登録画面用
 # ==============================
-
-SIGNUP_PASSWORD_RULE_MESSAGE = "8文字以上で英大文字・英小文字を含めて入力してください"
-
-
-def validate_signup_password_rule(password):
-    if len(password) < 8:
-        return False
-    if not re.search(r"[A-Z]", password):
-        return False
-    if not re.search(r"[a-z]", password):
-        return False
-    return True
-
 
 class SignUpForm(forms.ModelForm):
     username = forms.CharField(
@@ -141,41 +206,53 @@ class SignUpForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get("email")
 
-        if email and User.objects.filter(email=email).exists():
+        if email:
+            email = email.strip().lower()
+
+        if email and User.objects.filter(email__iexact=email).exists():
             raise forms.ValidationError("このメールアドレスは既に登録されています")
 
         return email
 
-    def clean_password1(self):
-        password = self.cleaned_data.get("password1")
-
-        if password and not validate_signup_password_rule(password):
-            raise forms.ValidationError(SIGNUP_PASSWORD_RULE_MESSAGE)
-
-        return password
-
     def clean(self):
         cleaned_data = super().clean()
 
-        password1 = cleaned_data.get("password1")
-        password2 = cleaned_data.get("password2")
+        password1 = self.data.get(self.add_prefix("password1"), "")
+        password2 = self.data.get(self.add_prefix("password2"), "")
+
+        if password1 and not validate_password_rule(password1):
+            add_error_once(
+                self,
+                "password1",
+                PASSWORD_RULE_MESSAGE,
+            )
 
         if password1 and password2 and password1 != password2:
-            self.add_error(
+            add_error_once(
+                self,
                 "password2",
-                "パスワードと確認用パスワードが一致していません"
+                PASSWORD_MISMATCH_MESSAGE,
             )
 
         return cleaned_data
 
     def save(self, commit=True):
         user = super().save(commit=False)
+
+        user.username = self.cleaned_data["username"].strip()
+        user.email = self.cleaned_data["email"].strip().lower()
         user.set_password(self.cleaned_data["password1"])
 
         if commit:
             user.save()
 
         return user
+
+
+# ==============================
+# メールアドレス変更画面用
+# ==============================
+
 class EmailChangeForm(forms.ModelForm):
     email = forms.EmailField(
         label="メールアドレス",
@@ -184,7 +261,7 @@ class EmailChangeForm(forms.ModelForm):
             "invalid": "メールアドレス形式で入力してください",
         },
     )
-#メールアドレス変更制約
+
     class Meta:
         model = User
         fields = ["email"]
@@ -192,12 +269,19 @@ class EmailChangeForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get("email")
 
-        if email and User.objects.exclude(pk=self.instance.pk).filter(email=email).exists():
+        if email:
+            email = email.strip().lower()
+
+        if email and User.objects.exclude(pk=self.instance.pk).filter(email__iexact=email).exists():
             raise forms.ValidationError("このメールアドレスは既に登録されています")
 
         return email
 
-#名前変更フォーム制約
+
+# ==============================
+# 名前変更画面用
+# ==============================
+
 class UsernameChangeForm(forms.ModelForm):
     username = forms.CharField(
         label="名前",
@@ -206,47 +290,24 @@ class UsernameChangeForm(forms.ModelForm):
         },
     )
 
-#パスワード変更フォーム制約
-class CustomPasswordResetForm(PasswordResetForm):
-    new_password1 = forms.CharField(
-        label="新しいパスワード",
-        widget=forms.PasswordInput,
-        error_messages={
-            "required": "パスワードを入力してください",
-        },
-    )
+    class Meta:
+        model = User
+        fields = ["username"]
 
-    new_password2 = forms.CharField(
-        label="新しいパスワード（確認用）",
-        widget=forms.PasswordInput,
-        error_messages={
-            "required": "確認用パスワードを入力してください",
-        },
-    )
 
-    def clean_new_password1(self):
-        password = self.cleaned_data.get("new_password1")
+# ==============================
+# 日報フォーム
+# ==============================
 
-        if password and not validate_password_rule(password):
-            raise forms.ValidationError(PASSWORD_RULE_MESSAGE)
-
-        return password
-
-    def clean(self):
-        cleaned_data = self.cleaned_data
-        password1 = cleaned_data.get("new_password1")
-        password2 = cleaned_data.get("new_password2")
-
-        if password1 and password2 and password1 != password2:
-            self.add_error("new_password2", PASSWORD_MISMATCH_MESSAGE)
-
-        return cleaned_data
-# 一覧/作成で使う（日報）
 class DailyReportForm(forms.ModelForm):
     class Meta:
         model = DailyReport
         exclude = ["report_date", "user"]
 
+
+# ==============================
+# ログインフォーム
+# ==============================
 
 class LoginForm(AuthenticationForm):
     username = forms.EmailField(
@@ -302,17 +363,31 @@ class LoginForm(AuthenticationForm):
             self.confirm_login_allowed(self.user_cache)
 
         return self.cleaned_data
-# テンプレート
+
+
+# ==============================
+# テンプレートフォーム
+# ==============================
+
 class ReportTemplateForm(forms.ModelForm):
     class Meta:
         model = ReportTemplate
         fields = ["template1", "is_formal", "is_casual"]
         widgets = {
-            "template1": forms.Textarea(attrs={"class": "template-textarea", "rows": 12}),
+            "template1": forms.Textarea(
+                attrs={
+                    "class": "template-textarea",
+                    "rows": 12,
+                }
+            ),
         }
 
 
-# 新規登録で使う
+# ==============================
+# 予備：UserCreationForm版の新規登録フォーム
+# 既存コードで SignupForm を参照している場合に備えて残す
+# ==============================
+
 class SignupForm(UserCreationForm):
     email = forms.EmailField(
         label="メールアドレス",
@@ -338,33 +413,65 @@ class SignupForm(UserCreationForm):
         self.fields["password1"].label = "パスワード"
         self.fields["password2"].label = "パスワード確認"
 
-        self.fields["username"].widget.attrs.update({
-            "class": "form-input",
-            "placeholder": "ユーザー名を入力",
-        })
+        self.fields["username"].widget.attrs.update(
+            {
+                "class": "form-input",
+                "placeholder": "ユーザー名を入力",
+            }
+        )
 
-        self.fields["password1"].widget.attrs.update({
-            "class": "form-input",
-            "placeholder": "英数字を含む8文字以上で入力",
-        })
+        self.fields["password1"].widget.attrs.update(
+            {
+                "class": "form-input",
+                "placeholder": "英語と数字を含む8文字以上で入力",
+            }
+        )
 
-        self.fields["password2"].widget.attrs.update({
-            "class": "form-input",
-            "placeholder": "再度パスワードを入力",
-        })
+        self.fields["password2"].widget.attrs.update(
+            {
+                "class": "form-input",
+                "placeholder": "再度パスワードを入力",
+            }
+        )
+
     def clean_email(self):
         email = self.cleaned_data.get("email")
 
         if email:
             email = email.strip().lower()
 
-            if User.objects.filter(email__iexact=email).exists():
-                raise forms.ValidationError(
-                    "このメールアドレスはすでに登録されています。"
-                )
+        if email and User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("このメールアドレスはすでに登録されています。")
 
         return email
-# パスワード再設定で使う
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        password1 = self.data.get(self.add_prefix("password1"), "")
+        password2 = self.data.get(self.add_prefix("password2"), "")
+
+        if password1 and not validate_password_rule(password1):
+            add_error_once(
+                self,
+                "password1",
+                PASSWORD_RULE_MESSAGE,
+            )
+
+        if password1 and password2 and password1 != password2:
+            add_error_once(
+                self,
+                "password2",
+                PASSWORD_MISMATCH_MESSAGE,
+            )
+
+        return cleaned_data
+
+
+# ==============================
+# パスワード再設定メール送信用フォーム
+# ==============================
+
 class CustomPasswordResetForm(PasswordResetForm):
     email = forms.EmailField(
         label="メールアドレス",
@@ -375,39 +482,14 @@ class CustomPasswordResetForm(PasswordResetForm):
                 "autocomplete": "email",
             }
         ),
+        error_messages={
+            "required": "メールアドレスを入力してください",
+            "invalid": "メールアドレス形式で入力してください",
+        },
     )
 
     def clean_email(self):
         email = self.cleaned_data.get("email", "").strip().lower()
-        UserModel = get_user_model()
-
-        if not UserModel.objects.filter(email__iexact=email, is_active=True).exists():
-            raise forms.ValidationError(
-                "このメールアドレスは登録されていません。新規登録をおこなってください。"
-            )
-
-        return email
-
-    def get_users(self, email):
-        UserModel = get_user_model()
-
-        users = (
-            UserModel._default_manager
-            .filter(email__iexact=email, is_active=True)
-            .order_by("date_joined", "id")
-        )
-
-        for user in users:
-            if user.has_usable_password():
-                yield user
-                return
-            
-#未登録メールの場合にエラー表示したい場合
-User = get_user_model()
-
-class CustomPasswordResetForm(PasswordResetForm):
-    def clean_email(self):
-        email = self.cleaned_data.get("email")
 
         if email and not User.objects.filter(email__iexact=email, is_active=True).exists():
             raise forms.ValidationError(
@@ -416,3 +498,14 @@ class CustomPasswordResetForm(PasswordResetForm):
 
         return email
 
+    def get_users(self, email):
+        users = (
+            User._default_manager
+            .filter(email__iexact=email, is_active=True)
+            .order_by("date_joined", "id")
+        )
+
+        for user in users:
+            if user.has_usable_password():
+                yield user
+                return
